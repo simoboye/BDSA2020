@@ -1,7 +1,7 @@
 #   Expectations alignment
 
 ## Working hours and days
-
+![Calendar](/images/kalender.jpg)
  - Aprox. 10-15 hours a week
  - **Touchdowns: (Discord)** Tuesday 12.00-12.15 and Wedensday 10.00-10.15
  - **Before scrum-meeting: (Deadline)** release Thursday 09.55
