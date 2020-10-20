@@ -49,6 +49,9 @@ Placement description
 
 * Upload new description
 
+### Use Case Diagram
+![Calendar](images/use_case.png)
+
 ## Non-functional
  * A student user should be able to setup his profile, browse descriptions, apply to descriptions and save descriptions after a three step introduction.
  * Code maintanability - make it easy to add/remove functionality 
