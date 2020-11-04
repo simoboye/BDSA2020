@@ -8,11 +8,11 @@ namespace BDSA2020.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class RepositoryController : ControllerBase
+    public class StudentRepositoryController : ControllerBase
     {
-        private readonly IRepository repository;
+        private readonly IStudentRepository repository;
 
-        public RepositoryController(IRepository repository)
+        public StudentRepositoryController(IStudentRepository repository)
         {
             this.repository = repository;
         }

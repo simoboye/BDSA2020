@@ -7,13 +7,13 @@ using Xunit;
 
 namespace BDSA2020.Models.Tests
 {
-    public class RepositoryTests
+    public class StudentRepositoryTests
     {
         private readonly SqliteConnection connection;
         private readonly Context context;
-        private readonly Repository repository;
+        private readonly StudentRepository repository;
 
-        public RepositoryTests()
+        public StudentRepositoryTests()
         {
             // Arrange
             connection = new SqliteConnection("Filename=:memory:");
@@ -23,7 +23,7 @@ namespace BDSA2020.Models.Tests
             context.Database.EnsureCreated();
             // context.GenerateTestData();
 
-            repository = new Repository(context);
+            repository = new StudentRepository(context);
         }
 
         [Fact]

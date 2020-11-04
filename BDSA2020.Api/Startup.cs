@@ -22,7 +22,7 @@ namespace BDSA2020.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IContext, Context>();
-            services.AddScoped<IRepository, Repository>();
+            services.AddScoped<IStudentRepository, StudentRepository>();
 
             services.AddControllers();
 

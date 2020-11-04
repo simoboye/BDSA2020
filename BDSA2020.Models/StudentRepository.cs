@@ -7,15 +7,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BDSA2020.Models
 {
-    public interface IRepository
+    public interface IStudentRepository
     {
         Task<ICollection<Student>> GetStudentsAsync();
     }
-    public class Repository : IRepository
+    public class StudentRepository : IStudentRepository
     {
         private readonly IContext context;
 
-        public Repository(IContext context)
+        public StudentRepository(IContext context)
         {
             this.context = context;
         }

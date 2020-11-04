@@ -19,10 +19,10 @@ namespace BDSA2020.Api.Tests
                 new Student { Id = 2, Degree = Degree.Master }
             };
 
-            var repository = new Mock<IRepository>();
+            var repository = new Mock<IStudentRepository>();
             repository.Setup(r => r.GetStudentsAsync()).ReturnsAsync(students);
 
-            var controller = new RepositoryController(repository.Object);
+            var controller = new StudentRepositoryController(repository.Object);
 
             var actual = await controller.Get();
 
