@@ -8,7 +8,6 @@
 ``` PowerShell
 dotnet user-secrets init
 dotnet user-secrets set "ConnectionStrings:ConnectionString" " $connectionString"
-dotnet add package Microsoft.Extensions.Configuration.UserSecrets
 ```
 
 To view your user-secret run the command: ``dotnet user-secrets list``
