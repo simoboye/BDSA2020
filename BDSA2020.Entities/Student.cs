@@ -1,12 +1,10 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace BDSA2020.Entities
 {
-    public class Student
+    public class Student : MatchingAttributes
     {
-        public int Id { get; set; }
-
-        [Required]
-        public Degree Degree { get; set; }
+        public virtual ICollection<Saved> PlacementDescriptions { get; set; }
     }
 }
