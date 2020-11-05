@@ -29,4 +29,4 @@ To view your user-secret run the command: ``dotnet user-secrets list``
 3. Start up the GUI
     * In a different terminal go to the ``BDSA2020.View`` directory
     * Run the command ``dotnet run``
-    * The GUI can be seen at [http://localhost:400](https://localhost:4000).
+    * The GUI can be seen at [http://localhost:4000](https://localhost:4000).
