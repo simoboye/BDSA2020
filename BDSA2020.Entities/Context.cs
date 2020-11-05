@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Configuration;
 
 namespace BDSA2020.Entities
@@ -38,6 +33,53 @@ namespace BDSA2020.Entities
             }
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            SetUpManyToManyKeys(modelBuilder);
+
+            modelBuilder
+                .Entity<Company>()
+                .HasMany(e => e.PlacementDescriptions)
+                .WithOne(e => e.Company);
+
+            ParseEnums(modelBuilder);
+
+            modelBuilder
+                .Entity<Company>()
+                .HasData(GetCompanyData());
+
+            modelBuilder
+                .Entity<PlacementDescription>()
+                .HasData(GetDescriptionsData());
+
+            modelBuilder
+                .Entity<Student>()
+                .HasData(GetStudentsData());
+
+            modelBuilder
+                .Entity<Saved>()
+                .HasData(GetSavedData());
+
+            modelBuilder
+                .Entity<KeywordContainer>()
+                .HasData(GetKeywordsData());
+            
+            modelBuilder
+                .Entity<StudentKeywords>()
+                .HasData(GetStudentKeywordsData());
+            
+            modelBuilder
+                .Entity<PlacementDescriptionKeywords>()
+                .HasData(GetPlacementDescriptionKeywordsData());
+        }
+
+        private void SetUpManyToManyKeys(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Saved>().HasKey(s => new { s.StudentId, s.PlacementDescriptionId });
+            modelBuilder.Entity<StudentKeywords>().HasKey(sk => new { sk.StudentId, sk.KeywordId });
+            modelBuilder.Entity<PlacementDescriptionKeywords>().HasKey(pdk => new { pdk.PlacementDescriptionId, pdk.KeywordId });
+        }
+
         private void ParseEnums(ModelBuilder modelBuilder)
         {
             modelBuilder
@@ -51,57 +93,44 @@ namespace BDSA2020.Entities
                 .HasConversion(e => e.ToString(), e => Enum.Parse<Degree>(e));
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        private Company GetCompanyData()
         {
-            modelBuilder.Entity<Saved>().HasKey(s => new { s.StudentId, s.PlacementDescriptionId });
-            modelBuilder.Entity<StudentKeywords>().HasKey(sk => new { sk.StudentId, sk.KeywordId });
-            modelBuilder.Entity<PlacementDescriptionKeywords>().HasKey(pdk => new { pdk.PlacementDescriptionId, pdk.KeywordId });
+            return new Company { Id = 1, Name = "UML-central" };
+        }
 
-            ParseEnums(modelBuilder);
-
-            modelBuilder
-                .Entity<Company>()
-                .HasMany(e => e.PlacementDescriptions)
-                .WithOne(e => e.Company);
-
-            var company = new Company { Id = 1, Name = "UML-central" };
-
-            var descriptions = new[]
+        private ICollection<PlacementDescription> GetDescriptionsData()
+        {
+           return new[]
             {
-                new PlacementDescription { Id = 1, Degree = Degree.Other, MinSalary = 10, MinWorkingHours = 1, MaxWorkingHours = 100, Agreement = false, Location = "Copenhagen", LastApplyDate = new DateTime(2020, 12, 3), Email = "ApplyHere@apply.com", Thumbnail = new Uri("https://starwarsblog.starwars.com/wp-content/uploads/2020/04/best-friend-in-galaxy-chewbacca_TALL.jpg"), Title = "UML designer", Description = "You should be able to do UML diagrams correctly", CompanyId = company.Id },
-                new PlacementDescription { Id = 2, Degree = Degree.Bachelor, MinSalary = 100, MinWorkingHours = 10, MaxWorkingHours = 100, Agreement = true, Location = "Copenhagen", LastApplyDate = new DateTime(2020, 12, 10), Email = "ApplyHere@apply.com", Thumbnail = new Uri("https://starwarsblog.starwars.com/wp-content/uploads/2020/04/best-friend-in-galaxy-chewbacca_TALL.jpg"), Title = "C# developer", Description = "Join our team in of skilled developers", CompanyId = company.Id }
+                new PlacementDescription { Id = 1, Degree = Degree.Other, MinSalary = 10, MinWorkingHours = 1, MaxWorkingHours = 100, Agreement = false, Location = "Copenhagen", LastApplyDate = new DateTime(2020, 12, 3), Email = "ApplyHere@apply.com", Thumbnail = new Uri("https://starwarsblog.starwars.com/wp-content/uploads/2020/04/best-friend-in-galaxy-chewbacca_TALL.jpg"), Title = "UML designer", Description = "You should be able to do UML diagrams correctly", CompanyId = 1 },
+                new PlacementDescription { Id = 2, Degree = Degree.Bachelor, MinSalary = 100, MinWorkingHours = 10, MaxWorkingHours = 100, Agreement = true, Location = "Copenhagen", LastApplyDate = new DateTime(2020, 12, 10), Email = "ApplyHere@apply.com", Thumbnail = new Uri("https://starwarsblog.starwars.com/wp-content/uploads/2020/04/best-friend-in-galaxy-chewbacca_TALL.jpg"), Title = "C# developer", Description = "Join our team in of skilled developers", CompanyId = 1 }
+            }; 
+        }
+
+        private ICollection<Student> GetStudentsData()
+        {
+            return new []
+            {
+                new Student { Id = 1, Degree = Degree.Bachelor, MinSalary = 100, MinWorkingHours = 5, MaxWorkingHours = 20, Agreement = false, Location = "Nowhere" },
+                new Student { Id = 2, Degree = Degree.Master, MinSalary = 1000, MinWorkingHours = 532, MaxWorkingHours = 43243, Agreement = false, Location = "Anywhere" },
+                new Student { Id = 3, Degree = Degree.PhD, MinSalary = 10000, MinWorkingHours = 5000, MaxWorkingHours = 5001, Agreement = true, Location = "Glostrup" },
+                new Student { Id = 4, Degree = Degree.Other, MinSalary = 1, MinWorkingHours = 1, MaxWorkingHours = 5, Agreement = true, Location = "Italy" }
             };
+        }
 
-            modelBuilder
-                .Entity<Company>()
-                .HasData(
-                    company
-                );
+        private ICollection<Saved> GetSavedData()
+        {
+            return new []
+            {
+                new Saved { StudentId = 1, PlacementDescriptionId = 1 },
+                new Saved { StudentId = 1, PlacementDescriptionId = 2 },
+                new Saved { StudentId = 2, PlacementDescriptionId = 1 }
+            };
+        } 
 
-            modelBuilder
-                .Entity<PlacementDescription>()
-                .HasData(
-                    descriptions
-                );
-
-            modelBuilder
-                .Entity<Student>()
-                .HasData(
-                    new Student { Id = 1, Degree = Degree.Bachelor, MinSalary = 100, MinWorkingHours = 5, MaxWorkingHours = 20, Agreement = false, Location = "Nowhere" },
-                    new Student { Id = 2, Degree = Degree.Master, MinSalary = 1000, MinWorkingHours = 532, MaxWorkingHours = 43243, Agreement = false, Location = "Anywhere" },
-                    new Student { Id = 3, Degree = Degree.PhD, MinSalary = 10000, MinWorkingHours = 5000, MaxWorkingHours = 5001, Agreement = true, Location = "Glostrup" },
-                    new Student { Id = 4, Degree = Degree.Other, MinSalary = 1, MinWorkingHours = 1, MaxWorkingHours = 5, Agreement = true, Location = "Italy" }
-                );
-
-            modelBuilder
-                .Entity<Saved>()
-                .HasData(
-                    new Saved { StudentId = 1, PlacementDescriptionId = 1 },
-                    new Saved { StudentId = 1, PlacementDescriptionId = 2 },
-                    new Saved { StudentId = 2, PlacementDescriptionId = 1 }
-                );
-            
-            var keywords = new []
+        private ICollection<KeywordContainer> GetKeywordsData()
+        {
+            return new []
             {
                 new KeywordContainer { Id = 1, Name = "Testing" },
                 new KeywordContainer { Id = 2, Name = "C#" },
@@ -114,30 +143,28 @@ namespace BDSA2020.Entities
                 new KeywordContainer { Id = 9, Name = "Communication" },
                 new KeywordContainer { Id = 10, Name = "JavaScript" }
             };
+        }
 
-            modelBuilder
-                .Entity<KeywordContainer>()
-                .HasData(
-                    keywords
-                );
-            
-            modelBuilder
-                .Entity<StudentKeywords>()
-                .HasData(
-                    new StudentKeywords { StudentId = 1, KeywordId = 1 },
-                    new StudentKeywords { StudentId = 1, KeywordId = 2 },
-                    new StudentKeywords { StudentId = 2, KeywordId = 1 },
-                    new StudentKeywords { StudentId = 3, KeywordId = 6 },
-                    new StudentKeywords { StudentId = 4, KeywordId = 7 }
-                );
-            
-            modelBuilder
-                .Entity<PlacementDescriptionKeywords>()
-                .HasData(
-                    new PlacementDescriptionKeywords { PlacementDescriptionId = 1, KeywordId = 1 },
-                    new PlacementDescriptionKeywords { PlacementDescriptionId = 1, KeywordId = 10 },
-                    new PlacementDescriptionKeywords { PlacementDescriptionId = 2, KeywordId = 3 }
-                );
+        private ICollection<StudentKeywords> GetStudentKeywordsData()
+        {
+            return new []
+            {
+                new StudentKeywords { StudentId = 1, KeywordId = 1 },
+                new StudentKeywords { StudentId = 1, KeywordId = 2 },
+                new StudentKeywords { StudentId = 2, KeywordId = 1 },
+                new StudentKeywords { StudentId = 3, KeywordId = 6 },
+                new StudentKeywords { StudentId = 4, KeywordId = 7 }
+            };
+        }
+
+        private ICollection<PlacementDescriptionKeywords> GetPlacementDescriptionKeywordsData()
+        {
+            return new []
+            {
+                new PlacementDescriptionKeywords { PlacementDescriptionId = 1, KeywordId = 1 },
+                new PlacementDescriptionKeywords { PlacementDescriptionId = 1, KeywordId = 10 },
+                new PlacementDescriptionKeywords { PlacementDescriptionId = 2, KeywordId = 3 }
+            };
         }
     }
 }
