@@ -13,6 +13,7 @@ namespace BDSA2020.Api
     {
         public static void Main(string[] args)
         {
+            System.Net.ServicePointManager.ServerCertificateValidationCallback += (s, cert, chain, sslPolicyErrors) => true;
             CreateHostBuilder(args).Build().Run();
         }
 
