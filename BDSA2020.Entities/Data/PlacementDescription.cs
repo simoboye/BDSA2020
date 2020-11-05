@@ -30,6 +30,8 @@ namespace BDSA2020.Entities
         // for accessing perposses.
         public virtual Company Company { get; set; }
 
+        public virtual ICollection<PlacementDescriptionKeywords> Keywords { get; set; }
+
         public virtual ICollection<Saved> Students { get; set; }
     }
 }
