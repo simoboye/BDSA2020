@@ -31,7 +31,7 @@ namespace BDSA2020.View
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
             
-            services.AddSingleton(_ => new HttpClient { BaseAddress = new Uri("https://localhost:5001") });
+            services.AddSingleton(_ => new HttpClient { BaseAddress = new Uri("http://localhost:5000") });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,7 +48,7 @@ namespace BDSA2020.View
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
