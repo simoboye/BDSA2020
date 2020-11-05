@@ -11,6 +11,8 @@ namespace BDSA2020.Entities
         public DbSet<Company> Companies { get; set; }
         public DbSet<PlacementDescription> PlacementDescriptions { get; set; }
         public DbSet<Saved> Saved { get; set; }
+        public DbSet<StudentKeywords> StudentKeywords { get; set; }
+        public DbSet<PlacementDescriptionKeywords> PlacementDescriptionKeywords { get; set; }
 
         public Context()
         {
