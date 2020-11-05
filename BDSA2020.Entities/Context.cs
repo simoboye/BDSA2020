@@ -9,6 +9,9 @@ namespace BDSA2020.Entities
     public class Context : DbContext, IContext
     {
         public DbSet<Student> Students { get; set; }
+        public DbSet<Company> Companies { get; set; }
+        public DbSet<PlacementDescription> PlacementDescriptions { get; set; }
+        public DbSet<Saved> Saved { get; set; }
 
         public Context()
         {
@@ -31,35 +34,45 @@ namespace BDSA2020.Entities
             }
         }
 
+        private void ParseEnums(ModelBuilder modelBuilder)
+        {
+            modelBuilder
+                .Entity<Student>()
+                .Property(e => e.Degree)
+                .HasConversion(e => e.ToString(), e => Enum.Parse<Degree>(e));
+
+            modelBuilder
+                .Entity<Student>()
+                .Property(e => e.Keywords)
+                .HasConversion(e => e.ToString(), e => Enum.Parse<Keywords>(e));
+
+            modelBuilder
+                .Entity<PlacementDescription>()
+                .Property(e => e.Degree)
+                .HasConversion(e => e.ToString(), e => Enum.Parse<Degree>(e));
+
+            modelBuilder
+                .Entity<PlacementDescription>()
+                .Property(e => e.Keywords)
+                .HasConversion(e => e.ToString(), e => Enum.Parse<Keywords>(e));
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Saved>().HasKey(e => new { e.StudentId, e.PlacementDescriptionId });
 
-            modelBuilder
-                .Entity<Student>()
-                .Property(e => e.Degree)
-                .HasConversion(e => e.ToString(), e => Enum.Parse<Degree>(e));
+            ParseEnums(modelBuilder);
 
             modelBuilder
-                .Entity<Student>()
-                .Property(e => e.Keywords)
-                .HasConversion(e => e.ToString(), e => Enum.Parse<Keywords>(e));
+                .Entity<Company>()
+                .HasMany(e => e.PlacementDescriptions)
+                .WithOne(e => e.Company);
 
-            modelBuilder
-                .Entity<PlacementDescription>()
-                .Property(e => e.Degree)
-                .HasConversion(e => e.ToString(), e => Enum.Parse<Degree>(e));
-
-            modelBuilder
-                .Entity<PlacementDescription>()
-                .Property(e => e.Keywords)
-                .HasConversion(e => e.ToString(), e => Enum.Parse<Keywords>(e));
-
-            // modelBuilder
-            //     .Entity<PlacementDescription>()
-            //     .HasOne(e => e.Company)
-            //     .WithMany(e => e.PlacementDescriptions)
-            //     .HasForeignKey(e => e.CompanyId);
+            var company = new Company
+            {
+                Id = 1,
+                Name = "UML-central"
+            };
 
             var descriptions = new[]
             {
@@ -77,25 +90,38 @@ namespace BDSA2020.Entities
                     Email = "ApplyHere@apply.com",
                     Thumbnail = new Uri("https://starwarsblog.starwars.com/wp-content/uploads/2020/04/best-friend-in-galaxy-chewbacca_TALL.jpg"),
                     Title = "UML designer",
-                    Description = "You should be able to do UML diagrams correctly"
+                    Description = "You should be able to do UML diagrams correctly",
+                    CompanyId = company.Id
+                },
+                new PlacementDescription
+                {
+                    Id = 2,
+                    Degree = Degree.Bachelor,
+                    Keywords = Keywords.CSharp,
+                    MinSalary = 100,
+                    MinWorkingHours = 10,
+                    MaxWorkingHours = 100,
+                    Agreement = true,
+                    Location = "Copenhagen",
+                    LastApplyDate = new DateTime(2020, 12, 10),
+                    Email = "ApplyHere@apply.com",
+                    Thumbnail = new Uri("https://starwarsblog.starwars.com/wp-content/uploads/2020/04/best-friend-in-galaxy-chewbacca_TALL.jpg"),
+                    Title = "C# developer",
+                    Description = "Join our team in of skilled developers",
+                    CompanyId = company.Id
                 }
             };
 
-            // modelBuilder
-            //     .Entity<Company>()
-            //     .HasData(
-            //         new Company
-            //         {
-            //             Id = 1,
-            //             Name = "UML-central",
-            //             PlacementDescriptions = descriptions
-            //         }
-            //     );
+            modelBuilder
+                .Entity<Company>()
+                .HasData(
+                    company
+                );
 
             modelBuilder
                 .Entity<PlacementDescription>()
                 .HasData(
-                    descriptions[0]
+                    descriptions
                 );
 
             modelBuilder

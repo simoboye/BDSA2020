@@ -23,6 +23,13 @@ namespace BDSA2020.Entities
         [Required]
         public string Description { get; set; }
 
+        [Required]
+        public int CompanyId { get; set; }
+
+        // The company should not be set when creating a new PD, it is only
+        // for accessing perposses.
+        public virtual Company Company { get; set; }
+
         public virtual ICollection<Saved> Students { get; set; }
     }
 }
