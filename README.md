@@ -24,9 +24,9 @@ To view your user-secret run the command: ``dotnet user-secrets list``
 2. Start the API
     * Go to the ``BDSA2020.Api`` directory
     * Run the command ``dotnet run``
-    * The Api will then be avaliable at [https://localhost:5001](https://localhost:5001).
+    * The Api will then be avaliable at [http://localhost:5000](https://localhost:5000).
 
 3. Start up the GUI
     * In a different terminal go to the ``BDSA2020.View`` directory
     * Run the command ``dotnet run``
-    * The GUI can be seen at [https://localhost:4001](https://localhost:4001).
+    * The GUI can be seen at [http://localhost:4000](https://localhost:4000).
