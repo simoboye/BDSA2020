@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BDSA2020.Entities;
+using BDSA2020.Shared;
 using Microsoft.EntityFrameworkCore;
 
 namespace BDSA2020.Models
@@ -35,19 +36,22 @@ namespace BDSA2020.Models
 
         }
 
-        public async Task<int> CreateStudentAsync(Student student)
+        public async Task<int> CreateStudentAsync(CreateStudentDTO student)
         {
-            var entity = await context.Students.FindAsync(student.Id);
-
-            if (entity != null)
+            var entity = new Student
             {
-                throw new ArgumentException("The student already exists");
-            }
+                Degree = student.Degree,
+                MinSalary = student.MinSalary,
+                MinWorkingHours = student.MinWorkingHours,
+                MaxWorkingHours = student.MaxWorkingHours,
+                Agreement = student.Agreement,
+                Location = student.Location
+            };
 
-            await context.Students.AddAsync(student);
+            await context.Students.AddAsync(entity);
             await context.SaveChangesAsync();
 
-            return student.Id;
+            return entity.Id;
         }
 
         public async Task<bool> DeleteStudentAsync(int id)

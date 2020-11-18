@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using BDSA2020.Api.Controllers;
 using BDSA2020.Entities;
 using BDSA2020.Models;
+using BDSA2020.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
@@ -100,6 +101,139 @@ namespace BDSA2020.Api.Tests
             var actual = await controller.Get(1);
 
             var actionResult = Assert.IsType<ActionResult<Student>>(actual);
+            var code = Assert.IsType<StatusCodeResult>(actionResult.Result);
+            Assert.Equal(500, code.StatusCode);
+        }
+
+        [Fact]
+        public async Task Create_returns_200_and_id_of_created_student()
+        {
+            var nextMockedId = 10;
+            var student = new CreateStudentDTO();
+            repository.Setup(r => r.CreateStudentAsync(student)).ReturnsAsync(nextMockedId);
+            var controller = new StudentRepositoryController(repository.Object);
+
+            var actual = await controller.Create(student);
+
+            var actionResult = Assert.IsType<ActionResult<int>>(actual);
+            var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
+            var actualId = Assert.IsType<int>(okResult.Value);
+
+            Assert.Equal(200, okResult.StatusCode);
+            Assert.Equal(nextMockedId, actualId);
+        }
+
+        // [Fact]
+        // public async Task Create_returns_409_on_conflict()
+        // {
+        //     var student = new CreateStudentDTO { Id = 1 };
+        //     repository.Setup(r => r.CreateStudentAsync(student)).ThrowsAsync(new ArgumentException());
+        //     var controller = new StudentRepositoryController(repository.Object);
+
+        //     var actual = await controller.Create(student);
+
+        //     var actionResult = Assert.IsType<ActionResult<int>>(actual);
+        //     var code = Assert.IsType<StatusCodeResult>(actionResult.Result);
+        //     Assert.Equal(409, code.StatusCode);
+        // }
+
+        [Fact]
+        public async Task Create_returns_500_on_internal_error()
+        {
+            var student = new CreateStudentDTO();
+            repository.Setup(r => r.CreateStudentAsync(student)).ThrowsAsync(new Exception());
+            var controller = new StudentRepositoryController(repository.Object);
+
+            var actual = await controller.Create(student);
+
+            var actionResult = Assert.IsType<ActionResult<int>>(actual);
+            var code = Assert.IsType<StatusCodeResult>(actionResult.Result);
+            Assert.Equal(500, code.StatusCode);
+        }
+
+        [Fact]
+        public async Task Delete_returns_200_and_true()
+        {
+            repository.Setup(r => r.DeleteStudentAsync(1)).ReturnsAsync(true);
+            var controller = new StudentRepositoryController(repository.Object);
+
+            var actual = await controller.Delete(1);
+
+            var actionResult = Assert.IsType<ActionResult<bool>>(actual);
+            var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
+            var hasBeenDeleted = Assert.IsType<bool>(okResult.Value);
+
+            Assert.Equal(200, okResult.StatusCode);
+            Assert.True(hasBeenDeleted);
+        }
+
+        [Fact]
+        public async Task Delete_returns_404_on_not_found()
+        {
+            repository.Setup(r => r.DeleteStudentAsync(10)).ThrowsAsync(new ArgumentException());
+            var controller = new StudentRepositoryController(repository.Object);
+
+            var actual = await controller.Delete(10);
+
+            var actionResult = Assert.IsType<ActionResult<bool>>(actual);
+            var code = Assert.IsType<StatusCodeResult>(actionResult.Result);
+            Assert.Equal(404, code.StatusCode);
+        }
+
+        [Fact]
+        public async Task Delete_returns_500_on_internal_error()
+        {
+            repository.Setup(r => r.DeleteStudentAsync(1)).ThrowsAsync(new Exception());
+            var controller = new StudentRepositoryController(repository.Object);
+
+            var actual = await controller.Delete(1);
+
+            var actionResult = Assert.IsType<ActionResult<bool>>(actual);
+            var code = Assert.IsType<StatusCodeResult>(actionResult.Result);
+            Assert.Equal(500, code.StatusCode);
+        }
+
+        [Fact]
+        public async Task Update_returns_200_and_true()
+        {
+            var student = new Student { Degree = Degree.Bachelor };
+            repository.Setup(r => r.UpdateStudentAsync(student)).ReturnsAsync(true);
+            var controller = new StudentRepositoryController(repository.Object);
+
+            var actual = await controller.Update(student);
+
+            var actionResult = Assert.IsType<ActionResult<bool>>(actual);
+            var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
+            var hasBeenUpdated = Assert.IsType<bool>(okResult.Value);
+
+            Assert.Equal(200, okResult.StatusCode);
+            Assert.True(hasBeenUpdated);
+        }
+
+        [Fact]
+        public async Task Update_returns_404_on_not_found()
+        {
+            var student = new Student { Id = 1 };
+            repository.Setup(r => r.UpdateStudentAsync(student)).ThrowsAsync(new ArgumentException());
+            var controller = new StudentRepositoryController(repository.Object);
+
+            var actual = await controller.Update(student);
+
+            var actionResult = Assert.IsType<ActionResult<bool>>(actual);
+            var code = Assert.IsType<StatusCodeResult>(actionResult.Result);
+            Assert.Equal(404, code.StatusCode);
+        }
+
+        [Fact]
+        public async Task Update_returns_500_on_internal_error()
+        {
+            var student = new Student { Degree = Degree.Bachelor };
+            repository.Setup(r => r.UpdateStudentAsync(student)).ThrowsAsync(new Exception());
+            var controller = new StudentRepositoryController(repository.Object);
+
+            var actual = await controller.Update(student);
+
+            var actionResult = Assert.IsType<ActionResult<bool>>(actual);
             var code = Assert.IsType<StatusCodeResult>(actionResult.Result);
             Assert.Equal(500, code.StatusCode);
         }

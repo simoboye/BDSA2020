@@ -4,4 +4,8 @@
     <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BDSA2020.Entities\BDSA2020.Entities.csproj" />
+  </ItemGroup>
+
 </Project>
