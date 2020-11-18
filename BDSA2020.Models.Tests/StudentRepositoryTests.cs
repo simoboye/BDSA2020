@@ -108,5 +108,28 @@ namespace BDSA2020.Models.Tests
 
             Assert.True(actual);
         }
+
+        [Fact]
+        public async Task DeleteStudent_returns_ArgumentException_on_not_found()
+        {
+            await Assert.ThrowsAsync<ArgumentException>(() => repository.DeleteStudentAsync(100));
+        }
+
+        [Fact]
+        public async Task UpdateStudent_returns_Student_on_updated()
+        {
+            var studentToUpdate = await context.Students.FirstAsync();
+            studentToUpdate.Degree = Degree.Other;
+            var actual = await repository.UpdateStudentAsync(studentToUpdate);
+
+            Assert.True(actual);
+        }
+
+        [Fact]
+        public async Task UpdateStudent_returns_ArgumentException_on_not_found()
+        {
+            var studentToUpdate = new Student { Id = 100 };
+            await Assert.ThrowsAsync<ArgumentException>(() => repository.UpdateStudentAsync(studentToUpdate));
+        }
     }
 }
