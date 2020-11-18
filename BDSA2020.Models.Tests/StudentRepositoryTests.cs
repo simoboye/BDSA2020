@@ -76,22 +76,6 @@ namespace BDSA2020.Models.Tests
             Assert.Equal(lastId + 1, actual);
         }
 
-        // [Fact]
-        // public async Task CreateStudent_returns_ArguementException_on_conflict()
-        // {
-        //     var student = new Student 
-        //     { 
-        //         Id = 1,
-        //         Degree = Degree.Bachelor, 
-        //         MinSalary = 100, 
-        //         MinWorkingHours = 5, 
-        //         MaxWorkingHours = 20, 
-        //         Agreement = false, 
-        //         Location = "Nowhere" 
-        //     };
-        //     await Assert.ThrowsAsync<ArgumentException>(() => repository.CreateStudentAsync(student));
-        // }
-
         [Fact]
         public async Task DeleteStudent_returns_true() 
         {
@@ -110,8 +94,18 @@ namespace BDSA2020.Models.Tests
         public async Task UpdateStudent_returns_true_on_updated()
         {
             var studentToUpdate = await Context.Students.FirstAsync();
-            studentToUpdate.Degree = Degree.Other;
-            var actual = await repository.UpdateStudentAsync(studentToUpdate);
+            var dto = new UpdateStudentDTO
+            {
+                Id = studentToUpdate.Id,
+                Keywords = new [] { new StudentKeywords { KeywordId = 7, StudentId = studentToUpdate.Id } },
+                Degree = Degree.Other,
+                MinSalary = 1,
+                MinWorkingHours = 1,
+                MaxWorkingHours = 2,
+                Agreement = true,
+                Location = "København"
+            };
+            var actual = await repository.UpdateStudentAsync(dto);
 
             Assert.True(actual);
         }
@@ -119,7 +113,7 @@ namespace BDSA2020.Models.Tests
         [Fact]
         public async Task UpdateStudent_returns_ArgumentException_on_not_found()
         {
-            var studentToUpdate = new Student { Id = 100 };
+            var studentToUpdate = new UpdateStudentDTO { Id = 100 };
             await Assert.ThrowsAsync<ArgumentException>(() => repository.UpdateStudentAsync(studentToUpdate));
         }
     }

@@ -123,20 +123,6 @@ namespace BDSA2020.Api.Tests
             Assert.Equal(nextMockedId, actualId);
         }
 
-        // [Fact]
-        // public async Task Create_returns_409_on_conflict()
-        // {
-        //     var student = new CreateStudentDTO { Id = 1 };
-        //     repository.Setup(r => r.CreateStudentAsync(student)).ThrowsAsync(new ArgumentException());
-        //     var controller = new StudentRepositoryController(repository.Object);
-
-        //     var actual = await controller.Create(student);
-
-        //     var actionResult = Assert.IsType<ActionResult<int>>(actual);
-        //     var code = Assert.IsType<StatusCodeResult>(actionResult.Result);
-        //     Assert.Equal(409, code.StatusCode);
-        // }
-
         [Fact]
         public async Task Create_returns_500_on_internal_error()
         {
@@ -196,7 +182,7 @@ namespace BDSA2020.Api.Tests
         [Fact]
         public async Task Update_returns_200_and_true()
         {
-            var student = new Student { Degree = Degree.Bachelor };
+            var student = new UpdateStudentDTO { Degree = Degree.Bachelor };
             repository.Setup(r => r.UpdateStudentAsync(student)).ReturnsAsync(true);
             var controller = new StudentRepositoryController(repository.Object);
 
@@ -213,7 +199,7 @@ namespace BDSA2020.Api.Tests
         [Fact]
         public async Task Update_returns_404_on_not_found()
         {
-            var student = new Student { Id = 1 };
+            var student = new UpdateStudentDTO { Id = 1 };
             repository.Setup(r => r.UpdateStudentAsync(student)).ThrowsAsync(new ArgumentException());
             var controller = new StudentRepositoryController(repository.Object);
 
@@ -227,7 +213,7 @@ namespace BDSA2020.Api.Tests
         [Fact]
         public async Task Update_returns_500_on_internal_error()
         {
-            var student = new Student { Degree = Degree.Bachelor };
+            var student = new UpdateStudentDTO { Degree = Degree.Bachelor };
             repository.Setup(r => r.UpdateStudentAsync(student)).ThrowsAsync(new Exception());
             var controller = new StudentRepositoryController(repository.Object);
 

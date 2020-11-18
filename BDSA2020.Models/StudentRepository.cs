@@ -41,6 +41,7 @@ namespace BDSA2020.Models
             var entity = new Student
             {
                 Degree = student.Degree,
+                Keywords = student.Keywords,
                 MinSalary = student.MinSalary,
                 MinWorkingHours = student.MinWorkingHours,
                 MaxWorkingHours = student.MaxWorkingHours,
@@ -65,7 +66,7 @@ namespace BDSA2020.Models
             return true;
         }
 
-        public async Task<bool> UpdateStudentAsync(Student student)
+        public async Task<bool> UpdateStudentAsync(UpdateStudentDTO student)
         {
             var entity = await GetStudentAsync(student.Id);
 
@@ -76,7 +77,6 @@ namespace BDSA2020.Models
             entity.MaxWorkingHours = student.MaxWorkingHours;
             entity.MinWorkingHours = student.MinWorkingHours;
             entity.MinSalary = student.MinSalary;
-            entity.PlacementDescriptions = student.PlacementDescriptions;
 
             await context.SaveChangesAsync();
 

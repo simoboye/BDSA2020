@@ -114,7 +114,7 @@ namespace BDSA2020.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<bool>> Update([FromBody] Student student)
+        public async Task<ActionResult<bool>> Update([FromBody] UpdateStudentDTO student)
         {
             try 
             {
