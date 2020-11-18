@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using BDSA2020.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +20,6 @@ namespace BDSA2020.Models
             var students = context.Students;
 
             return await students.ToListAsync();
-
         }
 
         public async Task<Student> GetStudentAsync(int id)
@@ -39,9 +37,9 @@ namespace BDSA2020.Models
 
         public async Task<int> CreateStudentAsync(Student student)
         {
-            var checkIfConflict = await context.Students.FindAsync(student.Id);
+            var entity = await context.Students.FindAsync(student.Id);
 
-            if (checkIfConflict != null)
+            if (entity != null)
             {
                 throw new ArgumentException("The student already exists");
             }
