@@ -30,7 +30,7 @@ namespace BDSA2020.Models
 
             if (student == null)
             {
-                throw new ArgumentException("The student doesn't exist");
+                throw new ArgumentException($"Could not find student with id {id}");
             }
 
             return student;
@@ -54,12 +54,7 @@ namespace BDSA2020.Models
 
         public async Task<bool> DeleteStudentAsync(int id)
         {
-            var student = await context.Students.FindAsync(id);
-
-            if (student == null) 
-            {
-                throw new ArgumentException($"Could not find student with id {id}");
-            }
+            var student = await GetStudentAsync(id);
 
             context.Students.Remove(student);
 
@@ -70,12 +65,7 @@ namespace BDSA2020.Models
 
         public async Task<bool> UpdateStudentAsync(Student student)
         {
-            var entity = await context.Students.FindAsync(student.Id);
-
-            if (entity == null)
-            {
-                throw new ArgumentException("Student does not exist");
-            }
+            var entity = await GetStudentAsync(student.Id);
 
             entity.Agreement = student.Agreement;
             entity.Degree = student.Degree;
