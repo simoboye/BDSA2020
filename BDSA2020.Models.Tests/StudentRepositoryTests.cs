@@ -2,29 +2,18 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using BDSA2020.Entities;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
 namespace BDSA2020.Models.Tests
 {
-    public class StudentRepositoryTests
+    public class StudentRepositoryTests : SqlLiteContext
     {
-        private readonly SqliteConnection connection;
-        private readonly Context context;
-        private readonly StudentRepository repository;
+        private readonly IStudentRepository repository;
 
-        public StudentRepositoryTests()
+        public StudentRepositoryTests() : base()
         {
-            // Arrange
-            connection = new SqliteConnection("Filename=:memory:");
-            connection.Open();
-            var builder = new DbContextOptionsBuilder<Context>().UseSqlite(connection);
-            context = new Context(builder.Options);
-            context.Database.EnsureCreated();
-            // context.GenerateTestData();
-
-            repository = new StudentRepository(context);
+            repository = new StudentRepository(Context);
         }
 
         [Fact]
@@ -76,13 +65,14 @@ namespace BDSA2020.Models.Tests
                 Location = "Nowhere" 
             };
 
-            var studentsList = await context.Students.ToListAsync();
-            var expected = studentsList.OrderByDescending(s => s.Id)
-                                        .FirstOrDefault();
+            var studentsList = await Context.Students.ToListAsync();
+            var lastId = studentsList.OrderByDescending(s => s.Id)
+                                        .FirstOrDefault()
+                                        .Id;
 
             var actual = await repository.CreateStudentAsync(student);
 
-            Assert.Equal(expected.Id + 1, actual);
+            Assert.Equal(lastId + 1, actual);
         }
 
         [Fact]
@@ -116,9 +106,9 @@ namespace BDSA2020.Models.Tests
         }
 
         [Fact]
-        public async Task UpdateStudent_returns_Student_on_updated()
+        public async Task UpdateStudent_returns_true_on_updated()
         {
-            var studentToUpdate = await context.Students.FirstAsync();
+            var studentToUpdate = await Context.Students.FirstAsync();
             studentToUpdate.Degree = Degree.Other;
             var actual = await repository.UpdateStudentAsync(studentToUpdate);
 
