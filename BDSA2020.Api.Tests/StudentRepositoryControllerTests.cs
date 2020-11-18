@@ -30,8 +30,8 @@ namespace BDSA2020.Api.Tests
         {
             var students = new []
             {
-                new Student { Id = 1, Degree = Degree.Bachelor },
-                new Student { Id = 2, Degree = Degree.Master }
+                new Student { Id = 1 },
+                new Student { Id = 2 }
             };
 
             repository.Setup(r => r.GetStudentsAsync()).ReturnsAsync(students);
@@ -48,7 +48,7 @@ namespace BDSA2020.Api.Tests
         }
 
         [Fact]
-        public async Task Get_returns_404_on_internal_error()
+        public async Task Get_returns_500_on_internal_error()
         {
             repository.Setup(r => r.GetStudentsAsync()).ThrowsAsync(new Exception());
             var controller = new StudentRepositoryController(repository.Object);
@@ -56,6 +56,50 @@ namespace BDSA2020.Api.Tests
             var actual = await controller.Get();
 
             var actionResult = Assert.IsType<ActionResult<IEnumerable<Student>>>(actual);
+            var code = Assert.IsType<StatusCodeResult>(actionResult.Result);
+            Assert.Equal(500, code.StatusCode);
+        }
+
+        [Fact]
+        public async Task Get_given_id_returns_200_and_student()
+        {
+            var student = new Student { Id = 1, Degree = Degree.Bachelor, MinSalary = 100, MinWorkingHours = 5, MaxWorkingHours = 20, Agreement = false, Location = "Nowhere" };
+
+            repository.Setup(r => r.GetStudentAsync(student.Id)).ReturnsAsync(student);
+            var controller = new StudentRepositoryController(repository.Object);
+
+            var actual = await controller.Get(1);
+
+            var actionResult = Assert.IsType<ActionResult<Student>>(actual);
+            var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
+            var actualStudent = Assert.IsType<Student>(okResult.Value);
+
+            Assert.Equal(200, okResult.StatusCode);
+            Assert.Equal(student, actualStudent);
+        }
+
+        [Fact]
+        public async Task Get_given_id_that_does_not_exist_returns_404()
+        {
+            repository.Setup(r => r.GetStudentAsync(100)).ThrowsAsync(new ArgumentException());
+            var controller = new StudentRepositoryController(repository.Object);
+
+            var actual = await controller.Get(100);
+
+            var actionResult = Assert.IsType<ActionResult<Student>>(actual);
+            var code = Assert.IsType<StatusCodeResult>(actionResult.Result);
+            Assert.Equal(404, code.StatusCode);
+        }
+
+        [Fact]
+        public async Task Get_given_id_returns_500_on_internal_error()
+        {
+            repository.Setup(r => r.GetStudentAsync(1)).ThrowsAsync(new Exception());
+            var controller = new StudentRepositoryController(repository.Object);
+
+            var actual = await controller.Get(1);
+
+            var actionResult = Assert.IsType<ActionResult<Student>>(actual);
             var code = Assert.IsType<StatusCodeResult>(actionResult.Result);
             Assert.Equal(500, code.StatusCode);
         }
