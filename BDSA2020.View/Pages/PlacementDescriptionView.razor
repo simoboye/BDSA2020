@@ -3,29 +3,43 @@
 @using Entities
 @inject HttpClient httpClient
 
-<div class = "placement">
+<div class="placement">
     <div class = "frame">
         <div style="height: 30px;"></div>
-    <h5>LEO Farma</h5>
-    <img src="https://i.huffpost.com/gen/1831592/images/o-HAPPY-WORK-facebook.jpg" alt="">
+    <h5>LEO Pharma</h5>
+    <img src="https://www.bhrservice.dk/wp-content/uploads/2016/12/3-1.jpg" alt="">
     <p class = "description">Lorem, ipsum dolor sit amet consectetur adipisicing elit.
         Deleniti architecto itaque accusantium nulla tempora animi
         recusandae mollitia fugiat omnis error, magni eius accusamus
         corporis voluptatibus quisquam incidunt sunt modi tempore!</p>
         <div class="divider"></div>
-        <ul class = "description">
+        <ul class="description">
             <li>hours</li>
             <li>location</li>
             <li>salary</li>
         </ul>
         <div class="divider"></div>
         <div style="height: 20px;"></div>
-        <div class = "btnPlacement">
-            More
+        <div class="btnPlacement more">
+            <p class="center">More</p>
         </div>
-        
+        <p class="boldText">Last apply date: 12th Nov 2020</p>
     </div>
 </div>
+
+<div class="frame">
+    <div class="btnPlacement apply">
+        <p class="center">Apply</p>
+    </div>
+    <div class="row center">
+        <div class="column" style="background-color:white;"></div>
+        <div class="like" style="background-color: black; color: white;"></div>
+        <div class="column" style="background-color:white;"></div>
+    </div>
+</div>
+
+
+
 
 @if (students == null)
 {

@@ -2,6 +2,7 @@
 
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: rgb(58, 175, 169);
 }
 
 a, .btn-link {
@@ -183,15 +184,15 @@ app {
 }
 
 /*new shit*/
-.center {
+.center{
     margin: auto;
-    width: 50%;
-    padding: 10px;
+    width: 100%;
+    border: 3px solid #73ad2100;
   }
 
 .placement {
     margin-top: 30px;
-    background-color: rgb(35, 125, 137) ;
+    background-color:rgb(55, 142, 141) ;
     width: 90%;
     height: 425px;
     /*align-items: center;*/
@@ -211,7 +212,15 @@ app {
 
 .placement h5 {
     color: white;
-    top: 30px;
+    font-weight: bold;
+}
+
+.boldText{
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    font-size: small;
+    padding: 5px;
 }
 
 .placement img {
@@ -220,10 +229,17 @@ app {
     height: auto;
 }
 
+.placement p{
+    margin: 0;
+}
+
 .description {
     color: white;
     text-align: left;
     font-size: small;
+    height: max-content;
+    margin:0;
+    
     /*font-weight: lighter;*/
  }
 
@@ -231,15 +247,46 @@ app {
      height: 1px;
      width: 100%;
      background-color: white;
+     margin-top: 5px;
+     margin-bottom: 5px;
  }
 
- .btnPlacement {
+ .btnPlacement{
      width: 100%;
      height: 30px;
      border-radius: 20px;
-     background-color: white;
-     color: black;
      text-align: center;
-     
-
  }
+
+ .more{
+    background-color: white;
+    color: black;
+ }
+
+ .apply{
+    background-color: black;
+    color: white;
+ }
+
+ .like{
+     border-radius: 50%;
+     width: 40px;
+     height: 40px;
+     box-sizing: border-box;
+ }
+
+/* Create three equal columns that floats next to each other */
+.column {
+    float: left;
+    padding: 10px;
+    width: 30%;
+    border-radius: 10px;
+    height: 40px;
+    margin:0 auto;
+  }
+  
+  /* Clear floats after the columns */
+  .row{
+    width: 100%;
+    margin-top: 10px;
+  }
