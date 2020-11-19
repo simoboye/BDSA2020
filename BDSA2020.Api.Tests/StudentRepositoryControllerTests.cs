@@ -38,7 +38,7 @@ namespace BDSA2020.Api.Tests
             repository.Setup(r => r.GetStudentsAsync()).ReturnsAsync(students);
             var controller = new StudentRepositoryController(repository.Object);
 
-            var actual = await controller.Get();
+            var actual = await controller.Get(true);
 
             var actionResult = Assert.IsType<ActionResult<IEnumerable<Student>>>(actual);
             var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
@@ -54,7 +54,7 @@ namespace BDSA2020.Api.Tests
             repository.Setup(r => r.GetStudentsAsync()).ThrowsAsync(new Exception());
             var controller = new StudentRepositoryController(repository.Object);
 
-            var actual = await controller.Get();
+            var actual = await controller.Get(true);
 
             var actionResult = Assert.IsType<ActionResult<IEnumerable<Student>>>(actual);
             var code = Assert.IsType<StatusCodeResult>(actionResult.Result);
@@ -69,7 +69,7 @@ namespace BDSA2020.Api.Tests
             repository.Setup(r => r.GetStudentAsync(student.Id)).ReturnsAsync(student);
             var controller = new StudentRepositoryController(repository.Object);
 
-            var actual = await controller.Get(1);
+            var actual = await controller.Get(1, true);
 
             var actionResult = Assert.IsType<ActionResult<Student>>(actual);
             var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
@@ -85,7 +85,7 @@ namespace BDSA2020.Api.Tests
             repository.Setup(r => r.GetStudentAsync(100)).ThrowsAsync(new ArgumentException());
             var controller = new StudentRepositoryController(repository.Object);
 
-            var actual = await controller.Get(100);
+            var actual = await controller.Get(100, true);
 
             var actionResult = Assert.IsType<ActionResult<Student>>(actual);
             var code = Assert.IsType<StatusCodeResult>(actionResult.Result);
@@ -98,7 +98,7 @@ namespace BDSA2020.Api.Tests
             repository.Setup(r => r.GetStudentAsync(1)).ThrowsAsync(new Exception());
             var controller = new StudentRepositoryController(repository.Object);
 
-            var actual = await controller.Get(1);
+            var actual = await controller.Get(1, true);
 
             var actionResult = Assert.IsType<ActionResult<Student>>(actual);
             var code = Assert.IsType<StatusCodeResult>(actionResult.Result);
@@ -113,7 +113,7 @@ namespace BDSA2020.Api.Tests
             repository.Setup(r => r.CreateStudentAsync(student)).ReturnsAsync(nextMockedId);
             var controller = new StudentRepositoryController(repository.Object);
 
-            var actual = await controller.Create(student);
+            var actual = await controller.Create(student, true);
 
             var actionResult = Assert.IsType<ActionResult<int>>(actual);
             var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
@@ -130,7 +130,7 @@ namespace BDSA2020.Api.Tests
             repository.Setup(r => r.CreateStudentAsync(student)).ThrowsAsync(new Exception());
             var controller = new StudentRepositoryController(repository.Object);
 
-            var actual = await controller.Create(student);
+            var actual = await controller.Create(student, true);
 
             var actionResult = Assert.IsType<ActionResult<int>>(actual);
             var code = Assert.IsType<StatusCodeResult>(actionResult.Result);
@@ -143,7 +143,7 @@ namespace BDSA2020.Api.Tests
             repository.Setup(r => r.DeleteStudentAsync(1)).ReturnsAsync(true);
             var controller = new StudentRepositoryController(repository.Object);
 
-            var actual = await controller.Delete(1);
+            var actual = await controller.Delete(1, true);
 
             var actionResult = Assert.IsType<ActionResult<bool>>(actual);
             var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
@@ -159,7 +159,7 @@ namespace BDSA2020.Api.Tests
             repository.Setup(r => r.DeleteStudentAsync(10)).ThrowsAsync(new ArgumentException());
             var controller = new StudentRepositoryController(repository.Object);
 
-            var actual = await controller.Delete(10);
+            var actual = await controller.Delete(10, true);
 
             var actionResult = Assert.IsType<ActionResult<bool>>(actual);
             var code = Assert.IsType<StatusCodeResult>(actionResult.Result);
@@ -172,7 +172,7 @@ namespace BDSA2020.Api.Tests
             repository.Setup(r => r.DeleteStudentAsync(1)).ThrowsAsync(new Exception());
             var controller = new StudentRepositoryController(repository.Object);
 
-            var actual = await controller.Delete(1);
+            var actual = await controller.Delete(1, true);
 
             var actionResult = Assert.IsType<ActionResult<bool>>(actual);
             var code = Assert.IsType<StatusCodeResult>(actionResult.Result);
@@ -186,7 +186,7 @@ namespace BDSA2020.Api.Tests
             repository.Setup(r => r.UpdateStudentAsync(student)).ReturnsAsync(true);
             var controller = new StudentRepositoryController(repository.Object);
 
-            var actual = await controller.Update(student);
+            var actual = await controller.Update(student, true);
 
             var actionResult = Assert.IsType<ActionResult<bool>>(actual);
             var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
@@ -203,7 +203,7 @@ namespace BDSA2020.Api.Tests
             repository.Setup(r => r.UpdateStudentAsync(student)).ThrowsAsync(new ArgumentException());
             var controller = new StudentRepositoryController(repository.Object);
 
-            var actual = await controller.Update(student);
+            var actual = await controller.Update(student, true);
 
             var actionResult = Assert.IsType<ActionResult<bool>>(actual);
             var code = Assert.IsType<StatusCodeResult>(actionResult.Result);
@@ -217,7 +217,7 @@ namespace BDSA2020.Api.Tests
             repository.Setup(r => r.UpdateStudentAsync(student)).ThrowsAsync(new Exception());
             var controller = new StudentRepositoryController(repository.Object);
 
-            var actual = await controller.Update(student);
+            var actual = await controller.Update(student, true);
 
             var actionResult = Assert.IsType<ActionResult<bool>>(actual);
             var code = Assert.IsType<StatusCodeResult>(actionResult.Result);

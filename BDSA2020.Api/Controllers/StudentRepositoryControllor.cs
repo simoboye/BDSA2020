@@ -24,7 +24,7 @@ namespace BDSA2020.Api.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<Student>>> Get()
+        public async Task<ActionResult<IEnumerable<Student>>> Get(bool isTest = false)
         {
             try 
             {
@@ -33,7 +33,7 @@ namespace BDSA2020.Api.Controllers
             } 
             catch (Exception e)
             {
-                Util.LogError(e);
+                Util.LogError(e, isTest);
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
@@ -42,7 +42,7 @@ namespace BDSA2020.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<Student>> Get(int id)
+        public async Task<ActionResult<Student>> Get(int id, bool isTest = false)
         {
             try 
             {
@@ -52,12 +52,12 @@ namespace BDSA2020.Api.Controllers
             }
             catch (ArgumentException e)
             {
-                Util.LogError(e);
+                Util.LogError(e, isTest);
                 return StatusCode(StatusCodes.Status404NotFound);
             }
             catch (Exception e) 
             {
-                Util.LogError(e);
+                Util.LogError(e, isTest);
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
@@ -66,7 +66,7 @@ namespace BDSA2020.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<int>> Create([FromBody] CreateStudentDTO student)
+        public async Task<ActionResult<int>> Create([FromBody] CreateStudentDTO student, bool isTest = false)
         {
             try 
             {
@@ -76,12 +76,12 @@ namespace BDSA2020.Api.Controllers
             }
             catch (ArgumentException e)
             {
-                Util.LogError(e);
+                Util.LogError(e, isTest);
                 return StatusCode(StatusCodes.Status409Conflict);
             }
             catch (Exception e) 
             {
-                Util.LogError(e);
+                Util.LogError(e, isTest);
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
@@ -90,7 +90,7 @@ namespace BDSA2020.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<bool>> Delete(int id)
+        public async Task<ActionResult<bool>> Delete(int id, bool isTest = false)
         {
             try 
             {
@@ -100,12 +100,12 @@ namespace BDSA2020.Api.Controllers
             }
             catch (ArgumentException e)
             {
-                Util.LogError(e);
+                Util.LogError(e, isTest);
                 return StatusCode(StatusCodes.Status404NotFound);
             }
             catch (Exception e) 
             {
-                Util.LogError(e);
+                Util.LogError(e, isTest);
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
@@ -114,7 +114,7 @@ namespace BDSA2020.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<bool>> Update([FromBody] UpdateStudentDTO student)
+        public async Task<ActionResult<bool>> Update([FromBody] UpdateStudentDTO student, bool isTest = false)
         {
             try 
             {
@@ -124,12 +124,12 @@ namespace BDSA2020.Api.Controllers
             }
             catch (ArgumentException e)
             {
-                Util.LogError(e);
+                Util.LogError(e, isTest);
                 return StatusCode(StatusCodes.Status404NotFound);
             }
             catch (Exception e) 
             {
-                Util.LogError(e);
+                Util.LogError(e, isTest);
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }

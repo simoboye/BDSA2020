@@ -4,11 +4,14 @@ namespace BDSA2020.Shared
 {
     public class Util
     {
-        public static void LogError(Exception e)
+        public static void LogError(Exception e, bool isTest = false)
         {   
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(e); // Primitive logging
-            Console.ResetColor();
+            if (!isTest)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(e); // Primitive logging
+                Console.ResetColor();
+            }
         }
     }
 }
