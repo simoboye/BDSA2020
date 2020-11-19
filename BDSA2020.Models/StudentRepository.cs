@@ -33,7 +33,6 @@ namespace BDSA2020.Models
             }
 
             return student;
-
         }
 
         public async Task<int> CreateStudentAsync(CreateStudentDTO student)
