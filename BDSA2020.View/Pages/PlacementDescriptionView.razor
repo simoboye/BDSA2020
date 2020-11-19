@@ -1,19 +1,9 @@
 @page "/placementdescription"
 
 @using Entities
+
 @inject HttpClient httpClient
 
-
-  
-<div class="carousel">
-  <ul class="carousel__list">
-    <li class="carousel__item" data-pos="-2">1</li>
-    <li class="carousel__item" data-pos="-1">2</li>
-    <li class="carousel__item" data-pos="0">3</li>
-    <li class="carousel__item" data-pos="1">4</li>
-    <li class="carousel__item" data-pos="2">5</li>
-  </ul>
-</div>
 
 <div class="placement my-card">
     <div class = "frame">
@@ -32,36 +22,28 @@
         </ul>
         <div class="divider"></div>
         <div style="height: 20px;"></div>
-        <div class="btnPlacement more">
-            <p class="center">More</p>
+        <div class = "btnPlacement">
+            <a href="https://www.google.com">More</a>
         </div>
-        <p class="boldText">Last apply date: 12th Nov 2020</p>
+    </div>
+    
+    <div class = "btnApplyPlacement">
+        <a href="mailto:Goolge.com">Apply Now</a>
     </div>
 </div>
 
-<div class="frame">
-    <div class="btnPlacement apply">
-        <p class="center">Apply</p>
-    </div>
-    <div class="row center">
-        <div class="column" style="background-color:white;"></div>
-        <div class="like" style="background-color: black; color: white;"></div>
-        <div class="column" style="background-color:white;"></div>
-    </div>
-</div>
-
-
-
+<p>PlacementDescription: @currentCount</p>
+<button class="btn btn-primary" @onclick="DecrementCount">Back</button>
+<button class="btn btn-primary" @onclick="IncrementCount">Next</button>
 
 @if (students == null)
 {
     <p><em>Loading...</em></p>
 }
 else
-{
-
-    
-   /* 
+{    
+    <p class= "applyDate"> Placement Description Duration: @(students[currentCount].MaxWorkingHours)/01-2021</p>
+    <p class= "applyDate"> Days Remaining: @(DateTime.Now.ToShortDateString())</p>
     <table class="table">
         <thead>
             <tr>
@@ -81,14 +63,23 @@ else
             }
         </tbody>
     </table>
-    */
 }
 
 @code {
     private Student[] students;
+    private int currentCount = 0;
 
     protected override async Task OnInitializedAsync()
     {
         students = await httpClient.GetFromJsonAsync<Student[]>("StudentRepository");
+    }
+
+     private void IncrementCount()
+    {
+        currentCount++;
+    }
+    private void DecrementCount()
+    {
+        currentCount--;
     }
 }
