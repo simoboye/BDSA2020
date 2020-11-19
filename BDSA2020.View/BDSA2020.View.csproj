@@ -4,12 +4,14 @@
     <ProjectReference Include="..\BDSA2020.Entities\BDSA2020.Entities.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="System.Net.Http.Json" Version="3.2.1" />
-  </ItemGroup>
-
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>aspnet-BDSA2020.View-EF8EEE67-D5D5-460B-AF90-50BF5F9E1718</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Net.Http.Json" Version="3.2.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.AzureADB2C.UI" Version="3.1.9" />
+  </ItemGroup>
 
 </Project>
