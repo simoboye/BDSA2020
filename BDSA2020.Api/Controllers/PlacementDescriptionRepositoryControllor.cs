@@ -12,11 +12,11 @@ namespace BDSA2020.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class StudentRepositoryController : ControllerBase
+    public class PlacementDescriptionRepositoryController : ControllerBase
     {
-        private readonly IStudentRepository repository;
+        private readonly IPlacementDescriptionRepository repository;
 
-        public StudentRepositoryController(IStudentRepository repository)
+        public PlacementDescriptionRepositoryController(IPlacementDescriptionRepository repository)
         {
             this.repository = repository;
         }
@@ -24,12 +24,12 @@ namespace BDSA2020.Api.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<Student>>> Get(bool isTest = false)
+        public async Task<ActionResult<IEnumerable<PlacementDescription>>> Get(bool isTest = false)
         {
             try 
             {
-                var students = await repository.GetStudentsAsync();
-                return Ok(students.ToList());
+                var descriptions = await repository.GetPlacementDescriptionsAsync();
+                return Ok(descriptions.ToList());
             } 
             catch (Exception e)
             {
@@ -42,13 +42,13 @@ namespace BDSA2020.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<Student>> Get(int id, bool isTest = false)
+        public async Task<ActionResult<PlacementDescription>> Get(int id, bool isTest = false)
         {
             try 
             {
-                var student = await repository.GetStudentAsync(id);
+                var description = await repository.GetPlacementDescriptionAsync(id);
 
-                return Ok(student);
+                return Ok(description);
             }
             catch (ArgumentException e)
             {
@@ -66,11 +66,11 @@ namespace BDSA2020.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<int>> Create([FromBody] CreateStudentDTO student, bool isTest = false)
+        public async Task<ActionResult<int>> Create([FromBody] PlacementDescription description, bool isTest = false)
         {
             try 
             {
-                var id = await repository.CreateStudentAsync(student);
+                var id = await repository.CreatePlacementDescriptionAsync(description);
 
                 return Ok(id);
             }
@@ -94,7 +94,7 @@ namespace BDSA2020.Api.Controllers
         {
             try 
             {
-                var isDeleted = await repository.DeleteStudentAsync(id);
+                var isDeleted = await repository.DeletePlacementDescriptionAsync(id);
 
                 return Ok(isDeleted);
             }
@@ -114,11 +114,11 @@ namespace BDSA2020.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<bool>> Update([FromBody] UpdateStudentDTO student, bool isTest = false)
+        public async Task<ActionResult<bool>> Update([FromBody] PlacementDescription description, bool isTest = false)
         {
             try 
             {
-                var isUpdated = await repository.UpdateStudentAsync(student);
+                var isUpdated = await repository.UpdatePlacementDescriptionAsync(description);
 
                 return Ok(isUpdated);
             }
