@@ -32,7 +32,7 @@ namespace BDSA2020.Models.Tests
         {
             var actual = await repository.GetStudentAsync(1);
 
-            var expected = new Student 
+            var expected = new StudentDetailsDTO
             { 
                 Id = 1, 
                 Degree = Degree.Bachelor, 
@@ -40,11 +40,13 @@ namespace BDSA2020.Models.Tests
                 MinWorkingHours = 5, 
                 MaxWorkingHours = 20, 
                 Agreement = false, 
-                Location = "Nowhere" 
+                Location = "Nowhere",
+                PlacementDescriptions = new [] { new PlacementDescription { Id = 1 } }
             };
 
             Assert.Equal(expected.Id, actual.Id);
             Assert.Equal(expected.Degree, actual.Degree);
+            Assert.Equal(expected.PlacementDescriptions.First().Id, actual.PlacementDescriptions.First().Id);
         }
 
         [Fact]

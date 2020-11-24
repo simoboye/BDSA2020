@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BDSA2020.Entities;
@@ -16,20 +17,47 @@ namespace BDSA2020.Models
             this.context = context;
         }
 
-        public async Task<ICollection<Student>> GetStudentsAsync()
+        public async Task<ICollection<StudentDetailsDTO>> GetStudentsAsync()
         {
-            var students = context.Students;
+            var students = from s in context.Students
+                           select new StudentDetailsDTO
+                           {
+                               Id = s.Id,
+                               Degree = s.Degree,
+                               Keywords = s.Keywords,
+                               MinSalary = s.MinSalary,
+                               MinWorkingHours = s.MinWorkingHours,
+                               MaxWorkingHours = s.MaxWorkingHours,
+                               Agreement = s.Agreement,
+                               Location = s.Location,
+                               PlacementDescriptions = s.PlacementDescriptions.Select(p => p.PlacementDescription).ToList()
+                           };
 
             return await students.ToListAsync();
         }
 
-        public async Task<Student> GetStudentAsync(int id)
+        public async Task<StudentDetailsDTO> GetStudentAsync(int id)
         {
-            var student = await context.Students.FindAsync(id);
+            var studentQuery = from s in context.Students
+                           where s.Id == id
+                           select new StudentDetailsDTO
+                           {
+                               Id = s.Id,
+                               Degree = s.Degree,
+                               Keywords = s.Keywords,
+                               MinSalary = s.MinSalary,
+                               MinWorkingHours = s.MinWorkingHours,
+                               MaxWorkingHours = s.MaxWorkingHours,
+                               Agreement = s.Agreement,
+                               Location = s.Location,
+                               PlacementDescriptions = s.PlacementDescriptions.Select(p => p.PlacementDescription).ToList()
+                           };
+
+            var student = await studentQuery.FirstOrDefaultAsync();
 
             if (student == null)
             {
-                throw new ArgumentException($"Could not find student with id {id}");
+                throw new ArgumentException($"Could not find student with id {id}.");
             }
 
             return student;
@@ -56,7 +84,12 @@ namespace BDSA2020.Models
 
         public async Task<bool> DeleteStudentAsync(int id)
         {
-            var student = await GetStudentAsync(id);
+            var student = await context.Students.FindAsync(id);
+
+            if (student == null)
+            {
+                throw new ArgumentException($"Could not remove student with id {id}, because it does not exist.");
+            }
 
             context.Students.Remove(student);
 
