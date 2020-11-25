@@ -125,18 +125,14 @@ p{
 .scroll-container {
   scroll-snap-type: y mandatory;
   overflow-y: scroll;
- 
-
-
 }
 
 .scroll-area {  
   scroll-snap-align: start;
-
+  scroll-snap-stop: always;
   display: flex;
   justify-content: center;
   align-items: center;
-  
 }
 
 .scroll-container,
@@ -144,48 +140,6 @@ p{
   margin: 30px auto;
 }
 
-.scroll-area {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-}
 
 
 
-
-#container {
-  scroll-snap-type: y mandatory;
-  overflow-y: scroll;
-
-  border: 2px solid var(--gs0);
-  border-radius: 8px;
-  height: 60vh;
-}
-
-#container div {
-  scroll-snap-align: start;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 4rem;
-}
-#container div:nth-child(1) {
-  background: hotpink;
-  color: white;
-  height: 50vh;
-}
-#container div:nth-child(2) {
-  background: azure;
-  height: 40vh;
-}
-#container div:nth-child(3) {
-  background: blanchedalmond;
-  height: 60vh;
-}
-#container div:nth-child(4) {
-  background: lightcoral;
-  color: white;
-  height: 40vh;
-}
