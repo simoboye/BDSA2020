@@ -2,54 +2,125 @@
 
 @using Entities
 @inject HttpClient httpClient
+@inject IJSRuntime JS;
 
-
-  
-<div class="carousel">
-  <ul class="carousel__list">
-    <li class="carousel__item" data-pos="-2">1</li>
-    <li class="carousel__item" data-pos="-1">2</li>
-    <li class="carousel__item" data-pos="0">3</li>
-    <li class="carousel__item" data-pos="1">4</li>
-    <li class="carousel__item" data-pos="2">5</li>
-  </ul>
-</div>
-
-<div class="placement my-card">
-    <div class = "frame">
-        <div style="height: 30px;"></div>
-    <h5>LEO Pharma</h5>
-    <img src="https://www.bhrservice.dk/wp-content/uploads/2016/12/3-1.jpg" alt="">
-    <p class = "description">Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-        Deleniti architecto itaque accusantium nulla tempora animi
-        recusandae mollitia fugiat omnis error, magni eius accusamus
-        corporis voluptatibus quisquam incidunt sunt modi tempore!</p>
-        <div class="divider"></div>
-        <ul class="description">
-            <li>hours</li>
-            <li>location</li>
-            <li>salary</li>
-        </ul>
-        <div class="divider"></div>
-        <div style="height: 20px;"></div>
-        <div class="btnPlacement more">
-            <p class="center">More</p>
+<div class="scroll-container" id="scroll-container">
+<div class="placement scroll-area">
+        <div class = "frame">
+            <div style="height: 30px;"></div>
+            <h5>LEO Pharma</h5>
+            <img src="https://www.bhrservice.dk/wp-content/uploads/2016/12/3-1.jpg" alt="">
+                <p class = "description">Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+                    Deleniti architecto itaque accusantium nulla tempora animi
+                    recusandae mollitia fugiat omnis error, magni eius accusamus
+                    corporis voluptatibus quisquam incidunt sunt modi tempore!</p>
+                    <div class="divider"></div>
+                    <ul class="description">
+                        <li>hours</li>
+                        <li>location</li>
+                        <li>salary</li>
+                    </ul>
+                    <div class="divider"></div>
+                    <div style="height: 20px;"></div>
+                    <div class="btnPlacement more">
+                        <p class="center">More</p>
+                    </div>
+                <p class="boldText">Last apply date: 12th Nov 2020</p>
+            </div>
         </div>
-        <p class="boldText">Last apply date: 12th Nov 2020</p>
-    </div>
+        <div class="placement scroll-area"> 
+        <div class = "frame">
+            <div style="height: 30px;"></div>
+            <h5>LEO Pharma</h5>
+            <img src="https://www.bhrservice.dk/wp-content/uploads/2016/12/3-1.jpg" alt="">
+                <p class = "description">Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+                    Deleniti architecto itaque accusantium nulla tempora animi
+                    recusandae mollitia fugiat omnis error, magni eius accusamus
+                    corporis voluptatibus quisquam incidunt sunt modi tempore!</p>
+                    <div class="divider"></div>
+                    <ul class="description">
+                        <li>hours</li>
+                        <li>location</li>
+                        <li>salary</li>
+                    </ul>
+                    <div class="divider"></div>
+                    <div style="height: 20px;"></div>
+                    <div class="btnPlacement more">
+                        <p class="center">More</p>
+                    </div>
+                <p class="boldText">Last apply date: 12th Nov 2020</p>
+            </div>
+        </div>
+        <div class="placement scroll-area">
+        <div class = "frame">
+            <div style="height: 30px;"></div>
+            <h5>LEO Pharma</h5>
+            <img src="https://www.bhrservice.dk/wp-content/uploads/2016/12/3-1.jpg" alt="">
+                <p class = "description">Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+                    Deleniti architecto itaque accusantium nulla tempora animi
+                    recusandae mollitia fugiat omnis error, magni eius accusamus
+                    corporis voluptatibus quisquam incidunt sunt modi tempore!</p>
+                    <div class="divider"></div>
+                    <ul class="description">
+                        <li>hours</li>
+                        <li>location</li>
+                        <li>salary</li>
+                    </ul>
+                    <div class="divider"></div>
+                    <div style="height: 20px;"></div>
+                    <div class="btnPlacement more">
+                        <p class="center">More</p>
+                    </div>
+                <p class="boldText">Last apply date: 12th Nov 2020</p>
+            </div>
+        </div>
+        <div class="placement scroll-area">
+        <div class = "frame">
+            <div style="height: 30px;"></div>
+            <h5>LEO Pharma</h5>
+            <img src="https://www.bhrservice.dk/wp-content/uploads/2016/12/3-1.jpg" alt="">
+                <p class = "description">Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+                    Deleniti architecto itaque accusantium nulla tempora animi
+                    recusandae mollitia fugiat omnis error, magni eius accusamus
+                    corporis voluptatibus quisquam incidunt sunt modi tempore!</p>
+                    <div class="divider"></div>
+                    <ul class="description">
+                        <li>hours</li>
+                        <li>location</li>
+                        <li>salary</li>
+                    </ul>
+                    <div class="divider"></div>
+                    <div style="height: 20px;"></div>
+                    <div class="btnPlacement more">
+                        <p class="center">More</p>
+                    </div>
+                <p class="boldText">Last apply date: 12th Nov 2020</p>
+            </div>
+        </div>
 </div>
+
+
+
 
 <div class="frame">
     <div class="btnPlacement apply">
         <p class="center">Apply</p>
     </div>
+  
     <div class="row center">
-        <div class="column" style="background-color:white;"></div>
-        <div class="like" style="background-color: black; color: white;"></div>
-        <div class="column" style="background-color:white;"></div>
+        <div onclick="goPrev()" class="column"style="background-color:white;">^</div>
+        <div class="like"  style="background-color: black; color: white;"></div>
+        <div onclick="goNext()" class="column" style="background-color:white;">v</div>
     </div>
 </div>
 
+
+
+
+  <div class="tinder--buttons">
+    <button id="nope"><i class="fa fa-remove"></i></button>
+    <button id="love"><i class="fa fa-heart"></i></button>
+  </div>
 
 
 
@@ -90,5 +161,12 @@ else
     protected override async Task OnInitializedAsync()
     {
         students = await httpClient.GetFromJsonAsync<Student[]>("StudentRepository");
+      
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        //To run JS AFTER Blazor is done loading application
+        await JS.InvokeAsync<string>("CardAnimation");
     }
 }
