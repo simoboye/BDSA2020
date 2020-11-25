@@ -1,12 +1,8 @@
 
-var checked = false;
 window.CardAnimation = () => {
   //use this for future JS where Blazor needs to be loaded
   document.getElementById('scroll-container').onscroll = function() {
-    if(!checked){
-      checked = true;
       checkMore();
-    }
   };
 };
 
@@ -38,5 +34,4 @@ function checkMore(){
       //TODO add loadMore() logic here
     }
 
-    checked = false;
 }
