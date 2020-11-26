@@ -11,8 +11,9 @@ namespace BDSA2020.Entities
         public DbSet<Company> Companies { get; set; }
         public DbSet<PlacementDescription> PlacementDescriptions { get; set; }
         public DbSet<Saved> Saved { get; set; }
-        public DbSet<StudentKeywords> StudentKeywords { get; set; }
+        public DbSet<StudentKeyword> StudentKeywords { get; set; }
         public DbSet<PlacementDescriptionKeywords> PlacementDescriptionKeywords { get; set; }
+        public DbSet<Keyword> Keywords { get; set; }
 
         public Context()
         {
@@ -63,11 +64,11 @@ namespace BDSA2020.Entities
                 .HasData(GetSavedData());
 
             modelBuilder
-                .Entity<KeywordContainer>()
+                .Entity<Keyword>()
                 .HasData(GetKeywordsData());
             
             modelBuilder
-                .Entity<StudentKeywords>()
+                .Entity<StudentKeyword>()
                 .HasData(GetStudentKeywordsData());
             
             modelBuilder
@@ -78,7 +79,7 @@ namespace BDSA2020.Entities
         private void SetUpManyToManyKeys(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Saved>().HasKey(s => new { s.StudentId, s.PlacementDescriptionId });
-            modelBuilder.Entity<StudentKeywords>().HasKey(sk => new { sk.StudentId, sk.KeywordId });
+            modelBuilder.Entity<StudentKeyword>().HasKey(sk => new { sk.StudentId, sk.KeywordId });
             modelBuilder.Entity<PlacementDescriptionKeywords>().HasKey(pdk => new { pdk.PlacementDescriptionId, pdk.KeywordId });
         }
 
@@ -130,32 +131,32 @@ namespace BDSA2020.Entities
             };
         } 
 
-        private ICollection<KeywordContainer> GetKeywordsData()
+        private ICollection<Keyword> GetKeywordsData()
         {
             return new []
             {
-                new KeywordContainer { Id = 1, Name = "Testing" },
-                new KeywordContainer { Id = 2, Name = "C#" },
-                new KeywordContainer { Id = 3, Name = "Java" },
-                new KeywordContainer { Id = 4, Name = "FullStack" },
-                new KeywordContainer { Id = 5, Name = "Frontend" },
-                new KeywordContainer { Id = 6, Name = "Backend" },
-                new KeywordContainer { Id = 7, Name = "UML" },
-                new KeywordContainer { Id = 8, Name = "DevOps" },
-                new KeywordContainer { Id = 9, Name = "Communication" },
-                new KeywordContainer { Id = 10, Name = "JavaScript" }
+                new Keyword { Id = 1, Name = "Testing" },
+                new Keyword { Id = 2, Name = "C#" },
+                new Keyword { Id = 3, Name = "Java" },
+                new Keyword { Id = 4, Name = "FullStack" },
+                new Keyword { Id = 5, Name = "Frontend" },
+                new Keyword { Id = 6, Name = "Backend" },
+                new Keyword { Id = 7, Name = "UML" },
+                new Keyword { Id = 8, Name = "DevOps" },
+                new Keyword { Id = 9, Name = "Communication" },
+                new Keyword { Id = 10, Name = "JavaScript" }
             };
         }
 
-        private ICollection<StudentKeywords> GetStudentKeywordsData()
+        private ICollection<StudentKeyword> GetStudentKeywordsData()
         {
             return new []
             {
-                new StudentKeywords { StudentId = 1, KeywordId = 1 },
-                new StudentKeywords { StudentId = 1, KeywordId = 2 },
-                new StudentKeywords { StudentId = 2, KeywordId = 1 },
-                new StudentKeywords { StudentId = 3, KeywordId = 6 },
-                new StudentKeywords { StudentId = 4, KeywordId = 7 }
+                new StudentKeyword { StudentId = 1, KeywordId = 1 },
+                new StudentKeyword { StudentId = 1, KeywordId = 2 },
+                new StudentKeyword { StudentId = 2, KeywordId = 1 },
+                new StudentKeyword { StudentId = 3, KeywordId = 6 },
+                new StudentKeyword { StudentId = 4, KeywordId = 7 }
             };
         }
 

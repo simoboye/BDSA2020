@@ -1,6 +1,6 @@
 namespace BDSA2020.Entities
 {
-    public class KeywordContainer
+    public class Keyword
     {
         public int Id { get; set; }
         public string Name { get; set; }

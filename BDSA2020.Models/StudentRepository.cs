@@ -24,7 +24,7 @@ namespace BDSA2020.Models
                            {
                                Id = s.Id,
                                Degree = s.Degree,
-                               Keywords = s.Keywords,
+                               KeywordNames = s.Keywords.Select(k => k.Keyword.Name).ToList(),
                                MinSalary = s.MinSalary,
                                MinWorkingHours = s.MinWorkingHours,
                                MaxWorkingHours = s.MaxWorkingHours,
@@ -44,7 +44,7 @@ namespace BDSA2020.Models
                            {
                                Id = s.Id,
                                Degree = s.Degree,
-                               Keywords = s.Keywords,
+                               KeywordNames = s.Keywords.Select(k => k.Keyword.Name).ToList(),
                                MinSalary = s.MinSalary,
                                MinWorkingHours = s.MinWorkingHours,
                                MaxWorkingHours = s.MaxWorkingHours,
@@ -68,7 +68,7 @@ namespace BDSA2020.Models
             var entity = new Student
             {
                 Degree = student.Degree,
-                Keywords = student.Keywords,
+                Keywords = GetKeywords(student.KeywordNames).ToList(),
                 MinSalary = student.MinSalary,
                 MinWorkingHours = student.MinWorkingHours,
                 MaxWorkingHours = student.MaxWorkingHours,
@@ -100,11 +100,23 @@ namespace BDSA2020.Models
 
         public async Task<bool> UpdateStudentAsync(UpdateStudentDTO student)
         {
-            var entity = await GetStudentAsync(student.Id);
+            var entity = await context.Students.FindAsync(student.Id);
+
+            if (entity == null)
+            {
+                throw new ArgumentException($"Could not remove student with id {student.Id}, because it does not exist.");
+            }
+
+            // Remove the previous keywords, as they are a primary key
+            var keywordsForStudent = from k in context.StudentKeywords
+                                     where k.StudentId == entity.Id
+                                     select k;
+
+            context.StudentKeywords.RemoveRange(keywordsForStudent);
 
             entity.Agreement = student.Agreement;
             entity.Degree = student.Degree;
-            entity.Keywords = student.Keywords;
+            entity.Keywords = GetKeywords(student.KeywordNames).ToList();
             entity.Location = student.Location;
             entity.MaxWorkingHours = student.MaxWorkingHours;
             entity.MinWorkingHours = student.MinWorkingHours;
@@ -113,6 +125,26 @@ namespace BDSA2020.Models
             await context.SaveChangesAsync();
 
             return true;
+        }
+
+        private IEnumerable<StudentKeyword> GetKeywords(IEnumerable<string> keywordNames) {
+            var keywords = from k in context.Keywords
+                           where keywordNames.Contains(k.Name)
+                           select k;
+
+            var keywordMap = keywords.ToDictionary(k => k.Name);
+
+            foreach (var name in keywordNames)
+            {
+                if (keywordMap.TryGetValue(name, out Keyword keyword))
+                {
+                    yield return new StudentKeyword { Keyword = keyword };
+                }
+                else
+                {
+                    throw new ArgumentException($"Keyword with name {name} does not exit.");
+                }
+            }
         }
     }
 }
