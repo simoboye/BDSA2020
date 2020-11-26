@@ -142,7 +142,7 @@ namespace BDSA2020.Models.Tests
 
             var updated = await Context.PlacementDescriptions.FindAsync(1);
             Assert.Equal(new [] { "UML" }, updated.Keywords.Select(k => k.Keyword.Name).ToList());
-            Assert.Equal("UML-central", created.Company.Name);
+            Assert.Equal("UML-central", updated.Company.Name);
         }
 
         [Fact]
