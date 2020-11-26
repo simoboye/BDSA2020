@@ -30,11 +30,12 @@ namespace BDSA2020.Models.Tests
         [Fact]
         public async Task GetStudent_returns_the_requested_student() 
         {
-            var actual = await repository.GetStudentAsync(1);
+            var entity = await Context.Students.FirstOrDefaultAsync();
+            var actual = await repository.GetStudentAsync(entity.Id);
 
             var expected = new StudentDetailsDTO
             { 
-                Id = 1, 
+                Id = entity.Id,
                 Degree = Degree.Bachelor, 
                 KeywordNames = new [] { "Testing", "C#" },
                 MinSalary = 100, 
@@ -54,14 +55,16 @@ namespace BDSA2020.Models.Tests
         [Fact]
         public async Task GetStudent_returns_ArgumentException_on_not_found_student() 
         {
-            await Assert.ThrowsAsync<ArgumentException>(() => repository.GetStudentAsync(100));
+            await Assert.ThrowsAsync<ArgumentException>(() => repository.GetStudentAsync(Guid.NewGuid()));
         }
 
         [Fact]
         public async Task CreateStudent_returns_the_id_of_created_student()
         {
+            var id = Guid.NewGuid();
             var student = new CreateStudentDTO
             { 
+                Id = id,
                 Degree = Degree.Bachelor,
                 KeywordNames = new [] { "Testing" },
                 MinSalary = 100, 
@@ -77,14 +80,16 @@ namespace BDSA2020.Models.Tests
                                         .Id;
 
             var actual = await repository.CreateStudentAsync(student);
-
-            Assert.Equal(lastId + 1, actual);
+        
+        
+            Assert.Equal(student.Id, actual);
         }
 
         [Fact]
         public async Task DeleteStudent_returns_true() 
         {
-            var actual = await repository.DeleteStudentAsync(1);
+            var entity = await Context.Students.FirstOrDefaultAsync();
+            var actual = await repository.DeleteStudentAsync(entity.Id);
 
             Assert.True(actual);
         }
@@ -92,7 +97,7 @@ namespace BDSA2020.Models.Tests
         [Fact]
         public async Task DeleteStudent_returns_ArgumentException_on_not_found()
         {
-            await Assert.ThrowsAsync<ArgumentException>(() => repository.DeleteStudentAsync(100));
+            await Assert.ThrowsAsync<ArgumentException>(() => repository.DeleteStudentAsync(Guid.NewGuid()));
         }
 
         [Fact]
@@ -115,14 +120,14 @@ namespace BDSA2020.Models.Tests
             Assert.True(actual);
 
             var updatedStudent = await Context.Students.FirstAsync();
-            Assert.Equal(1, updatedStudent.Id);
+            Assert.Equal(dto.Id, updatedStudent.Id);
             Assert.Equal(new [] { "Testing", "C#" }, updatedStudent.Keywords.Select(k => k.Keyword.Name).ToList());
         }
 
         [Fact]
         public async Task UpdateStudent_returns_ArgumentException_on_not_found()
         {
-            var studentToUpdate = new UpdateStudentDTO { Id = 100 };
+            var studentToUpdate = new UpdateStudentDTO { Id = Guid.NewGuid() };
             await Assert.ThrowsAsync<ArgumentException>(() => repository.UpdateStudentAsync(studentToUpdate));
         }
     }

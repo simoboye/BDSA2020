@@ -1,11 +1,15 @@
 ﻿@page "/"
+@using BDSA2020.Shared
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Components.Authorization
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager Navigation
+@inject HttpClient httpClient
 
-<h3>ClaimsPrincipal Data</h3>
+<p>Checking your status...</p>
+<p>UserID: @_userId</p>
 
-<button @onclick="GetClaimsPrincipalData">Get ClaimsPrincipal Data</button>
+@* <button @onclick="GetClaimsPrincipalData">Get ClaimsPrincipal Data</button>
 
 <p>@_authMessage</p>
 
@@ -19,14 +23,16 @@
     </ul>
 }
 
-<p>@_surnameMessage</p>
+<p>@_surnameMessage</p>*/ *@
 
 @code {
     private string _authMessage;
     private string _surnameMessage;
     private IEnumerable<Claim> _claims = Enumerable.Empty<Claim>();
 
-    private async Task GetClaimsPrincipalData()
+    private Guid _userId;
+
+    protected override async Task OnInitializedAsync()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
@@ -37,10 +43,41 @@
             _claims = user.Claims;
             _surnameMessage = 
                 $"Surname: {user.FindFirst(c => c.Type == ClaimTypes.Surname)?.Value}";
+            _userId = Guid.Parse(user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+            
+            var isCompany = bool.Parse(user.FindFirst(u => u.Type.Equals("extension_isCompany"))?.Value);
+
+            if (isCompany)
+            {
+                Console.WriteLine("Not implemented yet, logout to student account");
+            }
+            else 
+            {
+                await CheckIfStudentExits();
+            }
         }
         else
         {
             _authMessage = "The user is NOT authenticated.";
+        }
+    }
+
+    private async Task CheckIfStudentExits()
+    {
+        try {
+            var student = await httpClient.GetFromJsonAsync<StudentDetailsDTO>($"StudentRepository/{_userId}");
+            Navigation.NavigateTo("/placementdescription", true);
+        } catch (HttpRequestException e)
+        {
+            Console.WriteLine(e);
+            if (e.Message.Contains("500")) // TODO find a way to get the status code
+            {
+                Console.WriteLine("Internal server error"); // TODO Redirect to error page
+            }
+            else
+            {
+                Navigation.NavigateTo("/profilesettings", true);
+            }
         }
     }
 }

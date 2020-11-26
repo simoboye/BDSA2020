@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using BDSA2020.Entities;
 
@@ -5,6 +6,7 @@ namespace BDSA2020.Shared
 {
     public class CreateStudentDTO
     {
+        public Guid Id { get; set; }
         public Degree Degree { get; set; }
         public ICollection<string> KeywordNames { get; set; }
         public int MinSalary { get; set; }
