@@ -1,0 +1,85 @@
+@page "/placementdescription"
+@using Entities
+@inject HttpClient httpClient
+
+
+@if (placementDescriptions == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{    
+    <h5>Placement Descriptions</h5>
+    <div class="placement my-card">
+    <div class = "frame">
+        <div style="height: 30px;"></div>
+    <h5>LEO Pharma - @placementDescriptions[currentCount].Title</h5>
+    <img src="@placementDescriptions[currentCount].Thumbnail" alt="">
+    <p class = "description">@placementDescriptions[currentCount].Description</p>
+        <div class="divider"></div>
+    <ul class="description">
+            <li>Min hours weekly: @placementDescriptions[currentCount].MinWorkingHours</li>
+            <li>Degree: @placementDescriptions[currentCount].Degree</li>
+            <li>Location: @placementDescriptions[currentCount].Location</li>
+            <li>Min salary: @placementDescriptions[currentCount].MinSalary</li>
+            <li>Email: @placementDescriptions[currentCount].Email</li>
+    </ul>
+        <div class="divider"></div>
+        <div style="height: 20px;"></div>
+        <div class = "btnPlacement">
+            <a href="https://www.google.com">More</a>
+        </div>
+        <div class = "btnApplyPlacement">
+        <a href="mailto:Goolge.com">Apply Now</a>
+    </div>
+    </div>
+    
+    
+    @*<p>PlacementDescription: @currentCount</p>*@
+</div>
+<p class= "applyDate"> Placement Description Duration: @(GetLastApplyDate())</p>
+<p class= "applyDate"> Days Remaining: @(DaysRemaining())</p>
+}
+<button class="btn btn-primary" @onclick="DecrementCount">Back</button>
+<button class="btn btn-save" @onclick="DecrementCount">&heartsuit;</button>
+<button class="btn btn-primary" @onclick="IncrementCount">Next</button>
+
+
+@code {
+    private PlacementDescription[] placementDescriptions;
+    private int currentCount = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        placementDescriptions = await httpClient.GetFromJsonAsync<PlacementDescription[]>("PlacementDescriptionRepository");
+    }
+
+    // Implement write to Saved, method.
+    // Save placementdescription-ID in database.
+
+     private void IncrementCount()
+    {
+        if (this.currentCount == placementDescriptions.Length - 1) { return; }
+        currentCount++;
+    }
+
+    private void DecrementCount()
+    {
+        if (this.currentCount == 0) { return; }
+        currentCount--;
+    }
+
+    private string GetLastApplyDate()
+    {
+        var applyDate = placementDescriptions[this.currentCount].LastApplyDate;
+        return applyDate.ToShortDateString();
+    }
+
+    private string DaysRemaining()
+    {
+        var applyDate = placementDescriptions[this.currentCount].LastApplyDate;
+        DateTime today = DateTime.Now;
+        var daysLeft = applyDate.Subtract(today);
+        return (daysLeft.Days + 1).ToString(); 
+    }
+}
