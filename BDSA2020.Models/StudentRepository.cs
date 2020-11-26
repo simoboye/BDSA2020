@@ -67,6 +67,7 @@ namespace BDSA2020.Models
         {
             var entity = new Student
             {
+                Id = student.Id,
                 Degree = student.Degree,
                 Keywords = GetKeywords(student.KeywordNames).ToList(),
                 MinSalary = student.MinSalary,

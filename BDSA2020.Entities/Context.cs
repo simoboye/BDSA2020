@@ -111,14 +111,19 @@ namespace BDSA2020.Entities
             }; 
         }
 
+        private Guid id1 = Guid.NewGuid();
+        private Guid id2 = Guid.NewGuid();
+        private Guid id3 = Guid.NewGuid();
+        private Guid id4 = Guid.NewGuid();
+
         private Student[] GetStudentsData()
         {
             return new []
             {
-                new Student { Id = Guid.NewGuid(), Degree = Degree.Bachelor, MinSalary = 100, MinWorkingHours = 5, MaxWorkingHours = 20, Agreement = false, Location = "Nowhere" },
-                new Student { Id = Guid.NewGuid(), Degree = Degree.Master, MinSalary = 1000, MinWorkingHours = 532, MaxWorkingHours = 43243, Agreement = false, Location = "Anywhere" },
-                new Student { Id = Guid.NewGuid(), Degree = Degree.PhD, MinSalary = 10000, MinWorkingHours = 5000, MaxWorkingHours = 5001, Agreement = true, Location = "Glostrup" },
-                new Student { Id = Guid.NewGuid(), Degree = Degree.Other, MinSalary = 1, MinWorkingHours = 1, MaxWorkingHours = 5, Agreement = true, Location = "Italy" }
+                new Student { Id = id1, Degree = Degree.Bachelor, MinSalary = 100, MinWorkingHours = 5, MaxWorkingHours = 20, Agreement = false, Location = "Nowhere" },
+                new Student { Id = id2, Degree = Degree.Master, MinSalary = 1000, MinWorkingHours = 532, MaxWorkingHours = 43243, Agreement = false, Location = "Anywhere" },
+                new Student { Id = id3, Degree = Degree.PhD, MinSalary = 10000, MinWorkingHours = 5000, MaxWorkingHours = 5001, Agreement = true, Location = "Glostrup" },
+                new Student { Id = id4, Degree = Degree.Other, MinSalary = 1, MinWorkingHours = 1, MaxWorkingHours = 5, Agreement = true, Location = "Italy" }
             };
         }
 

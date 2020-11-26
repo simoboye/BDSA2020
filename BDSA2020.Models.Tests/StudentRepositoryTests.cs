@@ -61,9 +61,10 @@ namespace BDSA2020.Models.Tests
         [Fact]
         public async Task CreateStudent_returns_the_id_of_created_student()
         {
+            var id = Guid.NewGuid();
             var student = new CreateStudentDTO
             { 
-                Id = Guid.NewGuid(),
+                Id = id,
                 Degree = Degree.Bachelor,
                 KeywordNames = new [] { "Testing" },
                 MinSalary = 100, 
@@ -79,10 +80,9 @@ namespace BDSA2020.Models.Tests
                                         .Id;
 
             var actual = await repository.CreateStudentAsync(student);
-            var expected = await Context.Students.FirstOrDefaultAsync(s => 
-                                                    s.Degree == student.Degree && s.Location == student.Location && s.MinSalary == student.MinSalary);
-
-            Assert.Equal(expected.Id, actual);
+        
+        
+            Assert.Equal(student.Id, actual);
         }
 
         [Fact]

@@ -65,7 +65,7 @@ namespace BDSA2020.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<int>> Create([FromBody] CreateStudentDTO student, bool isTest = false)
+        public async Task<ActionResult<Guid>> Create([FromBody] CreateStudentDTO student, bool isTest = false)
         {
             try 
             {
