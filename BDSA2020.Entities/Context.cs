@@ -12,7 +12,7 @@ namespace BDSA2020.Entities
         public DbSet<PlacementDescription> PlacementDescriptions { get; set; }
         public DbSet<Saved> Saved { get; set; }
         public DbSet<StudentKeyword> StudentKeywords { get; set; }
-        public DbSet<PlacementDescriptionKeywords> PlacementDescriptionKeywords { get; set; }
+        public DbSet<PlacementDescriptionKeyword> PlacementDescriptionKeywords { get; set; }
         public DbSet<Keyword> Keywords { get; set; }
 
         public Context()
@@ -72,7 +72,7 @@ namespace BDSA2020.Entities
                 .HasData(GetStudentKeywordsData());
             
             modelBuilder
-                .Entity<PlacementDescriptionKeywords>()
+                .Entity<PlacementDescriptionKeyword>()
                 .HasData(GetPlacementDescriptionKeywordsData());
         }
 
@@ -80,7 +80,7 @@ namespace BDSA2020.Entities
         {
             modelBuilder.Entity<Saved>().HasKey(s => new { s.StudentId, s.PlacementDescriptionId });
             modelBuilder.Entity<StudentKeyword>().HasKey(sk => new { sk.StudentId, sk.KeywordId });
-            modelBuilder.Entity<PlacementDescriptionKeywords>().HasKey(pdk => new { pdk.PlacementDescriptionId, pdk.KeywordId });
+            modelBuilder.Entity<PlacementDescriptionKeyword>().HasKey(pdk => new { pdk.PlacementDescriptionId, pdk.KeywordId });
         }
 
         private void ParseEnums(ModelBuilder modelBuilder)
@@ -160,13 +160,13 @@ namespace BDSA2020.Entities
             };
         }
 
-        private ICollection<PlacementDescriptionKeywords> GetPlacementDescriptionKeywordsData()
+        private ICollection<PlacementDescriptionKeyword> GetPlacementDescriptionKeywordsData()
         {
             return new []
             {
-                new PlacementDescriptionKeywords { PlacementDescriptionId = 1, KeywordId = 1 },
-                new PlacementDescriptionKeywords { PlacementDescriptionId = 1, KeywordId = 10 },
-                new PlacementDescriptionKeywords { PlacementDescriptionId = 2, KeywordId = 3 }
+                new PlacementDescriptionKeyword { PlacementDescriptionId = 1, KeywordId = 1 },
+                new PlacementDescriptionKeyword { PlacementDescriptionId = 1, KeywordId = 10 },
+                new PlacementDescriptionKeyword { PlacementDescriptionId = 2, KeywordId = 3 }
             };
         }
     }

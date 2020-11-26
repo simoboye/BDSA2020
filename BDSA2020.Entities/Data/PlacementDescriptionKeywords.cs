@@ -1,6 +1,6 @@
 namespace BDSA2020.Entities
 {
-    public class PlacementDescriptionKeywords
+    public class PlacementDescriptionKeyword
     {
         public int PlacementDescriptionId { get; set; }
         public PlacementDescription PlacementDescription { get; set; }

@@ -24,7 +24,7 @@ namespace BDSA2020.Api.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<PlacementDescription>>> Get(bool isTest = false)
+        public async Task<ActionResult<IEnumerable<PlacementDescriptionDetailsDTO>>> Get(bool isTest = false)
         {
             try 
             {
@@ -42,7 +42,7 @@ namespace BDSA2020.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<PlacementDescription>> Get(int id, bool isTest = false)
+        public async Task<ActionResult<PlacementDescriptionDetailsDTO>> Get(int id, bool isTest = false)
         {
             try 
             {
@@ -66,7 +66,7 @@ namespace BDSA2020.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<int>> Create([FromBody] PlacementDescription description, bool isTest = false)
+        public async Task<ActionResult<int>> Create([FromBody] CreatePlacementDescriptionDTO description, bool isTest = false)
         {
             try 
             {
@@ -114,7 +114,7 @@ namespace BDSA2020.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<bool>> Update([FromBody] PlacementDescription description, bool isTest = false)
+        public async Task<ActionResult<bool>> Update([FromBody] UpdatePlacementDescriptionDTO description, bool isTest = false)
         {
             try 
             {

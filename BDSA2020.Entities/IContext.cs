@@ -11,7 +11,7 @@ namespace BDSA2020.Entities
         DbSet<PlacementDescription> PlacementDescriptions { get; set; }
         DbSet<Saved> Saved { get; set; }
         DbSet<StudentKeyword> StudentKeywords { get; set; }
-        DbSet<PlacementDescriptionKeywords> PlacementDescriptionKeywords { get; set; }
+        DbSet<PlacementDescriptionKeyword> PlacementDescriptionKeywords { get; set; }
         DbSet<Keyword> Keywords { get; set; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
