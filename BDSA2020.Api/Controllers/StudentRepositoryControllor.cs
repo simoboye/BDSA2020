@@ -41,7 +41,7 @@ namespace BDSA2020.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<StudentDetailsDTO>> Get(int id, bool isTest = false)
+        public async Task<ActionResult<StudentDetailsDTO>> Get(Guid id, bool isTest = false)
         {
             try 
             {
@@ -89,7 +89,7 @@ namespace BDSA2020.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<bool>> Delete(int id, bool isTest = false)
+        public async Task<ActionResult<bool>> Delete(Guid id, bool isTest = false)
         {
             try 
             {

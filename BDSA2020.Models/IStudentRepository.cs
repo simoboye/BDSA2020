@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BDSA2020.Entities;
@@ -7,10 +8,10 @@ namespace BDSA2020.Models
 {
     public interface IStudentRepository
     {
-        Task<int> CreateStudentAsync(CreateStudentDTO student);
-        Task<StudentDetailsDTO> GetStudentAsync(int id);
+        Task<Guid> CreateStudentAsync(CreateStudentDTO student);
+        Task<StudentDetailsDTO> GetStudentAsync(Guid id);
         Task<ICollection<StudentDetailsDTO>> GetStudentsAsync();
         Task<bool> UpdateStudentAsync(UpdateStudentDTO student);
-        Task<bool> DeleteStudentAsync(int id);
+        Task<bool> DeleteStudentAsync(Guid id);
     }
 }

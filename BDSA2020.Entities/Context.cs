@@ -29,7 +29,6 @@ namespace BDSA2020.Entities
             // Boilerplade code taken from the Lecture04/Program.cs 
             var configuration = new ConfigurationBuilder().AddUserSecrets(typeof(Context).Assembly).Build();
             var connectionString = configuration.GetConnectionString("ConnectionString");
-           // var connectionString = @"Server=(localdb)\MSSQLLocalDB;Database=BDSA2020;Trusted_Connection=True;";
 
             if (!optionsBuilder.IsConfigured)
             {
@@ -112,14 +111,14 @@ namespace BDSA2020.Entities
             }; 
         }
 
-        private ICollection<Student> GetStudentsData()
+        private Student[] GetStudentsData()
         {
             return new []
             {
-                new Student { Id = 1, Degree = Degree.Bachelor, MinSalary = 100, MinWorkingHours = 5, MaxWorkingHours = 20, Agreement = false, Location = "Nowhere" },
-                new Student { Id = 2, Degree = Degree.Master, MinSalary = 1000, MinWorkingHours = 532, MaxWorkingHours = 43243, Agreement = false, Location = "Anywhere" },
-                new Student { Id = 3, Degree = Degree.PhD, MinSalary = 10000, MinWorkingHours = 5000, MaxWorkingHours = 5001, Agreement = true, Location = "Glostrup" },
-                new Student { Id = 4, Degree = Degree.Other, MinSalary = 1, MinWorkingHours = 1, MaxWorkingHours = 5, Agreement = true, Location = "Italy" }
+                new Student { Id = Guid.NewGuid(), Degree = Degree.Bachelor, MinSalary = 100, MinWorkingHours = 5, MaxWorkingHours = 20, Agreement = false, Location = "Nowhere" },
+                new Student { Id = Guid.NewGuid(), Degree = Degree.Master, MinSalary = 1000, MinWorkingHours = 532, MaxWorkingHours = 43243, Agreement = false, Location = "Anywhere" },
+                new Student { Id = Guid.NewGuid(), Degree = Degree.PhD, MinSalary = 10000, MinWorkingHours = 5000, MaxWorkingHours = 5001, Agreement = true, Location = "Glostrup" },
+                new Student { Id = Guid.NewGuid(), Degree = Degree.Other, MinSalary = 1, MinWorkingHours = 1, MaxWorkingHours = 5, Agreement = true, Location = "Italy" }
             };
         }
 
@@ -127,9 +126,9 @@ namespace BDSA2020.Entities
         {
             return new []
             {
-                new Saved { StudentId = 1, PlacementDescriptionId = 1 },
-                new Saved { StudentId = 1, PlacementDescriptionId = 2 },
-                new Saved { StudentId = 2, PlacementDescriptionId = 1 }
+                new Saved { StudentId = GetStudentsData()[0].Id, PlacementDescriptionId = 1 },
+                new Saved { StudentId = GetStudentsData()[0].Id, PlacementDescriptionId = 2 },
+                new Saved { StudentId = GetStudentsData()[1].Id, PlacementDescriptionId = 1 }
             };
         } 
 
@@ -154,11 +153,11 @@ namespace BDSA2020.Entities
         {
             return new []
             {
-                new StudentKeyword { StudentId = 1, KeywordId = 1 },
-                new StudentKeyword { StudentId = 1, KeywordId = 2 },
-                new StudentKeyword { StudentId = 2, KeywordId = 1 },
-                new StudentKeyword { StudentId = 3, KeywordId = 6 },
-                new StudentKeyword { StudentId = 4, KeywordId = 7 }
+                new StudentKeyword { StudentId = GetStudentsData()[0].Id, KeywordId = 1 },
+                new StudentKeyword { StudentId = GetStudentsData()[0].Id, KeywordId = 2 },
+                new StudentKeyword { StudentId = GetStudentsData()[1].Id, KeywordId = 1 },
+                new StudentKeyword { StudentId = GetStudentsData()[2].Id, KeywordId = 6 },
+                new StudentKeyword { StudentId = GetStudentsData()[3].Id, KeywordId = 7 }
             };
         }
 

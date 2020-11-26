@@ -6,6 +6,8 @@ namespace BDSA2020.Entities
 {
     public class PlacementDescription : MatchingAttributes
     {
+        public int Id { get; set; }
+        
         [Required]
         public DateTime LastApplyDate { get; set; }
 

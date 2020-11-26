@@ -36,10 +36,10 @@ namespace BDSA2020.Models
             return await students.ToListAsync();
         }
 
-        public async Task<StudentDetailsDTO> GetStudentAsync(int id)
+        public async Task<StudentDetailsDTO> GetStudentAsync(Guid id)
         {
             var studentQuery = from s in context.Students
-                           where s.Id == id
+                           where s.Id.Equals(id)
                            select new StudentDetailsDTO
                            {
                                Id = s.Id,
@@ -63,7 +63,7 @@ namespace BDSA2020.Models
             return student;
         }
 
-        public async Task<int> CreateStudentAsync(CreateStudentDTO student)
+        public async Task<Guid> CreateStudentAsync(CreateStudentDTO student)
         {
             var entity = new Student
             {
@@ -82,7 +82,7 @@ namespace BDSA2020.Models
             return entity.Id;
         }
 
-        public async Task<bool> DeleteStudentAsync(int id)
+        public async Task<bool> DeleteStudentAsync(Guid id)
         {
             var student = await context.Students.FindAsync(id);
 
@@ -109,7 +109,7 @@ namespace BDSA2020.Models
 
             // Remove the previous keywords, as they are a primary key
             var keywordsForStudent = from k in context.StudentKeywords
-                                     where k.StudentId == entity.Id
+                                     where k.StudentId.Equals(entity.Id)
                                      select k;
 
             context.StudentKeywords.RemoveRange(keywordsForStudent);

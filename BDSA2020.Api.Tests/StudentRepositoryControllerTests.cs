@@ -31,8 +31,8 @@ namespace BDSA2020.Api.Tests
         {
             var students = new []
             {
-                new StudentDetailsDTO { Id = 1, KeywordNames = new [] { "Testing" } },
-                new StudentDetailsDTO { Id = 2, KeywordNames = new [] { "C#" } }
+                new StudentDetailsDTO { Id = Guid.NewGuid(), KeywordNames = new [] { "Testing" } },
+                new StudentDetailsDTO { Id = Guid.NewGuid(), KeywordNames = new [] { "C#" } }
             };
 
             repository.Setup(r => r.GetStudentsAsync()).ReturnsAsync(students);
@@ -64,12 +64,12 @@ namespace BDSA2020.Api.Tests
         [Fact]
         public async Task Get_given_id_returns_200_and_student()
         {
-            var student = new StudentDetailsDTO { Id = 1, Degree = Degree.Bachelor, MinSalary = 100, MinWorkingHours = 5, MaxWorkingHours = 20, Agreement = false, Location = "Nowhere" };
+            var student = new StudentDetailsDTO { Id = Guid.NewGuid(), Degree = Degree.Bachelor, MinSalary = 100, MinWorkingHours = 5, MaxWorkingHours = 20, Agreement = false, Location = "Nowhere" };
 
             repository.Setup(r => r.GetStudentAsync(student.Id)).ReturnsAsync(student);
             var controller = new StudentRepositoryController(repository.Object);
 
-            var actual = await controller.Get(1, true);
+            var actual = await controller.Get(student.Id, true);
 
             var actionResult = Assert.IsType<ActionResult<StudentDetailsDTO>>(actual);
             var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
@@ -82,10 +82,11 @@ namespace BDSA2020.Api.Tests
         [Fact]
         public async Task Get_given_id_that_does_not_exist_returns_404()
         {
-            repository.Setup(r => r.GetStudentAsync(100)).ThrowsAsync(new ArgumentException());
+            var id = Guid.NewGuid();
+            repository.Setup(r => r.GetStudentAsync(id)).ThrowsAsync(new ArgumentException());
             var controller = new StudentRepositoryController(repository.Object);
 
-            var actual = await controller.Get(100, true);
+            var actual = await controller.Get(id, true);
 
             var actionResult = Assert.IsType<ActionResult<StudentDetailsDTO>>(actual);
             var code = Assert.IsType<StatusCodeResult>(actionResult.Result);
@@ -95,10 +96,11 @@ namespace BDSA2020.Api.Tests
         [Fact]
         public async Task Get_given_id_returns_500_on_internal_error()
         {
-            repository.Setup(r => r.GetStudentAsync(1)).ThrowsAsync(new Exception());
+            var id = Guid.NewGuid();
+            repository.Setup(r => r.GetStudentAsync(id)).ThrowsAsync(new Exception());
             var controller = new StudentRepositoryController(repository.Object);
 
-            var actual = await controller.Get(1, true);
+            var actual = await controller.Get(id, true);
 
             var actionResult = Assert.IsType<ActionResult<StudentDetailsDTO>>(actual);
             var code = Assert.IsType<StatusCodeResult>(actionResult.Result);
@@ -108,16 +110,16 @@ namespace BDSA2020.Api.Tests
         [Fact]
         public async Task Create_returns_200_and_id_of_created_student()
         {
-            var nextMockedId = 10;
+            var nextMockedId = Guid.NewGuid();
             var student = new CreateStudentDTO();
             repository.Setup(r => r.CreateStudentAsync(student)).ReturnsAsync(nextMockedId);
             var controller = new StudentRepositoryController(repository.Object);
 
             var actual = await controller.Create(student, true);
 
-            var actionResult = Assert.IsType<ActionResult<int>>(actual);
+            var actionResult = Assert.IsType<ActionResult<Guid>>(actual);
             var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
-            var actualId = Assert.IsType<int>(okResult.Value);
+            var actualId = Assert.IsType<Guid>(okResult.Value);
 
             Assert.Equal(200, okResult.StatusCode);
             Assert.Equal(nextMockedId, actualId);
@@ -132,7 +134,7 @@ namespace BDSA2020.Api.Tests
 
             var actual = await controller.Create(student, true);
 
-            var actionResult = Assert.IsType<ActionResult<int>>(actual);
+            var actionResult = Assert.IsType<ActionResult<Guid>>(actual);
             var code = Assert.IsType<StatusCodeResult>(actionResult.Result);
             Assert.Equal(500, code.StatusCode);
         }
@@ -140,10 +142,11 @@ namespace BDSA2020.Api.Tests
         [Fact]
         public async Task Delete_returns_200_and_true()
         {
-            repository.Setup(r => r.DeleteStudentAsync(1)).ReturnsAsync(true);
+            var id = Guid.NewGuid();
+            repository.Setup(r => r.DeleteStudentAsync(id)).ReturnsAsync(true);
             var controller = new StudentRepositoryController(repository.Object);
 
-            var actual = await controller.Delete(1, true);
+            var actual = await controller.Delete(id, true);
 
             var actionResult = Assert.IsType<ActionResult<bool>>(actual);
             var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
@@ -156,10 +159,11 @@ namespace BDSA2020.Api.Tests
         [Fact]
         public async Task Delete_returns_404_on_not_found()
         {
-            repository.Setup(r => r.DeleteStudentAsync(10)).ThrowsAsync(new ArgumentException());
+            var id = Guid.NewGuid();
+            repository.Setup(r => r.DeleteStudentAsync(id)).ThrowsAsync(new ArgumentException());
             var controller = new StudentRepositoryController(repository.Object);
 
-            var actual = await controller.Delete(10, true);
+            var actual = await controller.Delete(id, true);
 
             var actionResult = Assert.IsType<ActionResult<bool>>(actual);
             var code = Assert.IsType<StatusCodeResult>(actionResult.Result);
@@ -169,10 +173,11 @@ namespace BDSA2020.Api.Tests
         [Fact]
         public async Task Delete_returns_500_on_internal_error()
         {
-            repository.Setup(r => r.DeleteStudentAsync(1)).ThrowsAsync(new Exception());
+            var id = Guid.NewGuid();
+            repository.Setup(r => r.DeleteStudentAsync(id)).ThrowsAsync(new Exception());
             var controller = new StudentRepositoryController(repository.Object);
 
-            var actual = await controller.Delete(1, true);
+            var actual = await controller.Delete(id, true);
 
             var actionResult = Assert.IsType<ActionResult<bool>>(actual);
             var code = Assert.IsType<StatusCodeResult>(actionResult.Result);
@@ -199,7 +204,7 @@ namespace BDSA2020.Api.Tests
         [Fact]
         public async Task Update_returns_404_on_not_found()
         {
-            var student = new UpdateStudentDTO { Id = 1 };
+            var student = new UpdateStudentDTO { Id = Guid.NewGuid() };
             repository.Setup(r => r.UpdateStudentAsync(student)).ThrowsAsync(new ArgumentException());
             var controller = new StudentRepositoryController(repository.Object);
 

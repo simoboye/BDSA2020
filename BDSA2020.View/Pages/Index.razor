@@ -3,9 +3,10 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-<h3>ClaimsPrincipal Data</h3>
+<p>Checking your status...</p>
+<p>UserID: @_userId</p>
 
-<button @onclick="GetClaimsPrincipalData">Get ClaimsPrincipal Data</button>
+@* <button @onclick="GetClaimsPrincipalData">Get ClaimsPrincipal Data</button>
 
 <p>@_authMessage</p>
 
@@ -19,14 +20,16 @@
     </ul>
 }
 
-<p>@_surnameMessage</p>
+<p>@_surnameMessage</p>*/ *@
 
 @code {
     private string _authMessage;
     private string _surnameMessage;
     private IEnumerable<Claim> _claims = Enumerable.Empty<Claim>();
 
-    private async Task GetClaimsPrincipalData()
+    private Guid _userId;
+
+    protected override async Task OnInitializedAsync()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
@@ -37,6 +40,7 @@
             _claims = user.Claims;
             _surnameMessage = 
                 $"Surname: {user.FindFirst(c => c.Type == ClaimTypes.Surname)?.Value}";
+            _userId = Guid.Parse(user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
         }
         else
         {
