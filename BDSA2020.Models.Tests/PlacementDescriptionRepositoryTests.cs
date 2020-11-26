@@ -75,32 +75,6 @@ namespace BDSA2020.Models.Tests
             Assert.Equal("UML-central", created.Company.Name);
         }
 
-        // This test does not make sense to run as of right now, but later when you have to supply the
-        // id fetched from azure, this test should be run.
-
-        // [Fact]
-        // public async Task CreatePlacementDescription_returns_ArgumentException_on_conflict()
-        // {
-        //     var description = new CreatePlacementDescriptionDTO
-        //     {
-        //         Degree = Degree.Other, 
-        //         KeywordNames = new [] { "Java", "Testing" },
-        //         MinSalary = 10, 
-        //         MinWorkingHours = 1, 
-        //         MaxWorkingHours = 100, 
-        //         Agreement = false, 
-        //         Location = "Copenhagen", 
-        //         LastApplyDate = new DateTime(2020, 12, 3), 
-        //         Email = "ApplyHere@apply.com", 
-        //         Thumbnail = new Uri("https://starwarsblog.starwars.com/wp-content/uploads/2020/04/best-friend-in-galaxy-chewbacca_TALL.jpg"), 
-        //         Title = "UML designer", 
-        //         Description = "You should be able to do UML diagrams correctly", 
-        //         Company = new Company { Name = "Test Company", Id = 10 }
-        //     };
-
-        //     await Assert.ThrowsAsync<ArgumentException>(() => repository.CreatePlacementDescriptionAsync(description));
-        // }
-
         [Fact]
         public async Task DeletePlacementDescription_returns_true() 
         {
