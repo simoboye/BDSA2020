@@ -1,0 +1,93 @@
+@page "/mysaves"
+@using Entities
+@inject HttpClient httpClient
+
+
+@if (placementDescriptions == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>My Saves &heartsuit;</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var placement in placementDescriptions)
+                    //(var saves in mySaves)
+            {
+                <tr>
+                    <div class="placement my-cardSaved">
+        <div class = "frame">
+        <div style="height: 30px;"></div>
+        <h5>LEO Pharma - @placementDescriptions[currentCount].Title</h5>    @*replace currentCount -> saves.getPlacementDescId*@
+        <img src="@placementDescriptions[currentCount].Thumbnail" alt="">   @*replace currentCount -> saves.getPlacementDescId*@
+        <div class="divider"></div>
+        <div style="height: 20px;"></div>
+        <div class = "btnPlacement">
+            <a href="https://www.google.com">More</a>
+        </div>
+        <div class = "btnApplyPlacement">
+            <a href="mailto:Goolge.com">Apply Now</a>
+        </div>
+        </div>
+        </div>
+        <p class= "applyDate"> Placement Description Duration: @(GetLastApplyDate())</p>
+        <p class= "applyDate"> Days Remaining: @(DaysRemaining())</p>
+                        </tr>
+                currentCount++; 
+                }
+            </tbody>
+        </table>
+
+
+    
+}
+
+
+@code {
+    private PlacementDescription[] placementDescriptions;
+    
+    //private Saved[] mySaves;
+    
+    //private int thisStudentId = 1; // Needs to be updated upon login.
+    
+    private int currentCount = 0;
+
+    
+
+    protected override async Task OnInitializedAsync()
+    {
+        placementDescriptions = await httpClient.GetFromJsonAsync<PlacementDescription[]>("PlacementDescriptionRepository");
+        //mySaves = await httpClient.GetFromJsonAsync<Saved[]>("");
+    }
+
+     private void IncrementCount()
+    {
+        if (this.currentCount == placementDescriptions.Length - 1) { return; }
+        currentCount++;
+    }
+
+    private void DecrementCount()
+    {
+        if (this.currentCount == 0) { return; }
+        currentCount--;
+    }
+
+    private string GetLastApplyDate()
+    {
+        var applyDate = placementDescriptions[this.currentCount].LastApplyDate;
+        return applyDate.ToShortDateString();
+    }
+
+    private string DaysRemaining()
+    {
+        var applyDate = placementDescriptions[this.currentCount].LastApplyDate;
+        DateTime today = DateTime.Now;
+        var daysLeft = applyDate.Subtract(today);
+        return (daysLeft.Days + 1).ToString(); 
+    }
+}
