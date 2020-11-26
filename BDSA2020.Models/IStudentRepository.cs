@@ -8,8 +8,8 @@ namespace BDSA2020.Models
     public interface IStudentRepository
     {
         Task<int> CreateStudentAsync(CreateStudentDTO student);
-        Task<Student> GetStudentAsync(int id);
-        Task<ICollection<Student>> GetStudentsAsync();
+        Task<StudentDetailsDTO> GetStudentAsync(int id);
+        Task<ICollection<StudentDetailsDTO>> GetStudentsAsync();
         Task<bool> UpdateStudentAsync(UpdateStudentDTO student);
         Task<bool> DeleteStudentAsync(int id);
     }

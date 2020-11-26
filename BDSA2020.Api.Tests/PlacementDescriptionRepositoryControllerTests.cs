@@ -31,8 +31,8 @@ namespace BDSA2020.Api.Tests
         {
             var descriptions = new []
             {
-                new PlacementDescription { Id = 1 },
-                new PlacementDescription { Id = 2 }
+                new PlacementDescriptionDetailsDTO { Id = 1 },
+                new PlacementDescriptionDetailsDTO { Id = 2 }
             };
 
             repository.Setup(r => r.GetPlacementDescriptionsAsync()).ReturnsAsync(descriptions);
@@ -40,9 +40,9 @@ namespace BDSA2020.Api.Tests
 
             var actual = await controller.Get(true);
 
-            var actionResult = Assert.IsType<ActionResult<IEnumerable<PlacementDescription>>>(actual);
+            var actionResult = Assert.IsType<ActionResult<IEnumerable<PlacementDescriptionDetailsDTO>>>(actual);
             var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
-            var actualDescriptions = Assert.IsType<List<PlacementDescription>>(okResult.Value);
+            var actualDescriptions = Assert.IsType<List<PlacementDescriptionDetailsDTO>>(okResult.Value);
 
             Assert.Equal(200, okResult.StatusCode);
             Assert.Equal(descriptions.Length, actualDescriptions.Count());
@@ -56,7 +56,7 @@ namespace BDSA2020.Api.Tests
 
             var actual = await controller.Get(true);
 
-            var actionResult = Assert.IsType<ActionResult<IEnumerable<PlacementDescription>>>(actual);
+            var actionResult = Assert.IsType<ActionResult<IEnumerable<PlacementDescriptionDetailsDTO>>>(actual);
             var code = Assert.IsType<StatusCodeResult>(actionResult.Result);
             Assert.Equal(500, code.StatusCode);
         }
@@ -64,16 +64,16 @@ namespace BDSA2020.Api.Tests
         [Fact]
         public async Task Get_given_id_returns_200_and_student()
         {
-            var description = new PlacementDescription { Id = 1, Degree = Degree.Bachelor, MinSalary = 100, MinWorkingHours = 5, MaxWorkingHours = 20, Agreement = false, Location = "Nowhere" };
+            var description = new PlacementDescriptionDetailsDTO { Id = 1, KeywordNames = new [] { "UML"}, Degree = Degree.Bachelor, MinSalary = 100, MinWorkingHours = 5, MaxWorkingHours = 20, Agreement = false, Location = "Nowhere" };
 
             repository.Setup(r => r.GetPlacementDescriptionAsync(description.Id)).ReturnsAsync(description);
             var controller = new PlacementDescriptionRepositoryController(repository.Object);
 
             var actual = await controller.Get(1, true);
 
-            var actionResult = Assert.IsType<ActionResult<PlacementDescription>>(actual);
+            var actionResult = Assert.IsType<ActionResult<PlacementDescriptionDetailsDTO>>(actual);
             var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
-            var actualDescription = Assert.IsType<PlacementDescription>(okResult.Value);
+            var actualDescription = Assert.IsType<PlacementDescriptionDetailsDTO>(okResult.Value);
 
             Assert.Equal(200, okResult.StatusCode);
             Assert.Equal(description, actualDescription);
@@ -87,7 +87,7 @@ namespace BDSA2020.Api.Tests
 
             var actual = await controller.Get(100, true);
 
-            var actionResult = Assert.IsType<ActionResult<PlacementDescription>>(actual);
+            var actionResult = Assert.IsType<ActionResult<PlacementDescriptionDetailsDTO>>(actual);
             var code = Assert.IsType<StatusCodeResult>(actionResult.Result);
             Assert.Equal(404, code.StatusCode);
         }
@@ -100,7 +100,7 @@ namespace BDSA2020.Api.Tests
 
             var actual = await controller.Get(1, true);
 
-            var actionResult = Assert.IsType<ActionResult<PlacementDescription>>(actual);
+            var actionResult = Assert.IsType<ActionResult<PlacementDescriptionDetailsDTO>>(actual);
             var code = Assert.IsType<StatusCodeResult>(actionResult.Result);
             Assert.Equal(500, code.StatusCode);
         }
@@ -109,7 +109,7 @@ namespace BDSA2020.Api.Tests
         public async Task Create_returns_200_and_id_of_created_student()
         {
             var nextMockedId = 10;
-            var description = new PlacementDescription();
+            var description = new CreatePlacementDescriptionDTO();
             repository.Setup(r => r.CreatePlacementDescriptionAsync(description)).ReturnsAsync(nextMockedId);
             var controller = new PlacementDescriptionRepositoryController(repository.Object);
 
@@ -126,7 +126,7 @@ namespace BDSA2020.Api.Tests
         [Fact]
         public async Task Create_returns_500_on_internal_error()
         {
-            var description = new PlacementDescription();
+            var description = new CreatePlacementDescriptionDTO();
             repository.Setup(r => r.CreatePlacementDescriptionAsync(description)).ThrowsAsync(new Exception());
             var controller = new PlacementDescriptionRepositoryController(repository.Object);
 
@@ -182,7 +182,7 @@ namespace BDSA2020.Api.Tests
         [Fact]
         public async Task Update_returns_200_and_true()
         {
-            var description = new PlacementDescription { Degree = Degree.Bachelor };
+            var description = new UpdatePlacementDescriptionDTO { Degree = Degree.Bachelor };
             repository.Setup(r => r.UpdatePlacementDescriptionAsync(description)).ReturnsAsync(true);
             var controller = new PlacementDescriptionRepositoryController(repository.Object);
 
@@ -199,7 +199,7 @@ namespace BDSA2020.Api.Tests
         [Fact]
         public async Task Update_returns_404_on_not_found()
         {
-            var description = new PlacementDescription { Degree = Degree.Bachelor };
+            var description = new UpdatePlacementDescriptionDTO { Degree = Degree.Bachelor };
             repository.Setup(r => r.UpdatePlacementDescriptionAsync(description)).ThrowsAsync(new ArgumentException());
             var controller = new PlacementDescriptionRepositoryController(repository.Object);
 
@@ -213,7 +213,7 @@ namespace BDSA2020.Api.Tests
         [Fact]
         public async Task Update_returns_500_on_internal_error()
         {
-            var description = new PlacementDescription { Degree = Degree.Bachelor };
+            var description = new UpdatePlacementDescriptionDTO { Degree = Degree.Bachelor };
             repository.Setup(r => r.UpdatePlacementDescriptionAsync(description)).ThrowsAsync(new Exception());
             var controller = new PlacementDescriptionRepositoryController(repository.Object);
 

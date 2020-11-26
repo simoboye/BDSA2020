@@ -4,6 +4,7 @@ using Xunit;
 using System;
 using BDSA2020.Entities;
 using Microsoft.EntityFrameworkCore;
+using BDSA2020.Shared;
 
 namespace BDSA2020.Models.Tests
 {
@@ -43,10 +44,11 @@ namespace BDSA2020.Models.Tests
         [Fact]
         public async Task CreatePlacementDescription_returns_id_of_created()
         {
-            var description = new PlacementDescription
+            var description = new CreatePlacementDescriptionDTO
             {
                 Degree = Degree.Other, 
-                MinSalary = 10, 
+                MinSalary = 10,
+                KeywordNames = new [] { "Java", "Testing" },
                 MinWorkingHours = 1, 
                 MaxWorkingHours = 100, 
                 Agreement = false, 
@@ -56,7 +58,7 @@ namespace BDSA2020.Models.Tests
                 Thumbnail = new Uri("https://starwarsblog.starwars.com/wp-content/uploads/2020/04/best-friend-in-galaxy-chewbacca_TALL.jpg"), 
                 Title = "UML designer", 
                 Description = "You should be able to do UML diagrams correctly", 
-                CompanyId = 1
+                CompanyName = "UML-central"
             };
 
             var descriptionList = await Context.PlacementDescriptions.ToListAsync();
@@ -66,30 +68,11 @@ namespace BDSA2020.Models.Tests
 
             var actual = await repository.CreatePlacementDescriptionAsync(description);
 
-            Assert.Equal(lastId + 1, actual); 
-        }
+            Assert.Equal(lastId + 1, actual);
 
-        [Fact]
-        public async Task CreatePlacementDescription_returns_ArgumentException_on_conflict()
-        {
-            var description = new PlacementDescription
-            {
-                Id = 1,
-                Degree = Degree.Other, 
-                MinSalary = 10, 
-                MinWorkingHours = 1, 
-                MaxWorkingHours = 100, 
-                Agreement = false, 
-                Location = "Copenhagen", 
-                LastApplyDate = new DateTime(2020, 12, 3), 
-                Email = "ApplyHere@apply.com", 
-                Thumbnail = new Uri("https://starwarsblog.starwars.com/wp-content/uploads/2020/04/best-friend-in-galaxy-chewbacca_TALL.jpg"), 
-                Title = "UML designer", 
-                Description = "You should be able to do UML diagrams correctly", 
-                CompanyId = 1
-            };
-
-            await Assert.ThrowsAsync<ArgumentException>(() => repository.CreatePlacementDescriptionAsync(description));
+            var created = await Context.PlacementDescriptions.FindAsync(actual);
+            Assert.Equal(new [] { "Java", "Testing" }, created.Keywords.Select(k => k.Keyword.Name).ToList());
+            Assert.Equal("UML-central", created.Company.Name);
         }
 
         [Fact]
@@ -109,17 +92,37 @@ namespace BDSA2020.Models.Tests
         [Fact]
         public async Task UpdatePlacementDescription_returns_true_on_updated()
         {
-            var descriptionToUpdate = await Context.PlacementDescriptions.FirstAsync();
-            descriptionToUpdate.Degree = Degree.Other;
+            var descriptionToUpdate = new UpdatePlacementDescriptionDTO
+            {
+                Id = 1,
+                KeywordNames = new [] { "UML" },
+                Degree = Degree.Bachelor, 
+                MinSalary = 10, 
+                MinWorkingHours = 1, 
+                MaxWorkingHours = 100, 
+                Agreement = true, 
+                Location = "Nørreport", 
+                LastApplyDate = new DateTime(2020, 12, 10), 
+                Email = "companyEmail@company.com", 
+                Thumbnail = new Uri("https://starwarsblog.starwars.com/wp-content/uploads/2020/04/best-friend-in-galaxy-chewbacca_TALL.jpg"), 
+                Title = "UML Tester", 
+                Description = "You should be able to do UML diagrams correctly", 
+                CompanyName = "UML-central"
+            };
+
             var actual = await repository.UpdatePlacementDescriptionAsync(descriptionToUpdate);
 
             Assert.True(actual);
+
+            var updated = await Context.PlacementDescriptions.FindAsync(1);
+            Assert.Equal(new [] { "UML" }, updated.Keywords.Select(k => k.Keyword.Name).ToList());
+            Assert.Equal("UML-central", updated.Company.Name);
         }
 
         [Fact]
         public async Task UpdatePlacementDescription_returns_ArgumentException_on_not_found()
         {
-            var descriptionToUpdate = new PlacementDescription { Id = 100 };
+            var descriptionToUpdate = new UpdatePlacementDescriptionDTO { Id = 100 };
             await Assert.ThrowsAsync<ArgumentException>(() => repository.UpdatePlacementDescriptionAsync(descriptionToUpdate));
         }
     }

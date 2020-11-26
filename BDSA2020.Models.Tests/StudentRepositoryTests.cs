@@ -32,19 +32,23 @@ namespace BDSA2020.Models.Tests
         {
             var actual = await repository.GetStudentAsync(1);
 
-            var expected = new Student 
+            var expected = new StudentDetailsDTO
             { 
                 Id = 1, 
                 Degree = Degree.Bachelor, 
+                KeywordNames = new [] { "Testing", "C#" },
                 MinSalary = 100, 
                 MinWorkingHours = 5, 
                 MaxWorkingHours = 20, 
                 Agreement = false, 
-                Location = "Nowhere" 
+                Location = "Nowhere",
+                PlacementDescriptionIds = new [] { 1 }
             };
 
             Assert.Equal(expected.Id, actual.Id);
             Assert.Equal(expected.Degree, actual.Degree);
+            Assert.Equal(expected.PlacementDescriptionIds.First(), actual.PlacementDescriptionIds.First());
+            Assert.Equal(expected.KeywordNames, actual.KeywordNames);
         }
 
         [Fact]
@@ -58,7 +62,8 @@ namespace BDSA2020.Models.Tests
         {
             var student = new CreateStudentDTO
             { 
-                Degree = Degree.Bachelor, 
+                Degree = Degree.Bachelor,
+                KeywordNames = new [] { "Testing" },
                 MinSalary = 100, 
                 MinWorkingHours = 5, 
                 MaxWorkingHours = 20, 
@@ -97,7 +102,7 @@ namespace BDSA2020.Models.Tests
             var dto = new UpdateStudentDTO
             {
                 Id = studentToUpdate.Id,
-                Keywords = new [] { new StudentKeywords { KeywordId = 7, StudentId = studentToUpdate.Id } },
+                KeywordNames = new [] { "Testing", "C#" },
                 Degree = Degree.Other,
                 MinSalary = 1,
                 MinWorkingHours = 1,
@@ -108,6 +113,10 @@ namespace BDSA2020.Models.Tests
             var actual = await repository.UpdateStudentAsync(dto);
 
             Assert.True(actual);
+
+            var updatedStudent = await Context.Students.FirstAsync();
+            Assert.Equal(1, updatedStudent.Id);
+            Assert.Equal(new [] { "Testing", "C#" }, updatedStudent.Keywords.Select(k => k.Keyword.Name).ToList());
         }
 
         [Fact]

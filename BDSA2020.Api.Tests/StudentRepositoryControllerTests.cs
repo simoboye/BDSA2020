@@ -31,8 +31,8 @@ namespace BDSA2020.Api.Tests
         {
             var students = new []
             {
-                new Student { Id = 1 },
-                new Student { Id = 2 }
+                new StudentDetailsDTO { Id = 1, KeywordNames = new [] { "Testing" } },
+                new StudentDetailsDTO { Id = 2, KeywordNames = new [] { "C#" } }
             };
 
             repository.Setup(r => r.GetStudentsAsync()).ReturnsAsync(students);
@@ -40,9 +40,9 @@ namespace BDSA2020.Api.Tests
 
             var actual = await controller.Get(true);
 
-            var actionResult = Assert.IsType<ActionResult<IEnumerable<Student>>>(actual);
+            var actionResult = Assert.IsType<ActionResult<IEnumerable<StudentDetailsDTO>>>(actual);
             var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
-            var actualStudents = Assert.IsType<List<Student>>(okResult.Value);
+            var actualStudents = Assert.IsType<List<StudentDetailsDTO>>(okResult.Value);
 
             Assert.Equal(200, okResult.StatusCode);
             Assert.Equal(students.Length, actualStudents.Count());
@@ -56,7 +56,7 @@ namespace BDSA2020.Api.Tests
 
             var actual = await controller.Get(true);
 
-            var actionResult = Assert.IsType<ActionResult<IEnumerable<Student>>>(actual);
+            var actionResult = Assert.IsType<ActionResult<IEnumerable<StudentDetailsDTO>>>(actual);
             var code = Assert.IsType<StatusCodeResult>(actionResult.Result);
             Assert.Equal(500, code.StatusCode);
         }
@@ -64,16 +64,16 @@ namespace BDSA2020.Api.Tests
         [Fact]
         public async Task Get_given_id_returns_200_and_student()
         {
-            var student = new Student { Id = 1, Degree = Degree.Bachelor, MinSalary = 100, MinWorkingHours = 5, MaxWorkingHours = 20, Agreement = false, Location = "Nowhere" };
+            var student = new StudentDetailsDTO { Id = 1, Degree = Degree.Bachelor, MinSalary = 100, MinWorkingHours = 5, MaxWorkingHours = 20, Agreement = false, Location = "Nowhere" };
 
             repository.Setup(r => r.GetStudentAsync(student.Id)).ReturnsAsync(student);
             var controller = new StudentRepositoryController(repository.Object);
 
             var actual = await controller.Get(1, true);
 
-            var actionResult = Assert.IsType<ActionResult<Student>>(actual);
+            var actionResult = Assert.IsType<ActionResult<StudentDetailsDTO>>(actual);
             var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
-            var actualStudent = Assert.IsType<Student>(okResult.Value);
+            var actualStudent = Assert.IsType<StudentDetailsDTO>(okResult.Value);
 
             Assert.Equal(200, okResult.StatusCode);
             Assert.Equal(student, actualStudent);
@@ -87,7 +87,7 @@ namespace BDSA2020.Api.Tests
 
             var actual = await controller.Get(100, true);
 
-            var actionResult = Assert.IsType<ActionResult<Student>>(actual);
+            var actionResult = Assert.IsType<ActionResult<StudentDetailsDTO>>(actual);
             var code = Assert.IsType<StatusCodeResult>(actionResult.Result);
             Assert.Equal(404, code.StatusCode);
         }
@@ -100,7 +100,7 @@ namespace BDSA2020.Api.Tests
 
             var actual = await controller.Get(1, true);
 
-            var actionResult = Assert.IsType<ActionResult<Student>>(actual);
+            var actionResult = Assert.IsType<ActionResult<StudentDetailsDTO>>(actual);
             var code = Assert.IsType<StatusCodeResult>(actionResult.Result);
             Assert.Equal(500, code.StatusCode);
         }

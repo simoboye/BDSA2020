@@ -10,9 +10,6 @@ namespace BDSA2020.Entities
         [Required]
         public Degree Degree { get; set; }
 
-        // [Required]
-        // public int KeywordWrapperId { get; set; }
-
         [Required]
         public int MinSalary { get; set; }
 

@@ -6,6 +6,6 @@ namespace BDSA2020.Entities
     {
         public virtual ICollection<Saved> PlacementDescriptions { get; set; }
 
-        public virtual ICollection<StudentKeywords> Keywords { get; set; }
+        public virtual ICollection<StudentKeyword> Keywords { get; set; }
     }
 }

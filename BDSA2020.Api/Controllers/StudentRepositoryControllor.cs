@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BDSA2020.Entities;
 using BDSA2020.Models;
 using BDSA2020.Shared;
 using Microsoft.AspNetCore.Http;
@@ -24,7 +23,7 @@ namespace BDSA2020.Api.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<Student>>> Get(bool isTest = false)
+        public async Task<ActionResult<IEnumerable<StudentDetailsDTO>>> Get(bool isTest = false)
         {
             try 
             {
@@ -42,7 +41,7 @@ namespace BDSA2020.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<Student>> Get(int id, bool isTest = false)
+        public async Task<ActionResult<StudentDetailsDTO>> Get(int id, bool isTest = false)
         {
             try 
             {
