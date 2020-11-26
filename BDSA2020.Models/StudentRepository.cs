@@ -30,7 +30,7 @@ namespace BDSA2020.Models
                                MaxWorkingHours = s.MaxWorkingHours,
                                Agreement = s.Agreement,
                                Location = s.Location,
-                               PlacementDescriptions = s.PlacementDescriptions.Select(p => p.PlacementDescription).ToList()
+                               PlacementDescriptionIds = s.PlacementDescriptions.Select(p => p.PlacementDescription.Id).ToList()
                            };
 
             return await students.ToListAsync();
@@ -50,7 +50,7 @@ namespace BDSA2020.Models
                                MaxWorkingHours = s.MaxWorkingHours,
                                Agreement = s.Agreement,
                                Location = s.Location,
-                               PlacementDescriptions = s.PlacementDescriptions.Select(p => p.PlacementDescription).ToList()
+                               PlacementDescriptionIds = s.PlacementDescriptions.Select(p => p.PlacementDescription.Id).ToList()
                            };
 
             var student = await studentQuery.FirstOrDefaultAsync();

@@ -42,12 +42,12 @@ namespace BDSA2020.Models.Tests
                 MaxWorkingHours = 20, 
                 Agreement = false, 
                 Location = "Nowhere",
-                PlacementDescriptions = new [] { new PlacementDescription { Id = 1 } }
+                PlacementDescriptionIds = new [] { 1 }
             };
 
             Assert.Equal(expected.Id, actual.Id);
             Assert.Equal(expected.Degree, actual.Degree);
-            Assert.Equal(expected.PlacementDescriptions.First().Id, actual.PlacementDescriptions.First().Id);
+            Assert.Equal(expected.PlacementDescriptionIds.First(), actual.PlacementDescriptionIds.First());
             Assert.Equal(expected.KeywordNames, actual.KeywordNames);
         }
 
