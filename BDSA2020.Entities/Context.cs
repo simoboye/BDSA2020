@@ -29,7 +29,6 @@ namespace BDSA2020.Entities
             // Boilerplade code taken from the Lecture04/Program.cs 
             var configuration = new ConfigurationBuilder().AddUserSecrets(typeof(Context).Assembly).Build();
             var connectionString = configuration.GetConnectionString("ConnectionString");
-           // var connectionString = @"Server=(localdb)\MSSQLLocalDB;Database=BDSA2020;Trusted_Connection=True;";
 
             if (!optionsBuilder.IsConfigured)
             {
