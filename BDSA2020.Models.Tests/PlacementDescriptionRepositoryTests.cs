@@ -58,7 +58,7 @@ namespace BDSA2020.Models.Tests
                 Thumbnail = new Uri("https://starwarsblog.starwars.com/wp-content/uploads/2020/04/best-friend-in-galaxy-chewbacca_TALL.jpg"), 
                 Title = "UML designer", 
                 Description = "You should be able to do UML diagrams correctly", 
-                CompanyName = "UML-central"
+                CompanyName = "Spotify"
             };
 
             var descriptionList = await Context.PlacementDescriptions.ToListAsync();
@@ -72,7 +72,7 @@ namespace BDSA2020.Models.Tests
 
             var created = await Context.PlacementDescriptions.FindAsync(actual);
             Assert.Equal(new [] { "Java", "Testing" }, created.Keywords.Select(k => k.Keyword.Name).ToList());
-            Assert.Equal("UML-central", created.Company.Name);
+            Assert.Equal("Spotify", created.Company.Name);
         }
 
         [Fact]
@@ -107,7 +107,7 @@ namespace BDSA2020.Models.Tests
                 Thumbnail = new Uri("https://starwarsblog.starwars.com/wp-content/uploads/2020/04/best-friend-in-galaxy-chewbacca_TALL.jpg"), 
                 Title = "UML Tester", 
                 Description = "You should be able to do UML diagrams correctly", 
-                CompanyName = "UML-central"
+                CompanyName = "Spotify"
             };
 
             var actual = await repository.UpdatePlacementDescriptionAsync(descriptionToUpdate);
@@ -116,7 +116,7 @@ namespace BDSA2020.Models.Tests
 
             var updated = await Context.PlacementDescriptions.FindAsync(1);
             Assert.Equal(new [] { "UML" }, updated.Keywords.Select(k => k.Keyword.Name).ToList());
-            Assert.Equal("UML-central", updated.Company.Name);
+            Assert.Equal("Spotify", updated.Company.Name);
         }
 
         [Fact]

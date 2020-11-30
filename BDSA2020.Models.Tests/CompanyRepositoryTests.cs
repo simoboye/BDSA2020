@@ -24,19 +24,22 @@ namespace BDSA2020.Models.Tests
             var actual = await repository.GetCompaniesAsync();
 
             // Assert
-            Assert.Equal(4, actual.Count);
+            Assert.Equal(2, actual.Count);
         }
 
         [Fact]
         public async Task GetCompany_returns_the_requested_comapny() 
-        {
-            var entity = await Context.Companies.FirstOrDefaultAsync();
-            var actual = await repository.GetCompanyAsync(entity.Id);
+        {   
+            var id = new Guid("daccfa6a-6765-4295-82f1-49480ab2c2c1");
+            // TODO: Need to find a more permanent solution to this, as this is hardcoded now.
+            //var entity = await Context.Companies.FirstOrDefaultAsync();
+            var actual = await repository.GetCompanyAsync(id);
 
             var expected = new CompanyDetailsDTO
             { 
-                Id = entity.Id,
-                Name = "Test"
+                PlacementDescriptionIds = new [] {1, 2},
+                Id = id,
+                Name = "Spotify"
             };
 
             Assert.Equal(expected.Id, actual.Id);
