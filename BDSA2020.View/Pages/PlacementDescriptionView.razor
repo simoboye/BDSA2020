@@ -118,8 +118,10 @@
 
 
 
-@if (students == null)
-@using Entities
+@if (students == null){
+
+}
+
 @inject HttpClient httpClient
 
 
@@ -185,7 +187,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-         students = await httpClient.GetFromJsonAsync<Student[]>("StudentRepository");
+        students = await httpClient.GetFromJsonAsync<Student[]>("StudentRepository");
         placementDescriptions = await httpClient.GetFromJsonAsync<PlacementDescription[]>("PlacementDescriptionRepository");
     }
 
