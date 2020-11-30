@@ -21,6 +21,21 @@
 
 .frame {
     margin: 30px;
+    vertical-align: auto;
+    margin: 0 auto;
+    border-radius: 20px;
+}
+
+.my-cardSaved{
+    height: 275px;
+}
+
+.my-settings{
+    height: 1250px;
+}
+
+.frame {
+    margin: 40px;
     /*
     margin-top: 30px;
     margin-left: 20px;
@@ -28,7 +43,8 @@
     */
 }
 
-h5 {
+
+.placement h5 {
     color: white;
     font-weight: bold;
 }
@@ -47,7 +63,25 @@ img {
     height: auto;
 }
 
-p{
+
+.placement img {
+    width: 100%;
+    max-height: 100px;
+    height: auto;
+}
+
+.btn-save {
+    color: #fff;
+    background-color: #c57ba0;
+    /*border-color: #af6874;*/
+    border-radius: 50%;
+}
+
+.btnApplyPlacement {
+    margin-top: 5px;
+}
+
+.placement p{
     margin: 0;
 }
 

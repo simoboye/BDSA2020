@@ -11,8 +11,9 @@ namespace BDSA2020.Entities
         public DbSet<Company> Companies { get; set; }
         public DbSet<PlacementDescription> PlacementDescriptions { get; set; }
         public DbSet<Saved> Saved { get; set; }
-        public DbSet<StudentKeywords> StudentKeywords { get; set; }
-        public DbSet<PlacementDescriptionKeywords> PlacementDescriptionKeywords { get; set; }
+        public DbSet<StudentKeyword> StudentKeywords { get; set; }
+        public DbSet<PlacementDescriptionKeyword> PlacementDescriptionKeywords { get; set; }
+        public DbSet<Keyword> Keywords { get; set; }
 
         public Context()
         {
@@ -65,23 +66,23 @@ namespace BDSA2020.Entities
                 .HasData(GetSavedData());
 
             modelBuilder
-                .Entity<KeywordContainer>()
+                .Entity<Keyword>()
                 .HasData(GetKeywordsData());
             
             modelBuilder
-                .Entity<StudentKeywords>()
+                .Entity<StudentKeyword>()
                 .HasData(GetStudentKeywordsData());
             
             modelBuilder
-                .Entity<PlacementDescriptionKeywords>()
+                .Entity<PlacementDescriptionKeyword>()
                 .HasData(GetPlacementDescriptionKeywordsData());
         }
 
         private void SetUpManyToManyKeys(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Saved>().HasKey(s => new { s.StudentId, s.PlacementDescriptionId });
-            modelBuilder.Entity<StudentKeywords>().HasKey(sk => new { sk.StudentId, sk.KeywordId });
-            modelBuilder.Entity<PlacementDescriptionKeywords>().HasKey(pdk => new { pdk.PlacementDescriptionId, pdk.KeywordId });
+            modelBuilder.Entity<StudentKeyword>().HasKey(sk => new { sk.StudentId, sk.KeywordId });
+            modelBuilder.Entity<PlacementDescriptionKeyword>().HasKey(pdk => new { pdk.PlacementDescriptionId, pdk.KeywordId });
         }
 
         private void ParseEnums(ModelBuilder modelBuilder)
@@ -111,14 +112,19 @@ namespace BDSA2020.Entities
             }; 
         }
 
-        private ICollection<Student> GetStudentsData()
+        private Guid id1 = Guid.NewGuid();
+        private Guid id2 = Guid.NewGuid();
+        private Guid id3 = Guid.NewGuid();
+        private Guid id4 = Guid.NewGuid();
+
+        private Student[] GetStudentsData()
         {
             return new []
             {
-                new Student { Id = 1, Degree = Degree.Bachelor, MinSalary = 100, MinWorkingHours = 5, MaxWorkingHours = 20, Agreement = false, Location = "Nowhere" },
-                new Student { Id = 2, Degree = Degree.Master, MinSalary = 1000, MinWorkingHours = 532, MaxWorkingHours = 43243, Agreement = false, Location = "Anywhere" },
-                new Student { Id = 3, Degree = Degree.PhD, MinSalary = 10000, MinWorkingHours = 5000, MaxWorkingHours = 5001, Agreement = true, Location = "Glostrup" },
-                new Student { Id = 4, Degree = Degree.Other, MinSalary = 1, MinWorkingHours = 1, MaxWorkingHours = 5, Agreement = true, Location = "Italy" }
+                new Student { Id = id1, Degree = Degree.Bachelor, MinSalary = 100, MinWorkingHours = 5, MaxWorkingHours = 20, Agreement = false, Location = "Nowhere" },
+                new Student { Id = id2, Degree = Degree.Master, MinSalary = 1000, MinWorkingHours = 532, MaxWorkingHours = 43243, Agreement = false, Location = "Anywhere" },
+                new Student { Id = id3, Degree = Degree.PhD, MinSalary = 10000, MinWorkingHours = 5000, MaxWorkingHours = 5001, Agreement = true, Location = "Glostrup" },
+                new Student { Id = id4, Degree = Degree.Other, MinSalary = 1, MinWorkingHours = 1, MaxWorkingHours = 5, Agreement = true, Location = "Italy" }
             };
         }
 
@@ -126,48 +132,48 @@ namespace BDSA2020.Entities
         {
             return new []
             {
-                new Saved { StudentId = 1, PlacementDescriptionId = 1 },
-                new Saved { StudentId = 1, PlacementDescriptionId = 2 },
-                new Saved { StudentId = 2, PlacementDescriptionId = 1 }
+                new Saved { StudentId = GetStudentsData()[0].Id, PlacementDescriptionId = 1 },
+                new Saved { StudentId = GetStudentsData()[0].Id, PlacementDescriptionId = 2 },
+                new Saved { StudentId = GetStudentsData()[1].Id, PlacementDescriptionId = 1 }
             };
         } 
 
-        private ICollection<KeywordContainer> GetKeywordsData()
+        private ICollection<Keyword> GetKeywordsData()
         {
             return new []
             {
-                new KeywordContainer { Id = 1, Name = "Testing" },
-                new KeywordContainer { Id = 2, Name = "C#" },
-                new KeywordContainer { Id = 3, Name = "Java" },
-                new KeywordContainer { Id = 4, Name = "FullStack" },
-                new KeywordContainer { Id = 5, Name = "Frontend" },
-                new KeywordContainer { Id = 6, Name = "Backend" },
-                new KeywordContainer { Id = 7, Name = "UML" },
-                new KeywordContainer { Id = 8, Name = "DevOps" },
-                new KeywordContainer { Id = 9, Name = "Communication" },
-                new KeywordContainer { Id = 10, Name = "JavaScript" }
+                new Keyword { Id = 1, Name = "Testing" },
+                new Keyword { Id = 2, Name = "C#" },
+                new Keyword { Id = 3, Name = "Java" },
+                new Keyword { Id = 4, Name = "FullStack" },
+                new Keyword { Id = 5, Name = "Frontend" },
+                new Keyword { Id = 6, Name = "Backend" },
+                new Keyword { Id = 7, Name = "UML" },
+                new Keyword { Id = 8, Name = "DevOps" },
+                new Keyword { Id = 9, Name = "Communication" },
+                new Keyword { Id = 10, Name = "JavaScript" }
             };
         }
 
-        private ICollection<StudentKeywords> GetStudentKeywordsData()
+        private ICollection<StudentKeyword> GetStudentKeywordsData()
         {
             return new []
             {
-                new StudentKeywords { StudentId = 1, KeywordId = 1 },
-                new StudentKeywords { StudentId = 1, KeywordId = 2 },
-                new StudentKeywords { StudentId = 2, KeywordId = 1 },
-                new StudentKeywords { StudentId = 3, KeywordId = 6 },
-                new StudentKeywords { StudentId = 4, KeywordId = 7 }
+                new StudentKeyword { StudentId = GetStudentsData()[0].Id, KeywordId = 1 },
+                new StudentKeyword { StudentId = GetStudentsData()[0].Id, KeywordId = 2 },
+                new StudentKeyword { StudentId = GetStudentsData()[1].Id, KeywordId = 1 },
+                new StudentKeyword { StudentId = GetStudentsData()[2].Id, KeywordId = 6 },
+                new StudentKeyword { StudentId = GetStudentsData()[3].Id, KeywordId = 7 }
             };
         }
 
-        private ICollection<PlacementDescriptionKeywords> GetPlacementDescriptionKeywordsData()
+        private ICollection<PlacementDescriptionKeyword> GetPlacementDescriptionKeywordsData()
         {
             return new []
             {
-                new PlacementDescriptionKeywords { PlacementDescriptionId = 1, KeywordId = 1 },
-                new PlacementDescriptionKeywords { PlacementDescriptionId = 1, KeywordId = 10 },
-                new PlacementDescriptionKeywords { PlacementDescriptionId = 2, KeywordId = 3 }
+                new PlacementDescriptionKeyword { PlacementDescriptionId = 1, KeywordId = 1 },
+                new PlacementDescriptionKeyword { PlacementDescriptionId = 1, KeywordId = 10 },
+                new PlacementDescriptionKeyword { PlacementDescriptionId = 2, KeywordId = 3 }
             };
         }
     }

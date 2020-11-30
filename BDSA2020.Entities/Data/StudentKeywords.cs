@@ -1,10 +1,12 @@
+using System;
+
 namespace BDSA2020.Entities
 {
-    public class StudentKeywords
+    public class StudentKeyword
     {
-        public int StudentId { get; set; }
-        public virtual Student Student { get; set; }
+        public Guid StudentId { get; set; }
+        public Student Student { get; set; }
         public int KeywordId { get; set; }
-        public string KeywordName { get; set; }
+        public Keyword Keyword { get; set; }
     }
 }

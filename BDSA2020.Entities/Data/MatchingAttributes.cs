@@ -5,13 +5,8 @@ namespace BDSA2020.Entities
 {
     public abstract class MatchingAttributes
     {
-        public int Id { get; set; }
-
         [Required]
         public Degree Degree { get; set; }
-
-        // [Required]
-        // public int KeywordWrapperId { get; set; }
 
         [Required]
         public int MinSalary { get; set; }

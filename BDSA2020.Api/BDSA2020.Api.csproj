@@ -16,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BDSA2020.Entities\BDSA2020.Entities.csproj" />
     <ProjectReference Include="..\BDSA2020.Models\BDSA2020.Models.csproj" />
+    <ProjectReference Include="..\BDSA2020.Shared\BDSA2020.Shared.csproj" />
   </ItemGroup>
 
 
