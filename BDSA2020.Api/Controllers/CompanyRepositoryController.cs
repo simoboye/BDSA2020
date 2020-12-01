@@ -85,11 +85,12 @@ namespace BDSA2020.Api.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete()]
+        [Route("delete/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<bool>> Delete(Guid id, bool isTest = false)
+        public async Task<ActionResult<bool>> Delete([FromRoute] Guid id, bool isTest = false)
         {
             try 
             {
