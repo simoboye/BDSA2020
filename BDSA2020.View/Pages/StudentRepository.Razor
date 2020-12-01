@@ -2,6 +2,7 @@
 
 @using Entities
 @inject HttpClient httpClient
+@inject IJSRuntime JS;
 
 <h1>Students</h1>
 
@@ -39,6 +40,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        students = await httpClient.GetFromJsonAsync<Student[]>("StudentRepository");
+        students = await httpClient.GetFromJsonAsync<Student[]>("StudentRepository"); 
     }
 }
