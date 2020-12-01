@@ -2,7 +2,7 @@
 
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    background-color: rgb(58, 175, 169);
+    background-color: #ffffff;
 }
 
 a, .btn-link {
@@ -48,7 +48,7 @@ app {
 }
 
 .sidebar {
-    background-image: linear-gradient(180deg, rgb(5, 150, 103) 0%, #257677 70%);
+    background-color: #ef403b;
 }
 
     .sidebar .top-row {
@@ -80,7 +80,7 @@ app {
         }
 
         .sidebar .nav-item a {
-            color: #d7d7d7;
+            color: #ecedee;
             border-radius: 4px;
             height: 3rem;
             display: flex;
@@ -147,7 +147,7 @@ app {
 
 .placement {
     margin-top: 30px;
-    background-color: rgb(35, 125, 137) ;
+    background-color: #BDBFBF;
     width: 90%;
     height: 425px;
     /*align-items: center;*/
