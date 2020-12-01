@@ -1,5 +1,6 @@
 @page "/placementdescription"
 
+@using BDSA2020.Shared;
 @inject HttpClient httpClient
 @inject IJSRuntime JS;
 
@@ -56,11 +57,11 @@ else
 
 @code {
 
-    private PlacementDescription[] placementDescriptions;
+    private PlacementDescriptionDetailsDTO[] placementDescriptions;
         
      protected override async Task OnInitializedAsync()
     {
-        placementDescriptions = await httpClient.GetFromJsonAsync<PlacementDescription[]>("PlacementDescriptionRepository");
+        placementDescriptions = await httpClient.GetFromJsonAsync<PlacementDescriptionDetailsDTO[]>("PlacementDescriptionRepository");
         
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)
