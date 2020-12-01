@@ -30,12 +30,14 @@ namespace BDSA2020.Models.Tests
         [Fact]
         public async Task GetStudent_returns_the_requested_student() 
         {
-            var entity = await Context.Students.FirstOrDefaultAsync();
-            var actual = await repository.GetStudentAsync(entity.Id);
+            var id = new Guid("290c1a5f-3790-4bcb-89dc-6a4c3de155d1");
+            // TODO: Need to find a more permanent solution to this, as this is hardcoded now.
+            //var entity = await Context.Students.FirstOrDefaultAsync();
+            var actual = await repository.GetStudentAsync(id);
 
             var expected = new StudentDetailsDTO
             { 
-                Id = entity.Id,
+                Id = id,
                 Degree = Degree.Bachelor, 
                 KeywordNames = new [] { "Testing", "C#" },
                 MinSalary = 100, 
