@@ -65,7 +65,7 @@ namespace BDSA2020.Entities
 
             modelBuilder
                 .Entity<Keyword>()
-                .HasData(GetKeywordsData());
+                .HasData(GetKeywordsData()); 
             
             modelBuilder
                 .Entity<StudentKeyword>()
