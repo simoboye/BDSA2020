@@ -111,6 +111,7 @@ namespace BDSA2020.Api.Controllers
         }
 
         [HttpPut]
+        [Route("update")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
