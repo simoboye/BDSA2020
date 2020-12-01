@@ -62,6 +62,7 @@ namespace BDSA2020.Api.Controllers
         }
 
         [HttpPost]
+        [Route("create")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
