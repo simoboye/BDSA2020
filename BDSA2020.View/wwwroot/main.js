@@ -1,11 +1,10 @@
 
 window.CardAnimation = () => {
   //use this for future JS where Blazor needs to be loaded
-  document.getElementById('scroll-container').onscroll = function() {
-      checkMore();
-  };
-};
-
+  //document.getElementById('scroll-container').onscroll = function() {
+  //    checkMore();
+  //};
+}
 
 function goPrev() {
   console.log("up");
@@ -21,7 +20,7 @@ function goNext() {
     top: 40,
     behavior: 'smooth' 
   });
- // checkMore();
+  checkMore();
 }
 
 
@@ -33,5 +32,4 @@ function checkMore(){
       console.log("NO MORE DESCRIPTION")
       //TODO add loadMore() logic here
     }
-
-}
+  }
