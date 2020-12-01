@@ -1,6 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Authentication.AzureADB2C.UI
 @using Microsoft.Extensions.Options
 @inject IOptionsMonitor<AzureADB2COptions> AzureADB2COptions
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <div class="top-row pl-4 navbar navbar-dark">
     <a class="navbar-brand" href="">PlaDat</a>
@@ -11,46 +13,38 @@
 
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <ul class="nav flex-column">
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="studentrepository">
-                <span class="oi oi-person" aria-hidden="true"></span> Students
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="placementdescription">
-                <span class="oi oi-book" aria-hidden="true"></span> Placement Descriptions
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="mysaves">
-                <span class="oi oi-heart" aria-hidden="true"></span> My Saves
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="profilesettings">
-                <span class="oi oi-cog" aria-hidden="true"></span> Profile Settings
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="placementdescriptioncreation">
-                <span class="oi oi-document" aria-hidden="true"></span> Create Placement
-            </NavLink>
-        </li>
+        @if (isCompany) 
+        {
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="placementdescription" Match="NavLinkMatch.All">
+                    <span class="oi oi-home" aria-hidden="true"></span> Home
+                </NavLink>
+            </li>
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="mysaves">
+                    <span class="oi oi-heart" aria-hidden="true"></span> My Saves
+                </NavLink>
+            </li>
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="profilesettings">
+                    <span class="oi oi-cog" aria-hidden="true"></span> Profile Settings
+                </NavLink>
+            </li>
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="placementdescriptioncreation">
+                    <span class="oi oi-document" aria-hidden="true"></span> Create Placement
+                </NavLink>
+            </li>
+        }
+        else
+        {
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="placementdescriptioncreation">
+                    <span class="oi oi-document" aria-hidden="true"></span> Create Placement
+                </NavLink>
+            </li>
+        }
+
         <li class="nav-item px-3">
             <AuthorizeView>
                 <Authorized>
@@ -69,21 +63,9 @@
 </div>
 
 @code {
-
-    /*
-     switch (user)
-    {
-        case student:
-            Console.WriteLine("student");
-            break;
-        case company:
-            Console.WriteLine("company");
-            break;
-    }
-    */
-
     private bool collapseNavMenu = true;
     private bool canEditProfile;
+    private bool isCompany;
 
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
@@ -92,9 +74,18 @@
         collapseNavMenu = !collapseNavMenu;
     }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         var options = AzureADB2COptions.Get(AzureADB2CDefaults.AuthenticationScheme);
         canEditProfile = !string.IsNullOrEmpty(options.EditProfilePolicyId);
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            var claims = user.Claims;
+            isCompany = bool.Parse(user.FindFirst(u => u.Type.Equals("extension_isCompany"))?.Value);
+        }
     }
 }
