@@ -13,5 +13,7 @@ namespace BDSA2020.Models
         Task<ICollection<StudentDetailsDTO>> GetStudentsAsync();
         Task<bool> UpdateStudentAsync(UpdateStudentDTO student);
         Task<bool> DeleteStudentAsync(Guid id);
+        Task<bool> SavePlacementDescription(Guid studentId, int descriptionId);
+        Task<bool> UnSavePlacementDescription(Guid studentId, int descriptionId);
     }
 }

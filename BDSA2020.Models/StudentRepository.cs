@@ -128,6 +128,57 @@ namespace BDSA2020.Models
             return true;
         }
 
+        public async Task<bool> SavePlacementDescription(Guid studentId, int descriptionId)
+        {
+            var student = await (from s in context.Students
+                                 where s.Id == studentId
+                                 select s).FirstOrDefaultAsync();
+
+            var description = await (from p in context.PlacementDescriptions
+                                     where p.Id == descriptionId
+                                     select p).FirstOrDefaultAsync();
+
+            if (student == null)
+            {
+                throw new ArgumentException($"Student with id {studentId}, does not exist.");
+            }
+            else if (description == null)
+            {
+                throw new ArgumentException($"PlacementDescription with id {descriptionId}, does not exist.");
+            }
+
+            if (student.PlacementDescriptions == null) 
+            {
+                student.PlacementDescriptions = new [] { new Saved { Student = student, PlacementDescription = description } };
+            }
+            else 
+            {
+                student.PlacementDescriptions.Add(new Saved { Student = student, PlacementDescription = description });
+            }
+
+            await context.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> UnSavePlacementDescription(Guid studentId, int descriptionId)
+        {
+            var toRemove = await context.Saved.FindAsync(new object[] { studentId, descriptionId });
+
+            if (toRemove != null) 
+            {
+                context.Saved.Remove(toRemove);
+            }
+            else
+            {
+                throw new ArgumentException($"Placement description with id {descriptionId}, is not saved by student with id {studentId}");
+            }
+
+            await context.SaveChangesAsync();
+
+            return true;
+        }
+
         private IEnumerable<StudentKeyword> GetKeywords(IEnumerable<string> keywordNames) {
             var keywords = from k in context.Keywords
                            where keywordNames.Contains(k.Name)

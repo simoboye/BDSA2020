@@ -9,22 +9,6 @@
 <p>Checking your status...</p>
 <p>UserID: @_userId</p>
 
-@* <button @onclick="GetClaimsPrincipalData">Get ClaimsPrincipal Data</button>
-
-<p>@_authMessage</p>
-
-@if (_claims.Count() > 0)
-{
-    <ul>
-        @foreach (var claim in _claims)
-        {
-            <li>@claim.Type: @claim.Value</li>
-        }
-    </ul>
-}
-
-<p>@_surnameMessage</p>*/ *@
-
 @code {
     private string _authMessage;
     private string _surnameMessage;
@@ -65,7 +49,7 @@
     {
         try {
             var student = await httpClient.GetFromJsonAsync<StudentDetailsDTO>($"StudentRepository/{_userId}");
-            //Navigation.NavigateTo("/placementdescription", true);
+            Navigation.NavigateTo("/placementdescription", true);
         } catch (HttpRequestException e)
         {
             Console.WriteLine(e);
