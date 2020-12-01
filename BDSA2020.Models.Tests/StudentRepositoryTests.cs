@@ -132,5 +132,47 @@ namespace BDSA2020.Models.Tests
             var studentToUpdate = new UpdateStudentDTO { Id = Guid.NewGuid() };
             await Assert.ThrowsAsync<ArgumentException>(() => repository.UpdateStudentAsync(studentToUpdate));
         }
+
+        [Fact]
+        public async Task SavePlacementDescription_adds_Id_to_saved_list()
+        {
+            var studentToLike = await Context.Students.FindAsync(new Guid("5a87427d-f0af-421d-a340-7d9dd8f9f76e"));
+            var descriptionToBeLiked = await Context.PlacementDescriptions.FindAsync(1);
+
+            var actual = await repository.SavePlacementDescription(studentToLike.Id, descriptionToBeLiked.Id);
+
+            Assert.True(actual);
+        }
+
+        [Fact]
+        public async Task SavePlacementDescription_throws_ArgumentException_on_not_found_student_or_description()
+        {
+            var studentToLike = await Context.Students.FindAsync(new Guid("5a87427d-f0af-421d-a340-7d9dd8f9f76e"));
+            var descriptionToBeLiked = await Context.PlacementDescriptions.FindAsync(1);
+
+            await Assert.ThrowsAsync<ArgumentException>(() => repository.SavePlacementDescription(Guid.NewGuid(), descriptionToBeLiked.Id));
+            await Assert.ThrowsAsync<ArgumentException>(() => repository.SavePlacementDescription(studentToLike.Id, 100));
+        }
+
+        [Fact]
+        public async Task UnsavePlacementDescription_removes_Id_from_saved_list()
+        {
+            var studentToLike = await Context.Students.FindAsync(new Guid("290c1a5f-3790-4bcb-89dc-6a4c3de155d1"));
+            var descriptionToBeLiked = await Context.PlacementDescriptions.FindAsync(1);
+
+            var actual = await repository.UnSavePlacementDescription(studentToLike.Id, descriptionToBeLiked.Id);
+
+            Assert.True(actual);
+        }
+
+        [Fact]
+        public async Task UnSavePlacementDescription_throws_ArgumentException_on_not_found_student_or_description()
+        {
+            var studentToLike = await Context.Students.FindAsync(new Guid("290c1a5f-3790-4bcb-89dc-6a4c3de155d1"));
+            var descriptionToBeLiked = await Context.PlacementDescriptions.FindAsync(1);
+
+            await Assert.ThrowsAsync<ArgumentException>(() => repository.UnSavePlacementDescription(Guid.NewGuid(), descriptionToBeLiked.Id));
+            await Assert.ThrowsAsync<ArgumentException>(() => repository.UnSavePlacementDescription(studentToLike.Id, 100));
+        }
     }
 }

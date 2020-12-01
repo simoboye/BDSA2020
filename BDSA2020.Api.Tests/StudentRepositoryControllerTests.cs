@@ -228,5 +228,105 @@ namespace BDSA2020.Api.Tests
             var code = Assert.IsType<StatusCodeResult>(actionResult.Result);
             Assert.Equal(500, code.StatusCode);
         }
+
+        [Fact]
+        public async Task Save_returns_true_on_200()
+        {
+            var studentId = new Guid("5a87427d-f0af-421d-a340-7d9dd8f9f76e");
+            var descriptionId = 1;
+            repository.Setup(r => r.SavePlacementDescription(studentId, descriptionId)).ReturnsAsync(true);
+            var controller = new StudentRepositoryController(repository.Object);
+
+            var actual = await controller.Save(studentId, descriptionId, true);
+
+            var actionCodeResult = Assert.IsType<ActionResult<bool>>(actual);
+            var code = Assert.IsType<OkObjectResult>(actionCodeResult.Result);
+            var hasBeenSaved = Assert.IsType<bool>(code.Value);
+
+            Assert.Equal(200, code.StatusCode);
+            Assert.True(hasBeenSaved);
+        }
+
+        [Fact]
+        public async Task Save_returns_404_on_not_found()
+        {
+            var studentId = new Guid("5a87427d-f0af-421d-a340-7d9dd8f9f76e");
+            var descriptionId = 100;
+            repository.Setup(r => r.SavePlacementDescription(studentId, descriptionId)).ThrowsAsync(new ArgumentException());
+            var controller = new StudentRepositoryController(repository.Object);
+
+            var actual = await controller.Save(studentId, descriptionId, true);
+
+            var actionCodeResult = Assert.IsType<ActionResult<bool>>(actual);
+            var code = Assert.IsType<StatusCodeResult>(actionCodeResult.Result);
+
+            Assert.Equal(404, code.StatusCode);
+        }
+
+        [Fact]
+        public async Task Save_returns_500_on_internal_server_error()
+        {
+            var studentId = new Guid("5a87427d-f0af-421d-a340-7d9dd8f9f76e");
+            var descriptionId = 1;
+            repository.Setup(r => r.SavePlacementDescription(studentId, descriptionId)).ThrowsAsync(new Exception());
+            var controller = new StudentRepositoryController(repository.Object);
+
+            var actual = await controller.Save(studentId, descriptionId, true);
+
+            var actionCodeResult = Assert.IsType<ActionResult<bool>>(actual);
+            var code = Assert.IsType<StatusCodeResult>(actionCodeResult.Result);
+
+            Assert.Equal(500, code.StatusCode);
+        }
+
+        [Fact]
+        public async Task UnSave_returns_true_on_200()
+        {
+            var studentId = new Guid("a3aaf097-a515-4aac-9a90-c26ee1e40488");
+            var descriptionId = 1;
+            repository.Setup(r => r.UnSavePlacementDescription(studentId, descriptionId)).ReturnsAsync(true);
+            var controller = new StudentRepositoryController(repository.Object);
+
+            var actual = await controller.UnSave(studentId, descriptionId, true);
+
+            var actionCodeResult = Assert.IsType<ActionResult<bool>>(actual);
+            var code = Assert.IsType<OkObjectResult>(actionCodeResult.Result);
+            var hasBeenUnSaved = Assert.IsType<bool>(code.Value);
+
+            Assert.Equal(200, code.StatusCode);
+            Assert.True(hasBeenUnSaved);
+        }
+
+        [Fact]
+        public async Task UnSave_returns_404_on_not_found()
+        {
+            var studentId = new Guid("5a87427d-f0af-421d-a340-7d9dd8f9f76e");
+            var descriptionId = 100;
+            repository.Setup(r => r.UnSavePlacementDescription(studentId, descriptionId)).ThrowsAsync(new ArgumentException());
+            var controller = new StudentRepositoryController(repository.Object);
+
+            var actual = await controller.UnSave(studentId, descriptionId, true);
+
+            var actionCodeResult = Assert.IsType<ActionResult<bool>>(actual);
+            var code = Assert.IsType<StatusCodeResult>(actionCodeResult.Result);
+
+            Assert.Equal(404, code.StatusCode);
+        }
+
+        [Fact]
+        public async Task UnSave_returns_500_on_internal_server_error()
+        {
+            var studentId = new Guid("5a87427d-f0af-421d-a340-7d9dd8f9f76e");
+            var descriptionId = 1;
+            repository.Setup(r => r.UnSavePlacementDescription(studentId, descriptionId)).ThrowsAsync(new Exception());
+            var controller = new StudentRepositoryController(repository.Object);
+
+            var actual = await controller.UnSave(studentId, descriptionId, true);
+
+            var actionCodeResult = Assert.IsType<ActionResult<bool>>(actual);
+            var code = Assert.IsType<StatusCodeResult>(actionCodeResult.Result);
+
+            Assert.Equal(500, code.StatusCode);
+        }
     }
 }

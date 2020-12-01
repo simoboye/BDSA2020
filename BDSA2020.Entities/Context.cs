@@ -120,7 +120,7 @@ namespace BDSA2020.Entities
         private Guid id1 = new Guid("290c1a5f-3790-4bcb-89dc-6a4c3de155d1");
         private Guid id2 = Guid.NewGuid();
         private Guid id3 = Guid.NewGuid();
-        private Guid id4 = Guid.NewGuid();
+        private Guid id4 = new Guid("5a87427d-f0af-421d-a340-7d9dd8f9f76e");
 
         private Student[] GetStudentsData()
         {
