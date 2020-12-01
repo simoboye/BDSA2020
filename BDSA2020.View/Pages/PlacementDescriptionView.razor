@@ -4,103 +4,41 @@
 @inject HttpClient httpClient
 @inject IJSRuntime JS;
 
+@if (placementDescriptions == null)
+{
+    <p><em>Loading...</em></p>
+}
+else 
+{
 <div class="scroll-container" id="scroll-container">
     <!-- Four placeholder Placement Descriptions-->
-<div class="placement scroll-area">
-        <div class = "frame">
-            <div style="height: 30px;"></div>
-            <h5>LEO Pharma</h5>
-            <img src="https://www.bhrservice.dk/wp-content/uploads/2016/12/3-1.jpg" alt="">
-                <p class = "description">Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                    Deleniti architecto itaque accusantium nulla tempora animi
-                    recusandae mollitia fugiat omnis error, magni eius accusamus
-                    corporis voluptatibus quisquam incidunt sunt modi tempore!</p>
-                    <div class="divider"></div>
-                    <ul class="description">
-                        <li>hours</li>
-                        <li>location</li>
-                        <li>salary</li>
-                    </ul>
-                    <div class="divider"></div>
-                    <div style="height: 20px;"></div>
-                    <div class="btnPlacement more">
-                        <p class="center">More</p>
-                    </div>
-                <p class="boldText">Last apply date: 12th Nov 2020</p>
-            </div>
-        </div>
 
-        <div class="placement scroll-area"> 
+    @foreach (var item in placementDescriptions)
+    {
+    <div class="placement scroll-area">
         <div class = "frame">
             <div style="height: 30px;"></div>
-            <h5>LEO Pharma</h5>
-            <img src="https://www.bhrservice.dk/wp-content/uploads/2016/12/3-1.jpg" alt="">
-                <p class = "description">Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                    Deleniti architecto itaque accusantium nulla tempora animi
-                    recusandae mollitia fugiat omnis error, magni eius accusamus
-                    corporis voluptatibus quisquam incidunt sunt modi tempore!</p>
+            <h5>@item.Title</h5>
+            <img src="@item.Thumbnail" alt="">
+                <p class = "description">@item.Description</p>
                     <div class="divider"></div>
                     <ul class="description">
-                        <li>hours</li>
-                        <li>location</li>
-                        <li>salary</li>
+                        <li>@item.MinWorkingHours</li>
+                        <li>@item.Location</li>
+                        <li>@item.MinSalary</li>
                     </ul>
                     <div class="divider"></div>
                     <div style="height: 20px;"></div>
                     <div class="btnPlacement more">
                         <p class="center">More</p>
                     </div>
-                <p class="boldText">Last apply date: 12th Nov 2020</p>
+                <p class="boldText">Last apply date: @GetLastApplyDate(item.Id -1)</p>
+                <p class="boldText">Days remaining: @DaysRemaining(item.Id -1)</p>
             </div>
         </div>
-        <div class="placement scroll-area">
-        <div class = "frame">
-            <div style="height: 30px;"></div>
-            <h5>LEO Pharma</h5>
-            <img src="https://www.bhrservice.dk/wp-content/uploads/2016/12/3-1.jpg" alt="">
-                <p class = "description">Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                    Deleniti architecto itaque accusantium nulla tempora animi
-                    recusandae mollitia fugiat omnis error, magni eius accusamus
-                    corporis voluptatibus quisquam incidunt sunt modi tempore!</p>
-                    <div class="divider"></div>
-                    <ul class="description">
-                        <li>hours</li>
-                        <li>location</li>
-                        <li>salary</li>
-                    </ul>
-                    <div class="divider"></div>
-                    <div style="height: 20px;"></div>
-                    <div class="btnPlacement more">
-                        <p class="center">More</p>
-                    </div>
-                <p class="boldText">Last apply date: 12th Nov 2020</p>
-            </div>
-        </div>
-        <div class="placement scroll-area">
-        <div class = "frame">
-            <div style="height: 30px;"></div>
-            <h5>LEO Pharma</h5>
-            <img src="https://www.bhrservice.dk/wp-content/uploads/2016/12/3-1.jpg" alt="">
-                <p class = "description">Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                    Deleniti architecto itaque accusantium nulla tempora animi
-                    recusandae mollitia fugiat omnis error, magni eius accusamus
-                    corporis voluptatibus quisquam incidunt sunt modi tempore!</p>
-                    <div class="divider"></div>
-                    <ul class="description">
-                        <li>hours</li>
-                        <li>location</li>
-                        <li>salary</li>
-                    </ul>
-                    <div class="divider"></div>
-                    <div style="height: 20px;"></div>
-                    <div class="btnPlacement more">
-                        <p class="center">More</p>
-                    </div>
-                <p class="boldText">Last apply date: 12th Nov 2020</p>
-            </div>
-        </div>
+    }
 </div>
-
+}
 
 
 
@@ -115,6 +53,38 @@
         <div onclick="goNext()" class="column" style="background-color:white;">v</div>
     </div>
 </div>
+
+
+@code {
+
+    private PlacementDescription[] placementDescriptions;
+        
+     protected override async Task OnInitializedAsync()
+    {
+        placementDescriptions = await httpClient.GetFromJsonAsync<PlacementDescription[]>("PlacementDescriptionRepository");
+        
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        //To run JS AFTER Blazor is done loading application
+        await JS.InvokeAsync<string>("CardAnimation");
+    }
+
+        private string GetLastApplyDate(int id)
+    {
+        var applyDate = placementDescriptions[id].LastApplyDate;
+        return applyDate.ToShortDateString();
+    }
+
+    private string DaysRemaining(int id)
+    {
+        var applyDate = placementDescriptions[id].LastApplyDate;
+        DateTime today = DateTime.Now;
+        var daysLeft = applyDate.Subtract(today);
+        return (daysLeft.Days + 1).ToString(); 
+    }
+}
+
 
 
 @*
@@ -200,19 +170,5 @@ else
     {
         if (this.currentCount == 0) { return; }
         currentCount--;
-    }
-
-    private string GetLastApplyDate()
-    {
-        var applyDate = placementDescriptions[this.currentCount].LastApplyDate;
-        return applyDate.ToShortDateString();
-    }
-
-    private string DaysRemaining()
-    {
-        var applyDate = placementDescriptions[this.currentCount].LastApplyDate;
-        DateTime today = DateTime.Now;
-        var daysLeft = applyDate.Subtract(today);
-        return (daysLeft.Days + 1).ToString(); 
     }
 }*@
