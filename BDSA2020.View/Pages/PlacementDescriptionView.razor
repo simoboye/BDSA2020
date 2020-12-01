@@ -117,13 +117,10 @@
 </div>
 
 
-
+@*
 @if (students == null){
 
 }
-
-@inject HttpClient httpClient
-
 
 @if (placementDescriptions == null)
 {
@@ -171,11 +168,10 @@ else
     </div>
     
     
-    @*<p>PlacementDescription: @currentCount</p>*@
+    @*<p>PlacementDescription: @currentCount</p>
 </div>
 <p class= "applyDate"> Placement Description Duration: @(GetLastApplyDate())</p>
 <p class= "applyDate"> Days Remaining: @(DaysRemaining())</p>
-}
 <button class="btn btn-primary" @onclick="DecrementCount">Back</button>
 <button class="btn btn-save" @onclick="DecrementCount">&heartsuit;</button>
 <button class="btn btn-primary" @onclick="IncrementCount">Next</button>
@@ -219,4 +215,4 @@ else
         var daysLeft = applyDate.Subtract(today);
         return (daysLeft.Days + 1).ToString(); 
     }
-}
+}*@
