@@ -22,8 +22,7 @@ namespace BDSA2020.Api.Tests
 
         public CompanyRepositoryControllerTests()
         {
-            var repository = new Mock<ICompanyRepository>();
-            this.repository = repository;
+            repository = new Mock<ICompanyRepository>();
         }
 
         [Fact]

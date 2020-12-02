@@ -22,8 +22,7 @@ namespace BDSA2020.Api.Tests
 
         public PlacementDescriptionRepositoryControllerTests()
         {
-            var repository = new Mock<IPlacementDescriptionRepository>();
-            this.repository = repository;
+            repository = new Mock<IPlacementDescriptionRepository>();
         }
 
         [Fact]
