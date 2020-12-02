@@ -24,7 +24,7 @@ namespace BDSA2020.Models
                            {
                                Id = c.Id,
                                Name = c.Name,
-                               PlacementDescriptionIds = c.PlacementDescriptions.Select(p => p.PlacementDescription.Id).ToList()
+                               PlacementDescriptionIds = c.PlacementDescriptions.Select(p => p.Id).ToList()
                            };
 
             return await companies.ToListAsync();
@@ -38,7 +38,7 @@ namespace BDSA2020.Models
                            {
                                Id = c.Id,
                                Name = c.Name,
-                               PlacementDescriptionIds = c.PlacementDescriptions.Select(p => p.PlacementDescription.Id).ToList()
+                               PlacementDescriptionIds = c.PlacementDescriptions.Select(p => p.Id).ToList()
                            };
 
             var company = await companyQuery.FirstOrDefaultAsync();

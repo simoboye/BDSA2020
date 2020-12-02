@@ -8,6 +8,5 @@ namespace BDSA2020.Shared
     {
         public Guid Id { get; set; }
         public String Name { get; set; }
-        public ISet<int> PlacementDescriptions { get; set; } = new HashSet<int>();
     }
 }

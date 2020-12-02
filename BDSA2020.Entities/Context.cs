@@ -11,7 +11,6 @@ namespace BDSA2020.Entities
         public DbSet<Student> Students { get; set; }
         public DbSet<PlacementDescription> PlacementDescriptions { get; set; }
         public DbSet<Saved> Saved { get; set; }
-        public DbSet<CompanyPlacement> CompanyPlacements {get; set;}
         public DbSet<StudentKeyword> StudentKeywords { get; set; }
         public DbSet<PlacementDescriptionKeyword> PlacementDescriptionKeywords { get; set; }
         public DbSet<Keyword> Keywords { get; set; }
@@ -40,6 +39,11 @@ namespace BDSA2020.Entities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder
+                .Entity<Company>()
+                .HasMany(company => company.PlacementDescriptions)
+                .WithOne(description => description.Company);
+
             SetUpManyToManyKeys(modelBuilder);
             ParseEnums(modelBuilder);
 
@@ -60,10 +64,6 @@ namespace BDSA2020.Entities
                 .HasData(GetSavedData());
 
             modelBuilder
-                .Entity<CompanyPlacement>()
-                .HasData(GetCompanyPlacementsData());
-
-            modelBuilder
                 .Entity<Keyword>()
                 .HasData(GetKeywordsData()); 
             
@@ -79,7 +79,6 @@ namespace BDSA2020.Entities
         private void SetUpManyToManyKeys(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Saved>().HasKey(s => new { s.StudentId, s.PlacementDescriptionId });
-            modelBuilder.Entity<CompanyPlacement>().HasKey(st => new { st.CompanyId, st.PlacementDescriptionId });
             modelBuilder.Entity<StudentKeyword>().HasKey(sk => new { sk.StudentId, sk.KeywordId });
             modelBuilder.Entity<PlacementDescriptionKeyword>().HasKey(pdk => new { pdk.PlacementDescriptionId, pdk.KeywordId });
         }
@@ -98,7 +97,7 @@ namespace BDSA2020.Entities
         }
 
         private Guid companyId1 = new Guid("daccfa6a-6765-4295-82f1-49480ab2c2c1");
-        private Guid companyId2 = Guid.NewGuid();
+        private Guid companyId2 = new Guid("a098132e-4636-4414-8ee8-ccc2405e3de4");
         private Company[] GetCompanyData()
         {
             return new []
@@ -112,8 +111,8 @@ namespace BDSA2020.Entities
         {
            return new[]
             {
-                new PlacementDescription { Id = 1, Degree = Degree.Other, MinSalary = 10, MinWorkingHours = 1, MaxWorkingHours = 100, Agreement = false, Location = "Copenhagen", LastApplyDate = new DateTime(2020, 12, 3), Email = "ApplyHere@apply.com", Thumbnail = new Uri("https://starwarsblog.starwars.com/wp-content/uploads/2020/04/best-friend-in-galaxy-chewbacca_TALL.jpg"), Title = "UML designer", Description = "You should be able to do UML diagrams correctly"},
-                new PlacementDescription { Id = 2, Degree = Degree.Bachelor, MinSalary = 100, MinWorkingHours = 10, MaxWorkingHours = 100, Agreement = true, Location = "Copenhagen", LastApplyDate = new DateTime(2020, 12, 10), Email = "ApplyHere@apply.com", Thumbnail = new Uri("https://starwarsblog.starwars.com/wp-content/uploads/2020/04/best-friend-in-galaxy-chewbacca_TALL.jpg"), Title = "C# developer", Description = "Join our team in of skilled developers"}
+                new PlacementDescription { Id = 1, Degree = Degree.Other, MinSalary = 10, MinWorkingHours = 1, MaxWorkingHours = 100, Agreement = false, Location = "Copenhagen", LastApplyDate = new DateTime(2020, 12, 3), Email = "ApplyHere@apply.com", Thumbnail = new Uri("https://starwarsblog.starwars.com/wp-content/uploads/2020/04/best-friend-in-galaxy-chewbacca_TALL.jpg"), Title = "UML designer", Description = "You should be able to do UML diagrams correctly", CompanyId = GetCompanyData()[0].Id },
+                new PlacementDescription { Id = 2, Degree = Degree.Bachelor, MinSalary = 100, MinWorkingHours = 10, MaxWorkingHours = 100, Agreement = true, Location = "Copenhagen", LastApplyDate = new DateTime(2020, 12, 10), Email = "ApplyHere@apply.com", Thumbnail = new Uri("https://starwarsblog.starwars.com/wp-content/uploads/2020/04/best-friend-in-galaxy-chewbacca_TALL.jpg"), Title = "C# developer", Description = "Join our team in of skilled developers", CompanyId = GetCompanyData()[0].Id }
             }; 
         }
 
@@ -141,17 +140,7 @@ namespace BDSA2020.Entities
                 new Saved { StudentId = GetStudentsData()[0].Id, PlacementDescriptionId = 2 },
                 new Saved { StudentId = GetStudentsData()[1].Id, PlacementDescriptionId = 1 }
             };
-        } 
-
-        private ICollection<CompanyPlacement> GetCompanyPlacementsData()
-        {
-            return new []
-            {
-                new CompanyPlacement { CompanyId = GetCompanyData()[0].Id, PlacementDescriptionId = 1 },
-                new CompanyPlacement { CompanyId = GetCompanyData()[0].Id, PlacementDescriptionId = 2 },
-                new CompanyPlacement { CompanyId = GetCompanyData()[1].Id, PlacementDescriptionId = 1 }
-            };
-        } 
+        }
 
         private ICollection<Keyword> GetKeywordsData()
         {
