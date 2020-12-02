@@ -10,15 +10,49 @@
 }
 else
 {    
-    <h5>Create Placement Description</h5>
+    <div class="container settingsView">
+        <div class="row">
+            <div class="col-sm">
+                <h1>Create Placement Description</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                <form>
+                    <div class="form-group">
+                        <label for="degreeSelect">Degree</label>
+                        <select class="form-control" id="degreeSelect">
+                            @* TODO: Retrieve these from enum*@    
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Password</label>
+                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                        <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    @*
     <div class="placement my-settings">
     <div class = "frame">
         <div style="height: 30px;"></div>
 
     
     
-    @*<form action=""> @*insert method to handle submit data (maybe use EditForms)*@
-    <EditForm Model="settings" OnValidSubmit="ValidFormSubmitted"> @*EditForm uses capital V in @bind-Value, form uses lowercase v*@
+    @*<form action=""> @*insert method to handle submit data (maybe use EditForms)
+    <EditForm Model="settings" OnValidSubmit="ValidFormSubmitted"> @*EditForm uses capital V in @bind-Value, form uses lowercase v
         <DataAnnotationsValidator></DataAnnotationsValidator>
     <h3>Title</h3>
     <label for="title"> Enter Title</label>
@@ -72,7 +106,7 @@ else
         <h3>Salary</h3>
         <span>Set avg </span>
         <input type="range" id="salary" name="salary" min="0" max="5000" step="10"
-        @bind-Value="settings.MinSalary"@bind-Value:event="oninput"/>             @*@bind-Value="@settings.MinSalary"@bind-Value:event="oninput"/>*@
+        @bind-Value="settings.MinSalary"@bind-Value:event="oninput"/>             bind-Value="@settings.MinSalary"@bind-Value:event="oninput"/>
         <p>@settings.MinSalary $</p><br>
 
         <br>
@@ -81,7 +115,7 @@ else
         <input type="radio" id="agreement" name="agreement" @bind="settings.Agreement"/>
         <label for="agreement">Select if you don't like bullsh*t</label><br>
         @*<input type="radio" id="agreementNo" name="agreement" value="no">
-        <label for="agreementNo">No</label><br>*@
+        <label for="agreementNo">No</label><br>
 
         <br>
         <div class="divider"></div>
@@ -101,7 +135,7 @@ else
         <label for="email"> Enter email</label>
         <InputText id="email" @bind-Value="settings.Email"></InputText>
         <p>Email set to: @settings.Email</p><br>
-        @*<input type="email" @bind="settings.Email"> </input>*@
+        <input type="email" @bind="settings.Email"> </input>
         <br>
 
 
@@ -114,22 +148,29 @@ else
         <br><br>
         <div class="divider"></div>
         <input type="submit" value="Submit"> @*submit form returns action/method call up top
-                                               create own write to database button upon click*@
+                                               create own write to database button upon click
         
-        @*image*@
+        @*image
 
 
-        <ValidationSummary></ValidationSummary>     @*prints summary here*@
+        <ValidationSummary></ValidationSummary>     @*prints summary here
 
 
     </EditForm>
     </div>
-    </div>
+    </div> -->*@
 }
 
 @code {
+    private PlacementDescription[] placementDescriptions;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        placementDescriptions = await httpClient.GetFromJsonAsync<PlacementDescription[]>("PlacementDescriptionRepository");
+        //mySaves = await httpClient.GetFromJsonAsync<Saved[]>("");
+    }
 
-    Settings settings = new Settings();
+    @*Settings settings = new Settings();*@
 
     public void ValidFormSubmitted()
     {
