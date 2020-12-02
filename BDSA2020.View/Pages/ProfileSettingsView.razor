@@ -4,7 +4,110 @@
 @inject HttpClient httpClient
 
 
-@if (false)
+@if (keywords == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{    
+    <div class="container settingsView">
+        <div class="row">
+            <div class="col-12">
+                <h1>Profile settings</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <form>
+                    <hr>
+                    <div class="form-group">
+                        <label for="degree">Degree</label>
+                        <select class="form-control" id="degree">
+                            @* TODO: Retrieve these from enum*@    
+                            <option selected="selected" value="bachelor">Please select</option>
+                        </select>
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <label for="keywordSelect">Keywords</label>
+                        <div class="form-group" id="keywordSelect">
+                            @* Add these into two coloumns *@
+                            @foreach (var keyword in keywords)
+                            {
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id='@(keyword.ToString())'>
+                                        <label class="form-check-label" for="exampleCheck1">@keyword</label>
+                                    </div>
+                            }
+                        </div>
+                    </div>
+                    <hr>
+                    <label> Working-hours </label>
+                    <div class="form-group">
+                        <label for="maxhours">Min. hours</label>
+                        <input type="range" class="custom-range" id="maxhours" min="0" max="100">
+                    </div>
+                    <div class="form-group">
+                        <label for="minhours">Max. hours</label>
+                        <input type="range" class="custom-range" id="minhours" min="0" max="100">
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <label for="salary">Salary</label>
+                        <input type="range" class="custom-range" id="salary" min="0" max="100">
+                    </div>
+                    <hr>
+                    <label>Agreement</label>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="yesAgreement" id="yesAgreement" value="yes" checked>
+                                <label class="form-check-label" for="yesAgreement">
+                                    Yes
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="noAgreement" id="noAgreement" value="no" checked>
+                                <label class="form-check-label" for="noAgreement">
+                                    No
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <label for="zipcode">Zipcode</label>
+                        <input type="number" class="form-control" id="zipcode">
+                    </div>
+                    <hr>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+
+@code {
+    private String[] keywords;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        keywords = await httpClient.GetFromJsonAsync<String[]>("KeywordRepository");
+    }
+}
+
+
+
+
+
+
+
+
+
+@*@if (false)
 {
     <p><em>Loading...</em></p>
 }
@@ -16,8 +119,8 @@ else
         <div style="height: 30px;"></div>
     
     <h3>Degree</h3>
-    @*<form action=""> @*insert method to handle submit data (maybe use EditForms)*@
-    <EditForm Model="settings" OnValidSubmit="ValidFormSubmitted"> @*EditForm uses capital V in @bind-Value, form uses lowercase v*@
+    @*<form action=""> @*insert method to handle submit data (maybe use EditForms)
+    <EditForm Model="settings" OnValidSubmit="ValidFormSubmitted"> @*EditForm uses capital V in @bind-Value, form uses lowercase v
         <DataAnnotationsValidator></DataAnnotationsValidator>
         <label for="degrees">Select your current degree:</label>
             <select name="degrees" id="degrees">
@@ -56,7 +159,7 @@ else
         <h3>Working Hours</h3>
         <span>Min hours </span>
         <input type="range" id="minHours" name="minHours" min="0" max="50" step="1"
-         @bind-Value="settings.MinWorkingHours"@bind-Value:event="oninput"/>       @*@bind="settings.MinWorkingHours"@bind:event="oninput"/>*@
+         @bind-Value="settings.MinWorkingHours"@bind-Value:event="oninput"/>       @bind="settings.MinWorkingHours"@bind:event="oninput"/>
         <p>@settings.MinWorkingHours</p><br>
 
         <span>Max hours </span>
@@ -69,7 +172,7 @@ else
         <h3>Salary</h3>
         <span>Set avg </span>
         <input type="range" id="salary" name="salary" min="0" max="5000" step="10"
-        @bind-Value="settings.MinSalary"@bind-Value:event="oninput"/>             @*@bind-Value="@settings.MinSalary"@bind-Value:event="oninput"/>*@
+        @bind-Value="settings.MinSalary"@bind-Value:event="oninput"/>             @bind-Value="@settings.MinSalary"@bind-Value:event="oninput"/>
         <p>@settings.MinSalary $</p><br>
 
         <br>
@@ -80,7 +183,7 @@ else
         <input type="radio" id="no" name="agreement" @bind="settings.Agreement"/>
         <label for="no">Select if you like bullsh*t</label><br>
         @*<input type="radio" id="agreementNo" name="agreement" value="no">
-        <label for="agreementNo">No</label><br>*@
+        <label for="agreementNo">No</label><br>
 
         <br>
         <div class="divider"></div>
@@ -90,9 +193,9 @@ else
 
         <br><br>
         <input type="submit" value="Submit"> @*submit form returns action/method call up top
-                                               create own write to database button upon click*@
+                                               create own write to database button upon click
         
-        <ValidationSummary></ValidationSummary>     @*prints summary here*@
+        <ValidationSummary></ValidationSummary>     @*prints summary here
 
     </EditForm>
     </div>
@@ -151,5 +254,4 @@ else
     {
 
     }
-    */
-}
+    */*@

@@ -4,7 +4,7 @@
 @inject HttpClient httpClient
 
 
-@if (false)
+@if (keywords == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -12,31 +12,84 @@ else
 {    
     <div class="container settingsView">
         <div class="row">
-            <div class="col-sm">
+            <div class="col-12">
                 <h1>Create Placement Description</h1>
             </div>
         </div>
         <div class="row">
-            <div class="col-sm">
+            <div class="col-12">
                 <form>
+                    <hr>
                     <div class="form-group">
-                        <label for="degreeSelect">Degree</label>
-                        <select class="form-control" id="degreeSelect">
+                        <label for="degree">Degree</label>
+                        <select class="form-control" id="degree">
                             @* TODO: Retrieve these from enum*@    
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
+                            <option selected="selected" value="bachelor">Please select</option>
                         </select>
                     </div>
+                    <hr>
                     <div class="form-group">
-                        <label for="exampleInputPassword1">Password</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                        <label for="keywordSelect">Keywords</label>
+                        <div class="form-group" id="keywordSelect">
+                            @* Add these into two coloumns *@
+                            @foreach (var keyword in keywords)
+                            {
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id='@(keyword.ToString())'>
+                                        <label class="form-check-label" for="exampleCheck1">@keyword</label>
+                                    </div>
+                            }
+                        </div>
                     </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                        <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                    <hr>
+                    <div class="form-group row">
+                        <label for="workingHours" class="col-sm-5 col-form-label">Working-hours</label>
+                        <div class="col-sm-7">
+                            <input type="number" class="form-control" id="workingHours">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <label for="salary">Salary</label>
+                        <input type="range" class="custom-range" id="salary" min="0" max="100">
+                    </div>
+                    <hr>
+                    <label>Agreement</label>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="yesAgreement" id="yesAgreement" value="yes" checked>
+                                <label class="form-check-label" for="yesAgreement">
+                                    Yes
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="noAgreement" id="noAgreement" value="no" checked>
+                                <label class="form-check-label" for="noAgreement">
+                                    No
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <label for="zipcode">Zipcode</label>
+                        <input type="number" class="form-control" id="zipcode">
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <label for="applydate">Last apply date</label>
+                        <input type="date" class="form-control" id="applydate">
+                    </div>
+                     <div class="form-group">
+                        <label for="emailadress">Email address</label>
+                        <input type="email" class="form-control" id="emailadress" placeholder="name@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <input type="textarea" class="form-control" id="description">
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
@@ -162,12 +215,11 @@ else
 }
 
 @code {
-    private PlacementDescription[] placementDescriptions;
+    private String[] keywords;
     
     protected override async Task OnInitializedAsync()
     {
-        placementDescriptions = await httpClient.GetFromJsonAsync<PlacementDescription[]>("PlacementDescriptionRepository");
-        //mySaves = await httpClient.GetFromJsonAsync<Saved[]>("");
+        keywords = await httpClient.GetFromJsonAsync<String[]>("KeywordRepository");
     }
 
     @*Settings settings = new Settings();*@

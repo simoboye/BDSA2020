@@ -3,6 +3,7 @@
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     background-color: #ffffff;
+    padding-bottom: 30px;
 }
 
 a, .btn-link {
@@ -138,7 +139,7 @@ app {
 }
 
 
-/* new ccss below */
+/* new ccss below 
 .center {
     margin: auto;
     width: 50%;
@@ -150,7 +151,7 @@ app {
     background-color: #BDBFBF;
     width: 90%;
     height: 425px;
-    /*align-items: center;*/
+    /*align-items: center;
     vertical-align: auto;
     margin: 0 auto;
     border-radius: 20px;
@@ -162,7 +163,7 @@ app {
     margin-top: 30px;
     margin-left: 20px;
     margin-right: 20px;
-    */
+    
 }
 
 .placement h5 {
@@ -180,7 +181,7 @@ app {
     color: white;
     text-align: left;
     font-size: small;
-    /*font-weight: lighter;*/
+    /*font-weight: lighter;
  }
 
  .divider {
@@ -251,8 +252,8 @@ app {
     }
 
     .sidebar .collapse {
-        /* Never collapse the sidebar for wide screens */
+        /* Never collapse the sidebar for wide screens 
         display: block;
     }
 }
-
+*/

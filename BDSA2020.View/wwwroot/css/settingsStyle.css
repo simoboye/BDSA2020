@@ -1,5 +1,9 @@
-.settingsView{
+.settingsView label{
+    font-weight: bold;
+}
 
+.settingsView .form-check-label{
+    font-weight: normal;
 }
 
 

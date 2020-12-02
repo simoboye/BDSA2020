@@ -1,5 +1,5 @@
 
-.center{
+/*.center{
     margin: auto;
     width: 100%;
     border: 3px solid #73ad2100;
@@ -11,7 +11,7 @@
     background-color:#ecedee;
     width: 90%;
     height: 100%;
-    /*align-items: center;*/
+    /*align-items: center;
     
     vertical-align: auto;
     margin: 0 auto;
@@ -40,7 +40,7 @@
     margin-top: 30px;
     margin-left: 20px;
     margin-right: 20px;
-    */
+    
 }
 
 
@@ -73,7 +73,7 @@ img {
 .btn-save {
     color: #fff;
     background-color: #c57ba0;
-    /*border-color: #af6874;*/
+    /*border-color: #af6874;
     border-radius: 50%;
 }
 
@@ -92,7 +92,7 @@ img {
     height: max-content;
     margin:0;
     
-    /*font-weight: lighter;*/
+    /*font-weight: lighter;
  }
 
  .divider {
@@ -152,7 +152,7 @@ img {
 
 
 
-/*__________*/
+/*__________
 
 
 .scroll-container,
@@ -180,4 +180,4 @@ img {
 .scroll-container,
 .scroll-area {
   margin: 30px auto;
-}
+}*/
