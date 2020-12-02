@@ -12,6 +12,9 @@ namespace BDSA2020.Models.Tests
     {
         private readonly IStudentRepository repository;
 
+        private readonly Guid id1 = new Guid("290c1a5f-3790-4bcb-89dc-6a4c3de155d1");
+        private readonly Guid id2 = new Guid("5a87427d-f0af-421d-a340-7d9dd8f9f76e");
+
         public StudentRepositoryTests() : base()
         {
             repository = new StudentRepository(Context);
@@ -30,9 +33,7 @@ namespace BDSA2020.Models.Tests
         [Fact]
         public async Task GetStudent_returns_the_requested_student() 
         {
-            var id = new Guid("290c1a5f-3790-4bcb-89dc-6a4c3de155d1");
-            // TODO: Need to find a more permanent solution to this, as this is hardcoded now.
-            //var entity = await Context.Students.FirstOrDefaultAsync();
+            var id = id1;
             var actual = await repository.GetStudentAsync(id);
 
             var expected = new StudentDetailsDTO
@@ -45,12 +46,12 @@ namespace BDSA2020.Models.Tests
                 MaxWorkingHours = 20, 
                 Agreement = false, 
                 Location = "Nowhere",
-                PlacementDescriptionIds = new [] { 1 }
+                PlacementDescriptionIds = new [] { 1, 2 }
             };
 
             Assert.Equal(expected.Id, actual.Id);
             Assert.Equal(expected.Degree, actual.Degree);
-            Assert.Equal(expected.PlacementDescriptionIds.First(), actual.PlacementDescriptionIds.First());
+            Assert.Equal(expected.PlacementDescriptionIds, actual.PlacementDescriptionIds);
             Assert.Equal(expected.KeywordNames, actual.KeywordNames);
         }
 
@@ -76,14 +77,8 @@ namespace BDSA2020.Models.Tests
                 Location = "Nowhere" 
             };
 
-            var studentsList = await Context.Students.ToListAsync();
-            var lastId = studentsList.OrderByDescending(s => s.Id)
-                                        .FirstOrDefault()
-                                        .Id;
-
             var actual = await repository.CreateStudentAsync(student);
-        
-        
+
             Assert.Equal(student.Id, actual);
         }
 
@@ -120,10 +115,8 @@ namespace BDSA2020.Models.Tests
             var actual = await repository.UpdateStudentAsync(dto);
 
             Assert.True(actual);
-
-            var updatedStudent = await Context.Students.FirstAsync();
-            Assert.Equal(dto.Id, updatedStudent.Id);
-            Assert.Equal(new [] { "Testing", "C#" }, updatedStudent.Keywords.Select(k => k.Keyword.Name).ToList());
+            Assert.Equal(dto.Id, studentToUpdate.Id);
+            Assert.Equal(dto.KeywordNames, studentToUpdate.Keywords.Select(k => k.Keyword.Name).ToList());
         }
 
         [Fact]
@@ -136,7 +129,7 @@ namespace BDSA2020.Models.Tests
         [Fact]
         public async Task SavePlacementDescription_adds_Id_to_saved_list()
         {
-            var studentToLike = await Context.Students.FindAsync(new Guid("5a87427d-f0af-421d-a340-7d9dd8f9f76e"));
+            var studentToLike = await Context.Students.FindAsync(id2);
             var descriptionToBeLiked = await Context.PlacementDescriptions.FindAsync(1);
 
             var actual = await repository.SavePlacementDescription(studentToLike.Id, descriptionToBeLiked.Id);
@@ -147,7 +140,7 @@ namespace BDSA2020.Models.Tests
         [Fact]
         public async Task SavePlacementDescription_throws_ArgumentException_on_not_found_student_or_description()
         {
-            var studentToLike = await Context.Students.FindAsync(new Guid("5a87427d-f0af-421d-a340-7d9dd8f9f76e"));
+            var studentToLike = await Context.Students.FindAsync(id2);
             var descriptionToBeLiked = await Context.PlacementDescriptions.FindAsync(1);
 
             await Assert.ThrowsAsync<ArgumentException>(() => repository.SavePlacementDescription(Guid.NewGuid(), descriptionToBeLiked.Id));
@@ -157,7 +150,7 @@ namespace BDSA2020.Models.Tests
         [Fact]
         public async Task UnsavePlacementDescription_removes_Id_from_saved_list()
         {
-            var studentToLike = await Context.Students.FindAsync(new Guid("290c1a5f-3790-4bcb-89dc-6a4c3de155d1"));
+            var studentToLike = await Context.Students.FindAsync(id1);
             var descriptionToBeLiked = await Context.PlacementDescriptions.FindAsync(1);
 
             var actual = await repository.UnSavePlacementDescription(studentToLike.Id, descriptionToBeLiked.Id);
@@ -168,7 +161,7 @@ namespace BDSA2020.Models.Tests
         [Fact]
         public async Task UnSavePlacementDescription_throws_ArgumentException_on_not_found_student_or_description()
         {
-            var studentToLike = await Context.Students.FindAsync(new Guid("290c1a5f-3790-4bcb-89dc-6a4c3de155d1"));
+            var studentToLike = await Context.Students.FindAsync(id1);
             var descriptionToBeLiked = await Context.PlacementDescriptions.FindAsync(1);
 
             await Assert.ThrowsAsync<ArgumentException>(() => repository.UnSavePlacementDescription(Guid.NewGuid(), descriptionToBeLiked.Id));
