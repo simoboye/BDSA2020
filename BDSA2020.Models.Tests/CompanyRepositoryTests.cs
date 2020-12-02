@@ -31,13 +31,11 @@ namespace BDSA2020.Models.Tests
         public async Task GetCompany_returns_the_requested_comapny() 
         {   
             var id = new Guid("daccfa6a-6765-4295-82f1-49480ab2c2c1");
-            // TODO: Need to find a more permanent solution to this, as this is hardcoded now.
-            //var entity = await Context.Companies.FirstOrDefaultAsync();
             var actual = await repository.GetCompanyAsync(id);
 
             var expected = new CompanyDetailsDTO
             { 
-                PlacementDescriptionIds = new [] {1, 2},
+                PlacementDescriptionIds = new [] { 1, 2 },
                 Id = id,
                 Name = "Spotify"
             };
@@ -62,15 +60,12 @@ namespace BDSA2020.Models.Tests
                 Name = "Test"
             };
 
-            var companiesList = await Context.Companies.ToListAsync();
-            var lastId = companiesList.OrderByDescending(s => s.Id)
-                                        .FirstOrDefault()
-                                        .Id;
+            var actualId = await repository.CreateCompanyAsync(company);
 
-            var actual = await repository.CreateCompanyAsync(company);
+            var createdCompany = await Context.Companies.FindAsync(actualId);
         
-        
-            Assert.Equal(company.Id, actual);
+            Assert.Equal(company.Id, actualId);
+            Assert.Equal(company.Name, createdCompany.Name);
         }
 
         [Fact]
@@ -92,6 +87,8 @@ namespace BDSA2020.Models.Tests
         public async Task UpdateCompany_returns_true_on_updated()
         {
             var companyToUpdate = await Context.Companies.FirstAsync();
+            var nameBeforeUpdate = companyToUpdate.Name;
+
             var dto = new UpdateCompanyDTO
             {
                 Id = companyToUpdate.Id,
@@ -100,9 +97,7 @@ namespace BDSA2020.Models.Tests
             var actual = await repository.UpdateCompanyAsync(dto);
 
             Assert.True(actual);
-
-            var updatedCompany = await Context.Companies.FirstAsync();
-            Assert.Equal(dto.Id, updatedCompany.Id);
+            Assert.NotEqual(nameBeforeUpdate, companyToUpdate.Name);
         }
 
         [Fact]
