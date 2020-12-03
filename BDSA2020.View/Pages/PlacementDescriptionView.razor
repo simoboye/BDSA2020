@@ -4,12 +4,58 @@
 @inject HttpClient httpClient
 @inject IJSRuntime JS;
 
+
+
+
+
 @if (placementDescriptions == null)
 {
     <p><em>Loading...</em></p>
 }
 else 
 {
+    <div class="container placementDescriptionView">
+        <div class="row">
+            <div class="col-12">
+                <p> @placementDescriptions.Length </p>
+                @foreach (var item in placementDescriptions)
+                {
+                        <p>@item.Title</p>
+                        <img src="@item.Thumbnail" alt="">
+                        <p>@item.Description</p>
+                        <li>@item.MinWorkingHours</li>
+                        <li>@item.Location</li>
+                        <li>@item.MinSalary</li>
+                        //<p class="boldText">Last apply date: @GetLastApplyDate(item.Id -1)</p>
+                        //<p class="boldText">Days remaining: @DaysRemaining(item.Id -1)</p>
+                }
+            </div>
+        </div>
+        <div class="row buttonrow">
+            <div class="col-sm-3">
+
+            </div>
+            <div class="col-sm-6">
+                <button type="button" class="btn btn-primary btn-lg btn-block">Block level button</button>
+            </div>
+            <div class="col-sm-3">
+
+            </div>
+        </div>
+        <div class="d-flex flex-row buttonrow justify-content-center">
+            <div class="p-2">
+                <button type="button" class="btn btn-primary">Primary</button>
+            </div>
+            <div class="p-2">
+                <button type="button" class="btn btn-danger">Danger</button>
+            </div>
+            <div class="p-2">
+                <button type="button" class="btn btn-dark">Dark</button>
+            </div>
+        </div>
+    </div>
+}
+@*    
 <div class="scroll-container" id="scroll-container">
     <!-- Four placeholder Placement Descriptions-->
 
@@ -54,7 +100,7 @@ else
     </div>
 </div>
 
-
+*@
 @code {
 
     private PlacementDescriptionDetailsDTO[] placementDescriptions;
@@ -85,9 +131,8 @@ else
     }
 }
 
-
-
 @*
+
 @if (students == null){
 
 }

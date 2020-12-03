@@ -30,15 +30,23 @@ else
                     <hr>
                     <div class="form-group">
                         <label for="keywordSelect">Keywords</label>
-                        <div class="form-group" id="keywordSelect">
-                            @* Add these into two coloumns *@
-                            @foreach (var keyword in keywords)
-                            {
+                        <div class="form-group row" id="keywordSelect">
+                            <div class="col-sm-6">
+                                @for(var i = 0; i<keywords.Length/2; i++){
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id='@(keyword.ToString())'>
-                                        <label class="form-check-label" for="exampleCheck1">@keyword</label>
+                                        <input type="checkbox" class="form-check-input" id='@(keywords[i].ToString())'>
+                                        <label class="form-check-label" for="exampleCheck1">@keywords[i]</label>
                                     </div>
-                            }
+                                }
+                            </div>
+                            <div class="col-sm-6">
+                                @for(var i = keywords.Length/2; i<keywords.Length; i++){
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id='@(keywords[i].ToString())'>
+                                        <label class="form-check-label" for="exampleCheck1">@keywords[i]</label>
+                                    </div>
+                                }                                
+                            </div>
                         </div>
                     </div>
                     <hr>
