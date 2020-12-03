@@ -81,7 +81,6 @@ else
         _userId = Guid.Parse(user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
 
         _placementDescriptions = await httpClient.GetFromJsonAsync<PlacementDescriptionDetailsDTO[]>("PlacementDescriptionRepository");
-
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

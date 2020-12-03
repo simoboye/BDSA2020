@@ -6,6 +6,8 @@
 @inject IOptionsMonitor<AzureADB2COptions> AzureADB2COptions
 @using Microsoft.AspNetCore.Components.Authorization
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@using System.Collections.Generic; 
+@using System;
 
 @using Entities
 @using BDSA2020.Shared;
@@ -26,14 +28,13 @@ else
         </thead>
         <tbody>
             @foreach (var placement in placementDescriptions)
-                    //(var saves in mySaves)
             {
                 <tr>
                     <div class="placement my-cardSaved">
         <div class = "frame">
         <div style="height: 30px;"></div>
-        <h5>LEO Pharma - @placementDescriptions[currentCount].Title</h5>    @*replace currentCount -> saves.getPlacementDescId*@
-        <img src="@placementDescriptions[currentCount].Thumbnail" alt="">   @*replace currentCount -> saves.getPlacementDescId*@
+        <h5>LEO Pharma - @placementDescriptions[currentCount].Title</h5>    
+        <img src="@placementDescriptions[currentCount].Thumbnail" alt="">
         <div class="divider"></div>
         <div style="height: 20px;"></div>
         <div class = "btnPlacement">
@@ -56,7 +57,9 @@ else
 
 @code {
     private Guid _userId;
-    private PlacementDescriptionDetailsDTO[] placementDescriptions;
+
+    //private PlacementDescriptionDetailsDTO[] placementDescriptions;
+    private List<PlacementDescriptionDetailsDTO> placementDescriptions;
     private int currentCount = 0;
 
     
@@ -70,21 +73,25 @@ else
         _userId = Guid.Parse("984ccbee-0229-46b0-a11d-d70ad5ba204c"); // hardcoded to return value (delete)
 
         var _studentInfo = await httpClient.GetFromJsonAsync<StudentDetailsDTO>($"StudentRepository/{_userId}");
-        var studentPlacementDescription = _studentInfo.PlacementDescriptionIds.ToArray();
+        var studentPlacementDescription = _studentInfo.PlacementDescriptionIds.ToList();
+        //var studentPlacementDescription = _studentInfo.PlacementDescriptionIds.Count;
+        //placementDescriptions = new PlacementDescriptionDetailsDTO[studentPlacementDescription.Count];
         
-        /*test*/
-        var placementDescrip = await httpClient.GetFromJsonAsync<PlacementDescriptionDetailsDTO>($"PlacementDescriptionRepository/{1}");
-        placementDescriptions.Append(placementDescrip);
-
-        /*
+        
         foreach (int i in studentPlacementDescription)
         {
-            var placementDescription = await httpClient.GetFromJsonAsync<PlacementDescriptionDetailsDTO>($"PlacementDescriptionRepository/{studentPlacementDescription[i]}");
-            placementDescriptions.Append(placementDescription);
+            Console.WriteLine(i);
+            var placementDescription = await httpClient.GetFromJsonAsync<PlacementDescriptionDetailsDTO>($"PlacementDescriptionRepository/{i}");
+            placementDescriptions.Add(placementDescription);
         }
+
+        /*
+        var placementDescrip = await httpClient.GetFromJsonAsync<PlacementDescriptionDetailsDTO>($"PlacementDescriptionRepository/{1}");
         */
     }
 
+
+    /*
      private void IncrementCount()
     {
         if (this.currentCount == placementDescriptions.Length - 1) { return; }
@@ -96,6 +103,7 @@ else
         if (this.currentCount == 0) { return; }
         currentCount--;
     }
+    */
 
     private string GetLastApplyDate()
     {
