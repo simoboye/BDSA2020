@@ -71,7 +71,7 @@ else
 
         var _studentInfo = await httpClient.GetFromJsonAsync<StudentDetailsDTO>($"StudentRepository/{_userId}");
         var studentPlacementDescription = _studentInfo.PlacementDescriptionIds.ToArray();
-
+        
         /*test*/
         var placementDescrip = await httpClient.GetFromJsonAsync<PlacementDescriptionDetailsDTO>($"PlacementDescriptionRepository/{1}");
         placementDescriptions.Append(placementDescrip);

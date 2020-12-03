@@ -134,19 +134,19 @@ else
 }
 
 @code {
-    CreatePlacementDescriptionDTO dto = new CreatePlacementDescriptionDTO(); //strong coupling. the shame.
+    //CreatePlacementDescriptionDTO dto = new CreatePlacementDescriptionDTO();
     Settings settings = new Settings();
 
     private async Task AddToSaves(CreatePlacementDescriptionDTO dto)    //Task<HttpResponseMessage>
     {
         var json = JsonConvert.SerializeObject(dto);
-        var data = new StringContent(json, Encoding.UTF8, "application/json"); // application/json?
+        var data = new StringContent(json, Encoding.UTF8, "application/json");
 
         var response = await httpClient.PostAsync($"PlacementDescriptionRepository/create", data);
         var result = response.Content.ReadAsStringAsync().Result;
         Console.WriteLine(result);
 
-        //return await httpClient.PutAsJsonAsync($"https://localhost:5000/PlacementDescriptionRepository/create", dto);   
+        //return await httpClient.PutAsJsonAsync($"PlacementDescriptionRepository/create", dto);   
     }
 
     public void ValidFormSubmitted()
