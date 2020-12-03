@@ -11,6 +11,6 @@ namespace BDSA2020.Entities
         [Required]
         public string Name { get; set; }
 
-        public virtual ICollection<CompanyPlacement> PlacementDescriptions { get; set; }
+        public ICollection<PlacementDescription> PlacementDescriptions { get; set; }
     }
 }

@@ -25,8 +25,7 @@ namespace BDSA2020.Api.Tests
 
         public StudentRepositoryControllerTests()
         {
-            var repository = new Mock<IStudentRepository>();
-            this.repository = repository;
+            repository = new Mock<IStudentRepository>();
         }
 
         [Fact]
