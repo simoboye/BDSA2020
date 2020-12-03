@@ -1,5 +1,14 @@
 @page "/mysaves"
+
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Authentication.AzureADB2C.UI
+@using Microsoft.Extensions.Options
+@inject IOptionsMonitor<AzureADB2COptions> AzureADB2COptions
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
 @using Entities
+@using BDSA2020.Shared;
 @inject HttpClient httpClient
 
 
@@ -42,27 +51,38 @@ else
                 }
             </tbody>
         </table>
-
-
-    
 }
 
 
 @code {
-    private PlacementDescription[] placementDescriptions;
-    
-    //private Saved[] mySaves;
-    
-    //private int thisStudentId = 1; // Needs to be updated upon login.
-    
+    private Guid _userId;
+    private PlacementDescriptionDetailsDTO[] placementDescriptions;
     private int currentCount = 0;
 
     
 
     protected override async Task OnInitializedAsync()
     {
-        placementDescriptions = await httpClient.GetFromJsonAsync<PlacementDescription[]>("PlacementDescriptionRepository");
-        //mySaves = await httpClient.GetFromJsonAsync<Saved[]>("");
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        _userId = Guid.Parse(user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+
+        _userId = Guid.Parse("984ccbee-0229-46b0-a11d-d70ad5ba204c"); // hardcoded to return value (delete)
+
+        var _studentInfo = await httpClient.GetFromJsonAsync<StudentDetailsDTO>($"StudentRepository/{_userId}");
+        var studentPlacementDescription = _studentInfo.PlacementDescriptionIds.ToArray();
+
+        /*test*/
+        var placementDescrip = await httpClient.GetFromJsonAsync<PlacementDescriptionDetailsDTO>($"PlacementDescriptionRepository/{1}");
+        placementDescriptions.Append(placementDescrip);
+
+        /*
+        foreach (int i in studentPlacementDescription)
+        {
+            var placementDescription = await httpClient.GetFromJsonAsync<PlacementDescriptionDetailsDTO>($"PlacementDescriptionRepository/{studentPlacementDescription[i]}");
+            placementDescriptions.Append(placementDescription);
+        }
+        */
     }
 
      private void IncrementCount()
