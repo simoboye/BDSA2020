@@ -130,6 +130,13 @@ namespace BDSA2020.Models
 
         public async Task<bool> SavePlacementDescription(Guid studentId, int descriptionId)
         {
+            var saved = await context.Saved.FindAsync(new object[] { studentId, descriptionId });
+
+            if (saved != null)
+            {
+                throw new ArgumentException($"Description with id {descriptionId} is already saved by student with id {studentId}");
+            }
+
             var student = await (from s in context.Students
                                  where s.Id == studentId
                                  select s).FirstOrDefaultAsync();

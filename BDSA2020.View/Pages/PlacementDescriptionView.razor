@@ -89,15 +89,27 @@ else
         await JS.InvokeAsync<string>("CardAnimation");
     }
 
-    private async Task<HttpResponseMessage> AddToSaves(int placementDescriptionId)
+    private async void AddToSaves(int placementDescriptionId)
     {
         placementDescriptionId = placementDescriptionId + 1;
         Console.WriteLine(placementDescriptionId);
 
         var json = JsonConvert.SerializeObject(placementDescriptionId);
         var data = new StringContent(json, Encoding.UTF8, "application/json");
-        _userId = Guid.Parse("984ccbee-0229-46b0-a11d-d70ad5ba204c"); // hardcoded to return value (delete)
-        return await httpClient.PatchAsync($"StudentRepository/save/{_userId}/{placementDescriptionId}", null);
+        _userId = Guid.Parse("ce0527df-eec0-43e1-9a9f-6546e35b695a");
+
+        using (var response = await httpClient.PatchAsync($"StudentRepository/save/{_userId}/{placementDescriptionId}", null))
+        {
+            try 
+            {
+                response.EnsureSuccessStatusCode();
+                Console.WriteLine(await response.Content.ReadAsStringAsync());
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
     }
 
     private string GetLastApplyDate(int id)
