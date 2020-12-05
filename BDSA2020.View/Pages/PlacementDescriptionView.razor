@@ -2,11 +2,9 @@
 
 @using BDSA2020.Shared;
 @inject HttpClient httpClient
+@inject IMatchingService service
 @inject IJSRuntime JS;
-
-
-
-
+@inject UserPropertiesService userPropertiesService
 
 @if (placementDescriptions == null)
 {
@@ -62,13 +60,17 @@ else
 }
 
 @code {
-
-    private PlacementDescriptionDetailsDTO[] placementDescriptions;
+    private PlacementDescriptionMatch[] matches;
         
-     protected override async Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        placementDescriptions = await httpClient.GetFromJsonAsync<PlacementDescriptionDetailsDTO[]>("PlacementDescriptionRepository");
+        var placementDescriptions = await httpClient.GetFromJsonAsync<PlacementDescriptionDetailsDTO[]>("PlacementDescriptionRepository");
         
+        var student = await httpClient.GetFromJsonAsync<StudentDetailsDTO>("StudentRepository/290c1a5f-3790-4bcb-89dc-6a4c3de155d1");
+        Console.WriteLine(userPropertiesService.UserId);
+        @* var student = await httpClient.GetFromJsonAsync<StudentDetailsDTO>($"StudentRepository/{userPropertiesService.UserId}"); *@
+
+        matches = service.CalculateMatches(student, placementDescriptions).ToArray();
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -76,15 +78,15 @@ else
         await JS.InvokeAsync<string>("CardAnimation");
     }
 
-        private string GetLastApplyDate(int id)
+    private string GetLastApplyDate(PlacementDescriptionMatch match)
     {
-        var applyDate = placementDescriptions[id].LastApplyDate;
+        var applyDate = match.LastApplyDate;
         return applyDate.ToShortDateString();
     }
 
-    private string DaysRemaining(int id)
+    private string DaysRemaining(PlacementDescriptionMatch match)
     {
-        var applyDate = placementDescriptions[id].LastApplyDate;
+        var applyDate = match.LastApplyDate;
         DateTime today = DateTime.Now;
         var daysLeft = applyDate.Subtract(today);
         return (daysLeft.Days + 1).ToString(); 

@@ -1,17 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.AzureADB2C.UI;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using BDSA2020.View.Data;
 using System.Net.Http;
 
 namespace BDSA2020.View
@@ -34,7 +28,8 @@ namespace BDSA2020.View
 
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
+            services.AddSingleton<UserPropertiesService>();
+            services.AddSingleton<IMatchingService, MatchingService>();
 
             services.AddSingleton(_ => new HttpClient { BaseAddress = new Uri("http://localhost:5000") });
         }

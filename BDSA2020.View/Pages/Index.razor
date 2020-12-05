@@ -5,13 +5,12 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager Navigation
 @inject HttpClient httpClient
+@inject UserPropertiesService userPropertiesService
 
 @code {
     private string _authMessage;
     private string _surnameMessage;
     private IEnumerable<Claim> _claims = Enumerable.Empty<Claim>();
-
-    private Guid _userId;
 
     protected override async Task OnInitializedAsync()
     {
@@ -22,12 +21,12 @@
         {
             _authMessage = $"{user.Identity.Name} is authenticated.";
             _claims = user.Claims;
-            _surnameMessage = 
+            userPropertiesService.Surname = 
                 $"Surname: {user.FindFirst(c => c.Type == ClaimTypes.Surname)?.Value}";
-            _userId = Guid.Parse(user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
-            var isCompany = bool.Parse(user.FindFirst(u => u.Type.Equals("extension_isCompany"))?.Value);
+            userPropertiesService.UserId = Guid.Parse(user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+            userPropertiesService.IsCompany = bool.Parse(user.FindFirst(u => u.Type.Equals("extension_isCompany"))?.Value);
 
-            if (isCompany)
+            if (userPropertiesService.IsCompany)
             {
                 await CheckIfCompanyExits();
             }
@@ -45,7 +44,7 @@
     private async Task CheckIfStudentExits()
     {
         try {
-            var student = await httpClient.GetFromJsonAsync<StudentDetailsDTO>($"StudentRepository/{_userId}");
+            var student = await httpClient.GetFromJsonAsync<StudentDetailsDTO>($"StudentRepository/{userPropertiesService.UserId}");
             Navigation.NavigateTo("/placementdescription", true);
         } catch (HttpRequestException e)
         {
@@ -64,8 +63,8 @@
     private async Task CheckIfCompanyExits()
     {
         try {
-            var company = await httpClient.GetFromJsonAsync<CompanyDetailsDTO>($"CompanyRepository/{_userId}");
-            Navigation.NavigateTo("/companyplacements", true);
+            var company = await httpClient.GetFromJsonAsync<CompanyDetailsDTO>($"CompanyRepository/{userPropertiesService.UserId}");
+            Navigation.NavigateTo("/placementdescriptioncreation", true);
         } catch (HttpRequestException e)
         {
             Console.WriteLine(e);
