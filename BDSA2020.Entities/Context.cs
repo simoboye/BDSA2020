@@ -11,7 +11,6 @@ namespace BDSA2020.Entities
         public DbSet<Student> Students { get; set; }
         public DbSet<PlacementDescription> PlacementDescriptions { get; set; }
         public DbSet<Saved> Saved { get; set; }
-        public DbSet<CompanyPlacement> CompanyPlacements {get; set;}
         public DbSet<StudentKeyword> StudentKeywords { get; set; }
         public DbSet<PlacementDescriptionKeyword> PlacementDescriptionKeywords { get; set; }
         public DbSet<Keyword> Keywords { get; set; }
@@ -40,6 +39,11 @@ namespace BDSA2020.Entities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder
+                .Entity<Company>()
+                .HasMany(company => company.PlacementDescriptions)
+                .WithOne(description => description.Company);
+
             SetUpManyToManyKeys(modelBuilder);
             ParseEnums(modelBuilder);
 
@@ -60,10 +64,6 @@ namespace BDSA2020.Entities
                 .HasData(GetSavedData());
 
             modelBuilder
-                .Entity<CompanyPlacement>()
-                .HasData(GetCompanyPlacementsData());
-
-            modelBuilder
                 .Entity<Keyword>()
                 .HasData(GetKeywordsData()); 
             
@@ -79,7 +79,6 @@ namespace BDSA2020.Entities
         private void SetUpManyToManyKeys(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Saved>().HasKey(s => new { s.StudentId, s.PlacementDescriptionId });
-            modelBuilder.Entity<CompanyPlacement>().HasKey(st => new { st.CompanyId, st.PlacementDescriptionId });
             modelBuilder.Entity<StudentKeyword>().HasKey(sk => new { sk.StudentId, sk.KeywordId });
             modelBuilder.Entity<PlacementDescriptionKeyword>().HasKey(pdk => new { pdk.PlacementDescriptionId, pdk.KeywordId });
         }
@@ -98,7 +97,7 @@ namespace BDSA2020.Entities
         }
 
         private Guid companyId1 = new Guid("daccfa6a-6765-4295-82f1-49480ab2c2c1");
-        private Guid companyId2 = Guid.NewGuid();
+        private Guid companyId2 = new Guid("a098132e-4636-4414-8ee8-ccc2405e3de4");
         private Company[] GetCompanyData()
         {
             return new []
@@ -117,7 +116,6 @@ namespace BDSA2020.Entities
                 new PlacementDescription { Id = 3, Degree = Degree.Master, MinSalary = 200, MinWorkingHours = 15, MaxWorkingHours = 150, Agreement = true, Location = "Aarhus", LastApplyDate = new DateTime(2020, 12, 24), Email = "ApplyHere@apply.com", Thumbnail = new Uri("http://www.omnimatrixindia.com/Images/General/Group-Company.jpg"), Title = "Manager", Description = "We need someone to get things done."},
                 new PlacementDescription { Id = 4, Degree = Degree.Master, MinSalary = 229, MinWorkingHours = 20, MaxWorkingHours = 150, Agreement = true, Location = "Odense", LastApplyDate = new DateTime(2020, 12, 29), Email = "ApplyHere@apply.com", Thumbnail = new Uri("https://i.ytimg.com/vi/rVYkBvOaMx4/maxresdefault.jpg"), Title = "CEO", Description = "Let's make it happen!"},
                 new PlacementDescription { Id = 5, Degree = Degree.Master, MinSalary = 229, MinWorkingHours = 20, MaxWorkingHours = 150, Agreement = true, Location = "US", LastApplyDate = new DateTime(2020, 12, 27), Email = "ApplyHere@apply.com", Thumbnail = new Uri("https://i.ibb.co/StgTn0h/ascii.png"), Title = "Obama", Description = "Yes we can."}
-                
             }; 
         }
 
@@ -145,17 +143,7 @@ namespace BDSA2020.Entities
                 new Saved { StudentId = GetStudentsData()[0].Id, PlacementDescriptionId = 2 },
                 new Saved { StudentId = GetStudentsData()[1].Id, PlacementDescriptionId = 1 }
             };
-        } 
-
-        private ICollection<CompanyPlacement> GetCompanyPlacementsData()
-        {
-            return new []
-            {
-                new CompanyPlacement { CompanyId = GetCompanyData()[0].Id, PlacementDescriptionId = 1 },
-                new CompanyPlacement { CompanyId = GetCompanyData()[0].Id, PlacementDescriptionId = 2 },
-                new CompanyPlacement { CompanyId = GetCompanyData()[1].Id, PlacementDescriptionId = 1 }
-            };
-        } 
+        }
 
         private ICollection<Keyword> GetKeywordsData()
         {

@@ -20,10 +20,12 @@ namespace BDSA2020.Api.Tests
     {
         private readonly Mock<IStudentRepository> repository;
 
+        private readonly Guid id1 = new Guid("5a87427d-f0af-421d-a340-7d9dd8f9f76e");
+        private readonly Guid id2 = new Guid("a3aaf097-a515-4aac-9a90-c26ee1e40488");
+
         public StudentRepositoryControllerTests()
         {
-            var repository = new Mock<IStudentRepository>();
-            this.repository = repository;
+            repository = new Mock<IStudentRepository>();
         }
 
         [Fact]
@@ -232,7 +234,7 @@ namespace BDSA2020.Api.Tests
         [Fact]
         public async Task Save_returns_true_on_200()
         {
-            var studentId = new Guid("5a87427d-f0af-421d-a340-7d9dd8f9f76e");
+            var studentId = id1;
             var descriptionId = 1;
             repository.Setup(r => r.SavePlacementDescription(studentId, descriptionId)).ReturnsAsync(true);
             var controller = new StudentRepositoryController(repository.Object);
@@ -250,7 +252,7 @@ namespace BDSA2020.Api.Tests
         [Fact]
         public async Task Save_returns_404_on_not_found()
         {
-            var studentId = new Guid("5a87427d-f0af-421d-a340-7d9dd8f9f76e");
+            var studentId = id1;
             var descriptionId = 100;
             repository.Setup(r => r.SavePlacementDescription(studentId, descriptionId)).ThrowsAsync(new ArgumentException());
             var controller = new StudentRepositoryController(repository.Object);
@@ -266,7 +268,7 @@ namespace BDSA2020.Api.Tests
         [Fact]
         public async Task Save_returns_500_on_internal_server_error()
         {
-            var studentId = new Guid("5a87427d-f0af-421d-a340-7d9dd8f9f76e");
+            var studentId = id1;
             var descriptionId = 1;
             repository.Setup(r => r.SavePlacementDescription(studentId, descriptionId)).ThrowsAsync(new Exception());
             var controller = new StudentRepositoryController(repository.Object);
@@ -282,7 +284,7 @@ namespace BDSA2020.Api.Tests
         [Fact]
         public async Task UnSave_returns_true_on_200()
         {
-            var studentId = new Guid("a3aaf097-a515-4aac-9a90-c26ee1e40488");
+            var studentId = id2;
             var descriptionId = 1;
             repository.Setup(r => r.UnSavePlacementDescription(studentId, descriptionId)).ReturnsAsync(true);
             var controller = new StudentRepositoryController(repository.Object);
@@ -300,7 +302,7 @@ namespace BDSA2020.Api.Tests
         [Fact]
         public async Task UnSave_returns_404_on_not_found()
         {
-            var studentId = new Guid("5a87427d-f0af-421d-a340-7d9dd8f9f76e");
+            var studentId = id1;
             var descriptionId = 100;
             repository.Setup(r => r.UnSavePlacementDescription(studentId, descriptionId)).ThrowsAsync(new ArgumentException());
             var controller = new StudentRepositoryController(repository.Object);
@@ -316,7 +318,7 @@ namespace BDSA2020.Api.Tests
         [Fact]
         public async Task UnSave_returns_500_on_internal_server_error()
         {
-            var studentId = new Guid("5a87427d-f0af-421d-a340-7d9dd8f9f76e");
+            var studentId = id1;
             var descriptionId = 1;
             repository.Setup(r => r.UnSavePlacementDescription(studentId, descriptionId)).ThrowsAsync(new Exception());
             var controller = new StudentRepositoryController(repository.Object);

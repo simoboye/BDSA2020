@@ -1,0 +1,84 @@
+@page "/companyplacements"
+@using Entities
+@inject HttpClient httpClient
+
+
+@if (placementDescriptions == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{    
+    <div class="row">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-6">
+            <h1>Our placement descriptions</h1>
+            <hr>
+        </div>
+        <div class="col-sm-3"></div>
+    </div> 
+    <div class="row">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-6">
+            @foreach (var placement in placementDescriptions)
+            //(var saves in mySaves)
+            {
+                <div class="card savedCard">
+                    <img class="card-img-top" src="@placement.Thumbnail" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">@placement.Title</h5>
+                        <p class="card-text">@placement.Description</p>
+                        <a href="#" class="btn btn-primary">Edit</a>
+                        <a href="#" class="card-link">More</a>
+                    </div>
+                </div>
+                <hr>
+            }
+        </div>
+        <div class="col-sm-3"></div>
+    </div>
+}
+
+@code {
+    private PlacementDescription[] placementDescriptions;
+    
+    //private Saved[] mySaves;
+    
+    //private int thisStudentId = 1; // Needs to be updated upon login.
+    
+    private int currentCount = 0;
+
+    
+
+    protected override async Task OnInitializedAsync()
+    {
+        placementDescriptions = await httpClient.GetFromJsonAsync<PlacementDescription[]>("PlacementDescriptionRepository");
+        //mySaves = await httpClient.GetFromJsonAsync<Saved[]>("");
+    }
+
+     private void IncrementCount()
+    {
+        if (this.currentCount == placementDescriptions.Length - 1) { return; }
+        currentCount++;
+    }
+
+    private void DecrementCount()
+    {
+        if (this.currentCount == 0) { return; }
+        currentCount--;
+    }
+
+    private string GetLastApplyDate()
+    {
+        var applyDate = placementDescriptions[this.currentCount].LastApplyDate;
+        return applyDate.ToShortDateString();
+    }
+
+    private string DaysRemaining()
+    {
+        var applyDate = placementDescriptions[this.currentCount].LastApplyDate;
+        DateTime today = DateTime.Now;
+        var daysLeft = applyDate.Subtract(today);
+        return (daysLeft.Days + 1).ToString(); 
+    }
+}

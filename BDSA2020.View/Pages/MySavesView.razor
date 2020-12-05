@@ -25,44 +25,41 @@
     <p><em>Loading...</em></p>
 }
 else
-{    
-    <table class="table">
-        <thead>
-            <tr>
-                <th>My Saves &heartsuit;</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var placement in _placementDescriptions)
+{   
+    <div class="row">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-6">
+            <h1>My Saves</h1>
+            <hr>
+        </div>
+        <div class="col-sm-3"></div>
+    </div> 
+    <div class="row">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-6">
+            @foreach (var placement in placementDescriptions)
+            //(var saves in mySaves)
             {
-                if( _studentPlacementDescriptionIds.Contains(placement.Id))
+              if( _studentPlacementDescriptionIds.Contains(placement.Id))
                 {
-                <tr>
-                    <div class="placement my-cardSaved">
-        <div class = "frame">
-        <div style="height: 30px;"></div>
-        <h5>@_placementDescriptions[placement.Id -1].Title</h5>    
-        <img src="@_placementDescriptions[placement.Id -1].Thumbnail" alt="">
-        <div class="divider"></div>
-        <div style="height: 20px;"></div>
-        <div class = "btnPlacement">
-            <a href="https://www.google.com">More</a>
-        </div>
-        <div class = "btnApplyPlacement">
-            <a href="mailto:Goolge.com">Apply Now</a>
-        </div>
-        </div>
-        </div>
-        <p class= "applyDate"> Placement Description Duration: @(GetLastApplyDate(placement.Id -1))</p>
-        <button class="btn btn-save" @onclick="() => RemoveFromSaves(placement.Id)">&heartsuit;</button>
-        <p class= "applyDate"> Days Remaining: @(DaysRemaining(placement.Id -1))</p>
-                </tr>
-                } 
+                <div class="card savedCard">
+                    <img class="card-img-top" src="@placement.Thumbnail" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">@placement.Title</h5>
+                        <p class="card-text">@placement.Description</p>
+                        <p class="card-text"> Placement Description Duration: @(GetLastApplyDate(placement.Id -1))</p>
+                        <p class="card-text"> Days Remaining: @(DaysRemaining(placement.Id -1))</p>
+                        <a href="#" class="btn btn-primary">Apply</a>
+                        <a class="card-link" @onclick="() => RemoveFromSaves(placement.Id)">Remove</a>
+                    </div>
+                </div>
+                <hr>
+                }
             }
-            </tbody>
-        </table>
+        </div>
+        <div class="col-sm-3"></div>
+    </div>
 }
-
 
 @code {
     private Guid _userId;

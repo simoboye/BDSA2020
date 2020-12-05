@@ -22,8 +22,7 @@ namespace BDSA2020.Api.Tests
 
         public PlacementDescriptionRepositoryControllerTests()
         {
-            var repository = new Mock<IPlacementDescriptionRepository>();
-            this.repository = repository;
+            repository = new Mock<IPlacementDescriptionRepository>();
         }
 
         [Fact]
@@ -64,7 +63,7 @@ namespace BDSA2020.Api.Tests
         [Fact]
         public async Task Get_given_id_returns_200_and_student()
         {
-            var description = new PlacementDescriptionDetailsDTO { Id = 1, KeywordNames = new [] { "UML"}, Degree = Degree.Bachelor, MinSalary = 100, MinWorkingHours = 5, MaxWorkingHours = 20, Agreement = false, Location = "Nowhere" };
+            var description = new PlacementDescriptionDetailsDTO { Id = 1, KeywordNames = new [] { "UML" }, Degree = Degree.Bachelor, MinSalary = 100, MinWorkingHours = 5, MaxWorkingHours = 20, Agreement = false, Location = "Nowhere" };
 
             repository.Setup(r => r.GetPlacementDescriptionAsync(description.Id)).ReturnsAsync(description);
             var controller = new PlacementDescriptionRepositoryController(repository.Object);

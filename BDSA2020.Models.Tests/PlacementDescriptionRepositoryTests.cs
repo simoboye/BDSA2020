@@ -71,8 +71,8 @@ namespace BDSA2020.Models.Tests
             Assert.Equal(lastId + 1, actual);
 
             var created = await Context.PlacementDescriptions.FindAsync(actual);
-            Assert.Equal(new [] { "Java", "Testing" }, created.Keywords.Select(k => k.Keyword.Name).ToList());
-            Assert.Equal("Spotify", created.Company.Name);
+            Assert.Equal(description.KeywordNames, created.Keywords.Select(k => k.Keyword.Name).ToList());
+            Assert.Equal(description.CompanyName, created.Company.Name);
         }
 
         [Fact]
@@ -114,9 +114,9 @@ namespace BDSA2020.Models.Tests
 
             Assert.True(actual);
 
-            var updated = await Context.PlacementDescriptions.FindAsync(1);
-            Assert.Equal(new [] { "UML" }, updated.Keywords.Select(k => k.Keyword.Name).ToList());
-            Assert.Equal("Spotify", updated.Company.Name);
+            var updated = await Context.PlacementDescriptions.FindAsync(descriptionToUpdate.Id);
+            Assert.Equal(descriptionToUpdate.KeywordNames, updated.Keywords.Select(k => k.Keyword.Name).ToList());
+            Assert.Equal(descriptionToUpdate.CompanyName, updated.Company.Name);
         }
 
         [Fact]

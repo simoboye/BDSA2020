@@ -26,10 +26,8 @@ namespace BDSA2020.Entities
         public string Description { get; set; }
 
         [Required]
-        public virtual ICollection<CompanyPlacement> Companies { get; set; }
+        public Guid CompanyId { get; set; }
 
-        // The company should not be set when creating a new PD, it is only
-        // for accessing perposses.
         public virtual Company Company { get; set; }
 
         public virtual ICollection<PlacementDescriptionKeyword> Keywords { get; set; }

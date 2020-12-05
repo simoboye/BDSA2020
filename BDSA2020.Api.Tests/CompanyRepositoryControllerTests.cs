@@ -22,8 +22,7 @@ namespace BDSA2020.Api.Tests
 
         public CompanyRepositoryControllerTests()
         {
-            var repository = new Mock<ICompanyRepository>();
-            this.repository = repository;
+            repository = new Mock<ICompanyRepository>();
         }
 
         [Fact]
@@ -64,7 +63,7 @@ namespace BDSA2020.Api.Tests
         [Fact]
         public async Task Get_given_id_returns_200_and_company()
         {
-            var company = new CompanyDetailsDTO { Id = Guid.NewGuid(), Name="Test"};
+            var company = new CompanyDetailsDTO { Id = Guid.NewGuid(), Name = "Test" };
 
             repository.Setup(r => r.GetCompanyAsync(company.Id)).ReturnsAsync(company);
             var controller = new CompanyRepositoryController(repository.Object);
