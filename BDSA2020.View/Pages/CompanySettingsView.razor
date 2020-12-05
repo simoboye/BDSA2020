@@ -1,0 +1,37 @@
+@page "/companysettings"
+@using Entities
+@using System.ComponentModel.DataAnnotations;
+@inject HttpClient httpClient
+
+
+@if (keywords == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{    
+    <div class="container settingsView">
+        <div class="row">
+            <div class="col-12">
+                <h1>Company settings</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <form>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+
+@code {
+    private String[] keywords;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        keywords = await httpClient.GetFromJsonAsync<String[]>("KeywordRepository");
+    }
+}

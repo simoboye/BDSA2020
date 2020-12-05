@@ -12,47 +12,53 @@
 }
 else 
 {
-    <div class="scroll-container" id="scroll-container">
-        @foreach (var match in matches)
-        {
-            <div class="placement scroll-area">
-                <div class="frame">
-                    <div>Matching score: @match.MatchScore</div>
-                    <div style="height: 30px;"></div>
-                    <h5>@match.Title</h5>
-                    <img src="@match.Thumbnail" alt="Thumbnail">
-                    <p class = "description">@match.Description</p>
-                    <div class="divider"></div>
-                    <ul class="description">
-                        <li>@match.MinWorkingHours</li>
-                        <li>@match.Location</li>
-                        <li>@match.MinSalary</li>
-                    </ul>
-                    <div class="divider"></div>
-                    <div style="height: 20px;"></div>
-                    <div class="btnPlacement more">
-                        <p class="center">More</p>
-                    </div>
-                    <p class="boldText">Last apply date: @GetLastApplyDate(match)</p>
-                    <p class="boldText">Days remaining: @DaysRemaining(match)</p>
+    <div class="container placementDescriptionView">
+        <div class="row">
+            <div class="col-sm-3">
+
+            </div>
+            <div class="col-sm-6 placementContainer">
+                <div class="placementCarousel">
+                    @foreach (var item in matches)
+                    { 
+                        <div class="card scroll-area placement">  
+                            <img class="card-img-top" src="@item.Thumbnail" alt="">
+                            <div class="card-body">
+                                <h5 class="card-title">@item.Title</h5>
+                                <p class="card-text">@item.Description</p>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><b>Minimum workinghours: </b>@item.MinWorkingHours</li>
+                                <li class="list-group-item"><b>Location: </b>@item.Location</li>
+                                <li class="list-group-item"><b>Salary: </b>@item.MinSalary</li>
+                                <li class="list-group-item"><b>Last apply date: </b>@GetLastApplyDate(item)</li>
+                                <li class="list-group-item"><b>Days remaining: </b>@DaysRemaining(item)</li>
+                                <li class="list-group-item"><b>Matching score: </b>@item.MatchScore</li>
+                            </ul>
+                            <div class="card-body">
+                                <button type="button" class="btn btn-primary btn-lg btn-block">Apply now</button>
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
-        }
+            <div class="col-sm-3">
+
+            </div>
+        </div>
+        <div class="d-flex flex-row buttonrow justify-content-center">
+            <div class="p-2">
+                <button type="button" onclick="goPrev()" class="btn btn-primary">Last</button>
+            </div>
+            <div class="p-2">
+                <button type="button" class="btn btn-danger">&#10084;</button>
+            </div>
+            <div class="p-2">
+                <button type="button" onclick="goNext()" class="btn btn-primary">Next</button>
+            </div>
+        </div>
     </div>
 }
-
-<div class="frame">
-    <div class="btnPlacement apply">
-        <p class="center">Apply</p>
-    </div>
-  
-    <div class="row center">
-        <div onclick="goPrev()" class="column"style="background-color:white;">^</div>
-        <div class="like"  style="background-color: black; color: white;"></div>
-        <div onclick="goNext()" class="column" style="background-color:white;">v</div>
-    </div>
-</div>
-
 
 @code {
     private PlacementDescriptionMatch[] matches;

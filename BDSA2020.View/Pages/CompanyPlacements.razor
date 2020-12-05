@@ -1,4 +1,4 @@
-@page "/mysaves"
+@page "/companyplacements"
 @using Entities
 @inject HttpClient httpClient
 
@@ -8,11 +8,11 @@
     <p><em>Loading...</em></p>
 }
 else
-{   
+{    
     <div class="row">
         <div class="col-sm-3"></div>
         <div class="col-sm-6">
-            <h1>My Saves</h1>
+            <h1>Our placement descriptions</h1>
             <hr>
         </div>
         <div class="col-sm-3"></div>
@@ -28,7 +28,7 @@ else
                     <div class="card-body">
                         <h5 class="card-title">@placement.Title</h5>
                         <p class="card-text">@placement.Description</p>
-                        <a href="#" class="btn btn-primary">Apply</a>
+                        <a href="#" class="btn btn-primary">Edit</a>
                         <a href="#" class="card-link">More</a>
                     </div>
                 </div>
