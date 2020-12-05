@@ -16,27 +16,32 @@ else
 {
     <div class="container placementDescriptionView">
         <div class="row">
-            <div class="col-12">
-                <p> @placementDescriptions.Length </p>
-                @foreach (var item in placementDescriptions)
-                {
-                        <p>@item.Title</p>
-                        <img src="@item.Thumbnail" alt="">
-                        <p>@item.Description</p>
-                        <li>@item.MinWorkingHours</li>
-                        <li>@item.Location</li>
-                        <li>@item.MinSalary</li>
-                        //<p class="boldText">Last apply date: @GetLastApplyDate(item.Id -1)</p>
-                        //<p class="boldText">Days remaining: @DaysRemaining(item.Id -1)</p>
-                }
-            </div>
-        </div>
-        <div class="row buttonrow">
             <div class="col-sm-3">
 
             </div>
-            <div class="col-sm-6">
-                <button type="button" class="btn btn-primary btn-lg btn-block">Block level button</button>
+            <div class="col-sm-6 placementContainer">
+                <div class="placementCarousel">
+                    @foreach (var item in placementDescriptions)
+                    { 
+                        <div class="card scroll-area placement">  
+                            <img class="card-img-top" src="@item.Thumbnail" alt="">
+                            <div class="card-body">
+                                <h5 class="card-title">@item.Title</h5>
+                                <p class="card-text">@item.Description</p>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><b>Minimum workinghours: </b>@item.MinWorkingHours</li>
+                                <li class="list-group-item"><b>Location: </b>@item.Location</li>
+                                <li class="list-group-item"><b>Salary: </b>@item.MinSalary</li>
+                            </ul>
+                            <div class="card-body">
+                                <button type="button" class="btn btn-primary btn-lg btn-block">Block level button</button>
+                            </div>
+                        </div>
+                            //<p class="boldText">Last apply date: @GetLastApplyDate(item.Id -1)</p>
+                            //<p class="boldText">Days remaining: @DaysRemaining(item.Id -1)</p>
+                    }
+                </div>
             </div>
             <div class="col-sm-3">
 
@@ -44,13 +49,13 @@ else
         </div>
         <div class="d-flex flex-row buttonrow justify-content-center">
             <div class="p-2">
-                <button type="button" class="btn btn-primary">Primary</button>
+                <button type="button" onclick="goPrev()" class="btn btn-primary">Last</button>
             </div>
             <div class="p-2">
                 <button type="button" class="btn btn-danger">Danger</button>
             </div>
             <div class="p-2">
-                <button type="button" class="btn btn-dark">Dark</button>
+                <button type="button" onclick="goNext()" class="btn btn-primary">Next</button>
             </div>
         </div>
     </div>

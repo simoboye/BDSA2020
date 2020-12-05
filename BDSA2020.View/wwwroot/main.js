@@ -7,7 +7,6 @@ window.CardAnimation = () => {
 }
 
 function goPrev() {
-  console.log("up");
   document.getElementById('scroll-container').scrollBy({ 
     top: -40,
     behavior: 'smooth' 
@@ -15,7 +14,7 @@ function goPrev() {
 }
 
 function goNext() {
-  console.log("down");
+
   document.getElementById('scroll-container').scrollBy({ 
     top: 40,
     behavior: 'smooth' 
@@ -23,7 +22,18 @@ function goNext() {
   checkMore();
 }
 
-
+document.querySelector('#controls').addEventListener('click', (event) => {
+  const $slide = document.querySelector(event.target.getAttribute('href'));
+  if (!$slide) return;
+  
+  if ($slide.scrollIntoViewIfNeeded) {
+    event.preventDefault();
+    $slide.scrollIntoViewIfNeeded();
+  } else if ($slide.scrollIntoView) {
+    event.preventDefault();
+    $slide.scrollIntoView();
+  }
+});
 
 
 function checkMore(){

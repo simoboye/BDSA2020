@@ -1,0 +1,194 @@
+@page "/companysettings"
+@using Entities
+@using System.ComponentModel.DataAnnotations;
+@inject HttpClient httpClient
+
+
+@if (keywords == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{    
+    <div class="container settingsView">
+        <div class="row">
+            <div class="col-12">
+                <h1>Company settings</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <form>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+
+@code {
+    private String[] keywords;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        keywords = await httpClient.GetFromJsonAsync<String[]>("KeywordRepository");
+    }
+}
+
+
+
+
+
+
+
+
+
+@*@if (false)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{    
+    <h5>Profile Settings</h5>
+    <div class="placement my-settings">
+    <div class = "frame">
+        <div style="height: 30px;"></div>
+    
+    <h3>Degree</h3>
+    @*<form action=""> @*insert method to handle submit data (maybe use EditForms)
+    <EditForm Model="settings" OnValidSubmit="ValidFormSubmitted"> @*EditForm uses capital V in @bind-Value, form uses lowercase v
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <label for="degrees">Select your current degree:</label>
+            <select name="degrees" id="degrees">
+                <option value="bachelor">Bachelor</option>
+                <option value="master">Master</option>
+                <option value="phd">PhD</option>
+                <option value="other">Other</option>
+            </select>
+
+        <br>
+        <div class="divider"></div>
+        <h3>Keywords</h3>
+        <input type="checkbox" id="testing" name="testing" value="Testing">
+        <label for="testing"> Testing</label><br>
+        <input type="checkbox" id="csharp" name="csharp" value="CSharp">
+        <label for="csharp"> C#</label><br>
+        <input type="checkbox" id="java" name="java" value="Java">
+        <label for="java"> java</label><br>
+        <input type="checkbox" id="fullstack" name="fullstack" value="Fullstack">
+        <label for="fullstack"> Fullstack</label><br>
+        <input type="checkbox" id="frontend" name="frontend" value="Frontend">
+        <label for="frontend"> Frontend</label><br>
+        <input type="checkbox" id="backend" name="backend" value="Backend">
+        <label for="backend"> Backend</label><br>
+        <input type="checkbox" id="uml" name="uml" value="UML">
+        <label for="uml"> UML</label><br>
+        <input type="checkbox" id="devops" name="devops" value="Devops">
+        <label for="devops"> DevOps</label><br>
+        <input type="checkbox" id="communication" name="communication" value="Communication">
+        <label for="communication"> Communication</label><br>
+        <input type="checkbox" id="javascript" name="javascript" value="JavaScript">
+        <label for="javascript"> JavaScript</label>
+
+        <br>
+        <div class="divider"></div>
+        <h3>Working Hours</h3>
+        <span>Min hours </span>
+        <input type="range" id="minHours" name="minHours" min="0" max="50" step="1"
+         @bind-Value="settings.MinWorkingHours"@bind-Value:event="oninput"/>       @bind="settings.MinWorkingHours"@bind:event="oninput"/>
+        <p>@settings.MinWorkingHours</p><br>
+
+        <span>Max hours </span>
+        <input type="range" id="maxHours" name="maxHours" min="0" max="50" step="1"
+        @bind-Value="settings.MaxWorkingHours"@bind-Value:event="oninput"/>
+        <p>@settings.MaxWorkingHours</p><br>
+
+        <br>
+        <div class="divider"></div>
+        <h3>Salary</h3>
+        <span>Set avg </span>
+        <input type="range" id="salary" name="salary" min="0" max="5000" step="10"
+        @bind-Value="settings.MinSalary"@bind-Value:event="oninput"/>             @bind-Value="@settings.MinSalary"@bind-Value:event="oninput"/>
+        <p>@settings.MinSalary $</p><br>
+
+        <br>
+        <div class="divider"></div>
+        <h3>Agreement</h3>
+        <input type="radio" id="yes" name="agreement" @bind="settings.Agreement"/>
+        <label for="yes">Select if you don't like bullsh*t</label><br>
+        <input type="radio" id="no" name="agreement" @bind="settings.Agreement"/>
+        <label for="no">Select if you like bullsh*t</label><br>
+        @*<input type="radio" id="agreementNo" name="agreement" value="no">
+        <label for="agreementNo">No</label><br>
+
+        <br>
+        <div class="divider"></div>
+        <h3>Zipcode</h3>
+        <label for="zip">Enter your zipcode: </label>
+        <input type="number" id="zip" name="zipcode" @bind="settings.Location">
+
+        <br><br>
+        <input type="submit" value="Submit"> @*submit form returns action/method call up top
+                                               create own write to database button upon click
+        
+        <ValidationSummary></ValidationSummary>     @*prints summary here
+
+    </EditForm>
+    </div>
+    </div>
+}
+
+@code {
+
+    Settings settings = new Settings();
+
+    public void ValidFormSubmitted()
+    {
+        return;
+    }
+    
+
+    class Settings //: MatchingAttributes
+    {
+         public int Id { get; set; }
+
+        [Required]
+        public Degree Degree { get; set; }
+
+        // [Required]
+        // public int KeywordWrapperId { get; set; }
+
+        [Required]
+        public int MinSalary { get; set; }
+
+        [Required]
+        public int MinWorkingHours { get; set; }
+
+        [Required]
+        //[Range(MinWorkingHours, 5000, ErrorMessage = "MaxWorkingHours must be higher than Min")]
+        public int MaxWorkingHours { get; set; }
+
+        [Required]
+        public bool Agreement { get; set; }
+
+        [Required]
+        public int Location { get; set; } //zip (was string)
+    }
+
+    /*
+    private int minHours {get; set; }
+    private int maxHours {get; set; }
+    private int salary {get; set; }
+
+    
+    private async Task SetSetting()
+    {
+
+    }
+    
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+    */*@
