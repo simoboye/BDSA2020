@@ -1,5 +1,6 @@
-@page "/redirectLogut"
+@page "/redirectLogout"
 @using Entities
+@using System
 @inject NavigationManager Navigation
 @inject HttpClient httpClient
 
@@ -8,13 +9,14 @@
 @code {
     protected override void OnInitialized()
     {
+        Console.WriteLine("HELLO");
         Delay();
     }
 
     public async void Delay()
     {
         await Task.Delay(1000);
-        Navigation.NavigateTo("AzureADB2C/Account/SignIn", true);
+        Navigation.NavigateTo("https://localhost:4001/", true);
     }
 
 }
