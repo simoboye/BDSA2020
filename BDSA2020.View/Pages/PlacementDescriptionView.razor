@@ -6,7 +6,7 @@
 @inject IJSRuntime JS;
 @inject UserPropertiesService userPropertiesService
 
-@if (placementDescriptions == null)
+@if (matches == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -19,7 +19,7 @@ else
             </div>
             <div class="col-sm-6 placementContainer">
                 <div class="placementCarousel">
-                    @foreach (var item in placementDescriptions)
+                    @foreach (var item in matches)
                     { 
                         <div class="card scroll-area placement">  
                             <img class="card-img-top" src="@item.Thumbnail" alt="">
@@ -31,8 +31,8 @@ else
                                 <li class="list-group-item"><b>Minimum workinghours: </b>@item.MinWorkingHours</li>
                                 <li class="list-group-item"><b>Location: </b>@item.Location</li>
                                 <li class="list-group-item"><b>Salary: </b>@item.MinSalary</li>
-                                <li class="list-group-item"><b>Last apply date: </b>@GetLastApplyDate(item.Id -1)</li>
-                                <li class="list-group-item"><b>Days remaining: </b>@DaysRemaining(item.Id -1)</li>
+                                <li class="list-group-item"><b>Last apply date: </b>@GetLastApplyDate(item)</li>
+                                <li class="list-group-item"><b>Days remaining: </b>@DaysRemaining(item)</li>
                             </ul>
                             <div class="card-body">
                                 <button type="button" class="btn btn-primary btn-lg btn-block">Block level button</button>
