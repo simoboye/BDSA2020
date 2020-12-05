@@ -100,7 +100,7 @@ else
         
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
-        _userId = Guid.Parse(user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+        var _userId = Guid.Parse(user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
         _userId = Guid.Parse("5a87427d-f0af-421d-a340-7d9dd8f9f76e"); // hardcoded to return value (delete)
 
         using (var response = await httpClient.PatchAsync($"StudentRepository/save/{_userId}/{placementDescriptionId}", null))
