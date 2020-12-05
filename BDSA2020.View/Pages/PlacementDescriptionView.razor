@@ -1,10 +1,23 @@
 @page "/placementdescription"
 
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Authentication.AzureADB2C.UI
+@using Microsoft.Extensions.Options
+@inject IOptionsMonitor<AzureADB2COptions> AzureADB2COptions
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
 @using BDSA2020.Shared;
 @inject HttpClient httpClient
+@using Newtonsoft.Json;
 @inject IMatchingService service
 @inject IJSRuntime JS;
 @inject UserPropertiesService userPropertiesService
+@using System;
+@using System.Text;
+@using System.Net.Http;
+
+
 
 @if (matches == null)
 {
@@ -15,7 +28,6 @@ else
     <div class="container placementDescriptionView">
         <div class="row">
             <div class="col-sm-3">
-
             </div>
             <div class="col-sm-6 placementContainer">
                 <div class="placementCarousel">
@@ -37,6 +49,7 @@ else
                             </ul>
                             <div class="card-body">
                                 <button type="button" class="btn btn-primary btn-lg btn-block">Apply now</button>
+                                <button type="button" class="btn btn-primary btn-lg btn-block" @onclick="() => AddToSaves(item.Id)">&#10084;</button>
                             </div>
                         </div>
                     }
@@ -49,9 +62,6 @@ else
         <div class="d-flex flex-row buttonrow justify-content-center">
             <div class="p-2">
                 <button type="button" onclick="goPrev()" class="btn btn-primary">Last</button>
-            </div>
-            <div class="p-2">
-                <button type="button" class="btn btn-danger">&#10084;</button>
             </div>
             <div class="p-2">
                 <button type="button" onclick="goNext()" class="btn btn-primary">Next</button>
@@ -73,10 +83,38 @@ else
 
         matches = service.CalculateMatches(student, placementDescriptions).ToArray();
     }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         //To run JS AFTER Blazor is done loading application
         await JS.InvokeAsync<string>("CardAnimation");
+    }
+
+    private async void AddToSaves(int placementDescriptionId)
+    {
+        //placementDescriptionId = placementDescriptionId + 1;
+        Console.WriteLine(placementDescriptionId);
+
+        var json = JsonConvert.SerializeObject(placementDescriptionId);
+        var data = new StringContent(json, Encoding.UTF8, "application/json");
+        
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        var _userId = Guid.Parse(user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+        _userId = Guid.Parse("5a87427d-f0af-421d-a340-7d9dd8f9f76e"); // hardcoded to return value (delete)
+
+        using (var response = await httpClient.PatchAsync($"StudentRepository/save/{_userId}/{placementDescriptionId}", null))
+        {
+            try 
+            {
+                response.EnsureSuccessStatusCode();
+                Console.WriteLine(await response.Content.ReadAsStringAsync());
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
     }
 
     private string GetLastApplyDate(PlacementDescriptionMatch match)
@@ -92,4 +130,6 @@ else
         var daysLeft = applyDate.Subtract(today);
         return (daysLeft.Days + 1).ToString(); 
     }
+
+//_userId = Guid.Parse("ce0527df-eec0-43e1-9a9f-6546e35b695a"); // hardcoded to return value (delete)
 }

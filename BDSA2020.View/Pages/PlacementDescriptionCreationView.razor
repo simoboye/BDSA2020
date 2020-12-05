@@ -1,6 +1,11 @@
 @page "/placementdescriptioncreation"
 @using Entities
 @using System.ComponentModel.DataAnnotations;
+@using BDSA2020.Shared;
+@using Newtonsoft.Json;
+@using System;
+@using System.Text;
+@using System.Net.Http;
 @inject HttpClient httpClient
 
 
@@ -109,6 +114,9 @@ else
 }
 
 @code {
+    //CreatePlacementDescriptionDTO dto = new CreatePlacementDescriptionDTO();
+    Settings settings = new Settings();
+                                           
     private String[] keywords;
     
     protected override async Task OnInitializedAsync()
@@ -117,6 +125,20 @@ else
     }
 
     @*Settings settings = new Settings();*@
+
+    private async Task AddToSaves(CreatePlacementDescriptionDTO dto)    //Task<HttpResponseMessage>
+    {
+        var json = JsonConvert.SerializeObject(dto);
+        var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+        var response = await httpClient.PostAsync($"PlacementDescriptionRepository/create", data);
+        var result = response.Content.ReadAsStringAsync().Result;
+        Console.WriteLine(result);
+
+        //return await httpClient.PutAsJsonAsync($"PlacementDescriptionRepository/update", dto);
+        // someVariable = await httpClient.DeleteAsync($"PlacementDescriptionRepository/delete/{id}", dto);   
+        
+    }
 
     public void ValidFormSubmitted()
     {
@@ -161,4 +183,19 @@ else
 
         // implement keywords
     }
+    /*
+    public Degree Degree { get; set; }
+        public ICollection<string> KeywordNames { get; set; }
+        public int MinSalary { get; set; }
+        public int MinWorkingHours { get; set; }
+        public int MaxWorkingHours { get; set; }
+        public bool Agreement { get; set; }
+        public string Location { get; set; }
+        public DateTime LastApplyDate { get; set; }
+        public string Email { get; set; }
+        public Uri Thumbnail { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string CompanyName { get; set; }
+    */
 }
