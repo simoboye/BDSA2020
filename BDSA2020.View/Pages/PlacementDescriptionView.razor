@@ -47,9 +47,9 @@ else
                             <p class="center">More</p>
                         </div>
                     <p>@_userId</p>
-                    <p class="boldText">Last apply date: @GetLastApplyDate(itemId)</p>
-                    <p class="boldText">Days remaining: @DaysRemaining(itemId)</p>
-                    <button class="btn btn-save" @onclick="() => AddToSaves(itemId)">&heartsuit;</button>  
+                    <p class="boldText">Last apply date: @GetLastApplyDate(itemId)</p>                      
+                    <p class="boldText">Days remaining: @DaysRemaining(itemId)</p>                          
+                    <button class="btn btn-save" @onclick="() => AddToSaves(item.Id)">&heartsuit;</button>
                 </div>
             </div>
     }
@@ -91,12 +91,16 @@ else
 
     private async void AddToSaves(int placementDescriptionId)
     {
-        placementDescriptionId = placementDescriptionId + 1;
+        //placementDescriptionId = placementDescriptionId + 1;
         Console.WriteLine(placementDescriptionId);
 
         var json = JsonConvert.SerializeObject(placementDescriptionId);
         var data = new StringContent(json, Encoding.UTF8, "application/json");
-        _userId = Guid.Parse("ce0527df-eec0-43e1-9a9f-6546e35b695a");
+        
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        _userId = Guid.Parse(user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+        _userId = Guid.Parse("5a87427d-f0af-421d-a340-7d9dd8f9f76e"); // hardcoded to return value (delete)
 
         using (var response = await httpClient.PatchAsync($"StudentRepository/save/{_userId}/{placementDescriptionId}", null))
         {
@@ -125,6 +129,8 @@ else
         var daysLeft = applyDate.Subtract(today);
         return (daysLeft.Days + 1).ToString(); 
     }
+
+//_userId = Guid.Parse("ce0527df-eec0-43e1-9a9f-6546e35b695a"); // hardcoded to return value (delete)
 }
 
 

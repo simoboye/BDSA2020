@@ -146,7 +146,9 @@ else
         var result = response.Content.ReadAsStringAsync().Result;
         Console.WriteLine(result);
 
-        //return await httpClient.PutAsJsonAsync($"PlacementDescriptionRepository/create", dto);   
+        //return await httpClient.PutAsJsonAsync($"PlacementDescriptionRepository/update", dto);
+        // someVariable = await httpClient.DeleteAsync($"PlacementDescriptionRepository/delete/{id}", dto);   
+        
     }
 
     public void ValidFormSubmitted()

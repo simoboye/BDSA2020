@@ -8,15 +8,21 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @using System.Collections.Generic; 
 @using System;
+@using System.Linq;
 
 @using Entities
 @using BDSA2020.Shared;
 @inject HttpClient httpClient
+@using Newtonsoft.Json;
+@inject IJSRuntime JS;
+
+@using System.Text;
+@using System.Net.Http;
 
 
-@if (placementDescriptions == null)
+@if (_studentPlacementDescriptionIds == null || _placementDescriptions == null)
 {
-    <p><em>Loading...</em></p>
+    <p><em>you haven't saved any descriptions...</em></p>
 }
 else
 {    
@@ -27,14 +33,16 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var placement in placementDescriptions)
+            @foreach (var placement in _placementDescriptions)
             {
+                if( _studentPlacementDescriptionIds.Contains(placement.Id))
+                {
                 <tr>
                     <div class="placement my-cardSaved">
         <div class = "frame">
         <div style="height: 30px;"></div>
-        <h5>LEO Pharma - @placementDescriptions[currentCount].Title</h5>    
-        <img src="@placementDescriptions[currentCount].Thumbnail" alt="">
+        <h5>@_placementDescriptions[placement.Id -1].Title</h5>    
+        <img src="@_placementDescriptions[placement.Id -1].Thumbnail" alt="">
         <div class="divider"></div>
         <div style="height: 20px;"></div>
         <div class = "btnPlacement">
@@ -45,11 +53,12 @@ else
         </div>
         </div>
         </div>
-        <p class= "applyDate"> Placement Description Duration: @(GetLastApplyDate())</p>
-        <p class= "applyDate"> Days Remaining: @(DaysRemaining())</p>
-                        </tr>
-                currentCount++; 
-                }
+        <p class= "applyDate"> Placement Description Duration: @(GetLastApplyDate(placement.Id -1))</p>
+        <button class="btn btn-save" @onclick="() => RemoveFromSaves(placement.Id)">&heartsuit;</button>
+        <p class= "applyDate"> Days Remaining: @(DaysRemaining(placement.Id -1))</p>
+                </tr>
+                } 
+            }
             </tbody>
         </table>
 }
@@ -58,9 +67,9 @@ else
 @code {
     private Guid _userId;
 
-    //private PlacementDescriptionDetailsDTO[] placementDescriptions;
-    private List<PlacementDescriptionDetailsDTO> placementDescriptions;
-    private int currentCount = 0;
+    private PlacementDescriptionDetailsDTO[] _placementDescriptions;
+    //private List<PlacementDescriptionDetailsDTO> placementDescriptions;
+    List<int> _studentPlacementDescriptionIds = new List<int>();
 
     
 
@@ -69,22 +78,31 @@ else
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
         _userId = Guid.Parse(user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+        _userId = Guid.Parse("5a87427d-f0af-421d-a340-7d9dd8f9f76e"); // hardcoded to return value (delete)
 
-        _userId = Guid.Parse("984ccbee-0229-46b0-a11d-d70ad5ba204c"); // hardcoded to return value (delete)
-
-        var _studentInfo = await httpClient.GetFromJsonAsync<StudentDetailsDTO>($"StudentRepository/{_userId}");
-        var studentPlacementDescription = _studentInfo.PlacementDescriptionIds.ToList();
+        try
+        {
+            var _studentInfo = await httpClient.GetFromJsonAsync<StudentDetailsDTO>($"StudentRepository/{_userId}");
+            _studentPlacementDescriptionIds = _studentInfo.PlacementDescriptionIds.ToList();
+        } 
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        _placementDescriptions = await httpClient.GetFromJsonAsync<PlacementDescriptionDetailsDTO[]>("PlacementDescriptionRepository");
+        
         //var studentPlacementDescription = _studentInfo.PlacementDescriptionIds.Count;
         //placementDescriptions = new PlacementDescriptionDetailsDTO[studentPlacementDescription.Count];
-        
-        
+        /*
         foreach (int i in studentPlacementDescription)
         {
             Console.WriteLine(i);
             var placementDescription = await httpClient.GetFromJsonAsync<PlacementDescriptionDetailsDTO>($"PlacementDescriptionRepository/{i}");
             placementDescriptions.Add(placementDescription);
         }
+        */
 
+        
         /*
         var placementDescrip = await httpClient.GetFromJsonAsync<PlacementDescriptionDetailsDTO>($"PlacementDescriptionRepository/{1}");
         */
@@ -105,17 +123,41 @@ else
     }
     */
 
-    private string GetLastApplyDate()
+    
+    private async void RemoveFromSaves(int placementDescriptionId)
     {
-        var applyDate = placementDescriptions[this.currentCount].LastApplyDate;
+        var json = JsonConvert.SerializeObject(placementDescriptionId);
+        var data = new StringContent(json, Encoding.UTF8, "application/json");
+        _userId = Guid.Parse("5a87427d-f0af-421d-a340-7d9dd8f9f76e"); // hardcoded to return value (delete)
+
+        using (var response = await httpClient.PatchAsync($"StudentRepository/unsave/{_userId}/{placementDescriptionId}", null))
+        {
+            try 
+            {
+                response.EnsureSuccessStatusCode();
+                Console.WriteLine(await response.Content.ReadAsStringAsync());
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+    }
+    
+    private string GetLastApplyDate(int placementId)
+    {
+        var applyDate = _placementDescriptions[placementId].LastApplyDate;
         return applyDate.ToShortDateString();
     }
 
-    private string DaysRemaining()
+    private string DaysRemaining(int placementId)
     {
-        var applyDate = placementDescriptions[this.currentCount].LastApplyDate;
+        var applyDate = _placementDescriptions[placementId].LastApplyDate;
         DateTime today = DateTime.Now;
         var daysLeft = applyDate.Subtract(today);
         return (daysLeft.Days + 1).ToString(); 
     }
+
+//_userId = Guid.Parse("ce0527df-eec0-43e1-9a9f-6546e35b695a"); // hardcoded to return value (delete)
 }
+
