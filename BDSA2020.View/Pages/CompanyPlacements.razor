@@ -37,43 +37,6 @@ else
         </div>
         <div class="col-sm-3"></div>
     </div>
-
-    @*<table class="table">
-        <thead>
-            <tr>
-                <th>My Saves &heartsuit;</th>
-            </tr>
-        </thead>
-        <tbody>
-
-            @foreach (var placement in placementDescriptions)
-                    //(var saves in mySaves)
-            {
-                <tr>
-                    <div class="placement my-cardSaved">
-        <div class = "frame">
-        <div style="height: 30px;"></div>
-        <h5>LEO Pharma - @placementDescriptions[currentCount].Title</h5>    @*replace currentCount -> saves.getPlacementDescId
-        <img src="@placementDescriptions[currentCount].Thumbnail" alt="">   @*replace currentCount -> saves.getPlacementDescId
-        <div class="divider"></div>
-        <div style="height: 20px;"></div>
-        <div class = "btnPlacement">
-            <a href="https://www.google.com">More</a>
-        </div>
-        <div class = "btnApplyPlacement">
-            <a href="mailto:Goolge.com">Apply Now</a>
-        </div>
-        </div>
-        </div>
-        <p class= "applyDate"> Placement Description Duration: @(GetLastApplyDate())</p>
-        <p class= "applyDate"> Days Remaining: @(DaysRemaining())</p>
-                        </tr>
-                currentCount++; 
-                }
-            </tbody>
-        </table>
-
-*@
 }
 
 @code {

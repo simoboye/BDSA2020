@@ -138,6 +138,18 @@ app {
     top: 0.5rem;
 }
 
+@media (max-width: 767.98px) {
+    h1{
+        font-size: 1.17em;
+    }
+
+    h2{
+        font-size: 1em;
+    }
+}
+
+
+
 
 /* new ccss below 
 .center {

@@ -5,15 +5,3 @@
 .settingsView .form-check-label{
     font-weight: normal;
 }
-
-
-@media (max-width: 767.98px) {
-    .settingsView h1{
-        font-size: 1.17em;
-    }
-
-    .settingsView h2{
-        font-size: 1em;
-    }
-}
-
