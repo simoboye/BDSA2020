@@ -33,9 +33,10 @@ else
                                 <li class="list-group-item"><b>Salary: </b>@item.MinSalary</li>
                                 <li class="list-group-item"><b>Last apply date: </b>@GetLastApplyDate(item)</li>
                                 <li class="list-group-item"><b>Days remaining: </b>@DaysRemaining(item)</li>
+                                <li class="list-group-item"><b>Matching score: </b>@item.MatchScore</li>
                             </ul>
                             <div class="card-body">
-                                <button type="button" class="btn btn-primary btn-lg btn-block">Block level button</button>
+                                <button type="button" class="btn btn-primary btn-lg btn-block">Apply now</button>
                             </div>
                         </div>
                     }
@@ -50,7 +51,7 @@ else
                 <button type="button" onclick="goPrev()" class="btn btn-primary">Last</button>
             </div>
             <div class="p-2">
-                <button type="button" class="btn btn-danger">Danger</button>
+                <button type="button" class="btn btn-danger">&#10084;</button>
             </div>
             <div class="p-2">
                 <button type="button" onclick="goNext()" class="btn btn-primary">Next</button>
