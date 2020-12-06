@@ -47,10 +47,12 @@ else
                     <div class="card-body">
                         <h5 class="card-title">@placement.Title</h5>
                         <p class="card-text">@placement.Description</p>
-                        <p class="card-text"> Placement Description Duration: @(GetLastApplyDate(placement.Id -1))</p>
-                        <p class="card-text"> Days Remaining: @(DaysRemaining(placement.Id -1))</p>
-                        <a href="#" class="btn btn-primary">Apply</a>
-                        <a class="card-link" @onclick="() => RemoveFromSaves(placement.Id)">Remove</a>
+                        <p class="card-text"> <b>Placement Description Duration:</b> @(GetLastApplyDate(placement.Id -1))</p>
+                        <p class="card-text"> <b>Days Remaining:</b> @(DaysRemaining(placement.Id -1))</p>
+                        @* Workaround for isssue with mailto: https://github.com/dotnet/aspnetcore/issues/25724*@
+                        <a href="mailto:@placement.Email" type="button" class="btn btn-primary" target="hidden-iframe">Apply</a>
+                        <iframe name="hidden-iframe" style="visibility:hidden;position:absolute;"></iframe>
+                        <button type="button"class="btn btn-danger" @onclick="() => RemoveFromSaves(placement.Id)">Remove</button>
                     </div>
                 </div>
                 <hr>

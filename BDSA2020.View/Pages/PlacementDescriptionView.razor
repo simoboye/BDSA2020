@@ -51,7 +51,9 @@ else
                                 <li class="list-group-item"><b>Matching score: </b>@item.MatchScore</li>
                             </ul>
                             <div class="card-body">
-                                <button type="button" class="btn btn-primary btn-lg btn-block">Apply now</button>
+                                <a type="button" class="btn btn-primary btn-lg btn-block" href="mailto:@item.Email" target="hidden-iframe">Apply now</a>
+                                @* Workaround for isssue with mailto: https://github.com/dotnet/aspnetcore/issues/25724*@
+                                <iframe name="hidden-iframe" style="visibility:hidden;position:absolute;"></iframe>
                                 <div onclick="showAlert()" class="saveField">
                                     <button type="button" class="btn btn-danger btn-lg btn-block saveButton" @onclick="() => AddToSaves(item.Id)">&#10084;</button>
                                 </div>
