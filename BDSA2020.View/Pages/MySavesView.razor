@@ -1,26 +1,22 @@
 @page "/mysaves"
 
-@using System.Security.Claims
 @using Microsoft.AspNetCore.Authentication.AzureADB2C.UI
 @using Microsoft.Extensions.Options
-@inject IOptionsMonitor<AzureADB2COptions> AzureADB2COptions
 @using Microsoft.AspNetCore.Components.Authorization
-@inject AuthenticationStateProvider AuthenticationStateProvider
 @using System.Collections.Generic; 
 @using System;
 @using System.Linq;
-
-@using Entities
 @using BDSA2020.Shared;
-@inject HttpClient httpClient
-@using Newtonsoft.Json;
-@inject IJSRuntime JS;
-
-@using System.Text;
 @using System.Net.Http;
 
+@inject HttpClient httpClient
+@inject IJSRuntime JS;
+@inject UserPropertiesService userPropertiesService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IOptionsMonitor<AzureADB2COptions> AzureADB2COptions
 
-@if (_studentPlacementDescriptionIds == null || _placementDescriptions == null)
+
+@if (_saved == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -36,103 +32,80 @@ else
     </div> 
     <div class="row">
         <div class="col-sm-3"></div>
-        <div class="col-sm-6">
-            @foreach (var placement in _placementDescriptions)
-            //(var saves in mySaves)
-            {
-              if( _studentPlacementDescriptionIds.Contains(placement.Id))
+            <div class="col-sm-6">
+                @if (_saved.Count == 0)
                 {
-                <div class="card savedCard">
-                    <img class="card-img-top" src="@placement.Thumbnail" alt="Card image cap">
-                    <div class="card-body">
-                        <h5 class="card-title">@placement.Title</h5>
-                        <p class="card-text">@placement.Description</p>
-                        <p class="card-text"> Placement Description Duration: @(GetLastApplyDate(placement.Id -1))</p>
-                        <p class="card-text"> Days Remaining: @(DaysRemaining(placement.Id -1))</p>
-                        <a href="#" class="btn btn-primary">Apply</a>
-                        <a class="card-link" @onclick="() => RemoveFromSaves(placement.Id)">Remove</a>
+                    <div class="alert alert-danger" role="alert">
+                        <div class="alert-heading text-center">
+                            <svg width="4em" height="4em" viewBox="0 0 16 16" class="bi bi-question-diamond-fill" fill="red" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M9.05.435c-.58-.58-1.52-.58-2.1 0L.436 6.95c-.58.58-.58 1.519 0 2.098l6.516 6.516c.58.58 1.519.58 2.098 0l6.516-6.516c.58-.58.58-1.519 0-2.098L9.05.435zM5.495 6.033a.237.237 0 0 1-.24-.247C5.35 4.091 6.737 3.5 8.005 3.5c1.396 0 2.672.73 2.672 2.24 0 1.08-.635 1.594-1.244 2.057-.737.559-1.01.768-1.01 1.486v.105a.25.25 0 0 1-.25.25h-.81a.25.25 0 0 1-.25-.246l-.004-.217c-.038-.927.495-1.498 1.168-1.987.59-.444.965-.736.965-1.371 0-.825-.628-1.168-1.314-1.168-.803 0-1.253.478-1.342 1.134-.018.137-.128.25-.266.25h-.825zm2.325 6.443c-.584 0-1.009-.394-1.009-.927 0-.552.425-.94 1.01-.94.609 0 1.028.388 1.028.94 0 .533-.42.927-1.029.927z"/>
+                            </svg>
+                            <p>No placement descriptions have been saved yet.</p>
+                        </div>
+                        <hr>
+                        <div class="mb-0 text-center">
+                            <a href="/">Browse placement descriptions.</a>
+                        </div>
                     </div>
-                </div>
-                <hr>
                 }
-            }
-        </div>
+                else 
+                {
+                    @foreach (var placement in _saved)
+                    {
+                        <div class="card savedCard">
+                            <img class="card-img-top" src="@placement.Thumbnail" alt="Card image cap">
+                            <div class="card-body">
+                                <h5 class="card-title">@placement.Title</h5>
+                                <p class="card-text">@placement.Description</p>
+                                <p class="card-text"> Placement Description Duration: @(GetLastApplyDate(placement))</p>
+                                <p class="card-text"> Days Remaining: @(DaysRemaining(placement))</p>
+                                <a href="#" class="btn btn-primary">Apply</a>
+                                <a class="card-link" @onclick="() => RemoveFromSaves(placement.Id)">Remove</a>
+                            </div>
+                        </div>
+                        <hr>
+                    }
+                }
+            </div>
         <div class="col-sm-3"></div>
     </div>
 }
 
 @code {
-    private Guid _userId;
-
-    private PlacementDescriptionDetailsDTO[] _placementDescriptions;
-    //private List<PlacementDescriptionDetailsDTO> placementDescriptions;
-    List<int> _studentPlacementDescriptionIds = new List<int>();
-
-    
+    private Guid _userId = Guid.Parse("5a87427d-f0af-421d-a340-7d9dd8f9f76e"); // hardcoded to return value (delete);
+    private List<PlacementDescriptionDetailsDTO> _saved;
 
     protected override async Task OnInitializedAsync()
     {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-        _userId = Guid.Parse(user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
-        _userId = Guid.Parse("5a87427d-f0af-421d-a340-7d9dd8f9f76e"); // hardcoded to return value (delete)
-
         try
         {
-            var _studentInfo = await httpClient.GetFromJsonAsync<StudentDetailsDTO>($"StudentRepository/{_userId}");
-            _studentPlacementDescriptionIds = _studentInfo.PlacementDescriptionIds.ToList();
+            @* var studentInfo = await httpClient.GetFromJsonAsync<StudentDetailsDTO>($"StudentRepository/{userPropertiesService.UserId}"); *@
+            var studentInfo = await httpClient.GetFromJsonAsync<StudentDetailsDTO>($"StudentRepository/{_userId}");
+            var studentPlacementDescriptionIds = studentInfo.PlacementDescriptionIds.ToList();
+            var placementDescriptions = await httpClient.GetFromJsonAsync<PlacementDescriptionDetailsDTO[]>("PlacementDescriptionRepository");
+            
+            var saved = placementDescriptions.Where(p => studentPlacementDescriptionIds.Contains(p.Id));
+            _saved = new List<PlacementDescriptionDetailsDTO>(saved);
         } 
         catch (Exception e)
         {
             Console.WriteLine(e);
         }
-        _placementDescriptions = await httpClient.GetFromJsonAsync<PlacementDescriptionDetailsDTO[]>("PlacementDescriptionRepository");
-        
-        //var studentPlacementDescription = _studentInfo.PlacementDescriptionIds.Count;
-        //placementDescriptions = new PlacementDescriptionDetailsDTO[studentPlacementDescription.Count];
-        /*
-        foreach (int i in studentPlacementDescription)
-        {
-            Console.WriteLine(i);
-            var placementDescription = await httpClient.GetFromJsonAsync<PlacementDescriptionDetailsDTO>($"PlacementDescriptionRepository/{i}");
-            placementDescriptions.Add(placementDescription);
-        }
-        */
-
-        
-        /*
-        var placementDescrip = await httpClient.GetFromJsonAsync<PlacementDescriptionDetailsDTO>($"PlacementDescriptionRepository/{1}");
-        */
     }
 
-
-    /*
-     private void IncrementCount()
-    {
-        if (this.currentCount == placementDescriptions.Length - 1) { return; }
-        currentCount++;
-    }
-
-    private void DecrementCount()
-    {
-        if (this.currentCount == 0) { return; }
-        currentCount--;
-    }
-    */
-
-    
     private async void RemoveFromSaves(int placementDescriptionId)
     {
-        var json = JsonConvert.SerializeObject(placementDescriptionId);
-        var data = new StringContent(json, Encoding.UTF8, "application/json");
         _userId = Guid.Parse("5a87427d-f0af-421d-a340-7d9dd8f9f76e"); // hardcoded to return value (delete)
 
+        @* using (var response = await httpClient.PatchAsync($"StudentRepository/unsave/{userPropertiesService.UserId}/{placementDescriptionId}", null)) *@
         using (var response = await httpClient.PatchAsync($"StudentRepository/unsave/{_userId}/{placementDescriptionId}", null))
         {
             try 
             {
                 response.EnsureSuccessStatusCode();
                 Console.WriteLine(await response.Content.ReadAsStringAsync());
+                _saved.RemoveAll(d => d.Id == placementDescriptionId);
+                StateHasChanged();
             }
             catch (Exception e)
             {
@@ -141,20 +114,18 @@ else
         }
     }
     
-    private string GetLastApplyDate(int placementId)
+    private string GetLastApplyDate(PlacementDescriptionDetailsDTO description)
     {
-        var applyDate = _placementDescriptions[placementId].LastApplyDate;
+        var applyDate = description.LastApplyDate;
         return applyDate.ToShortDateString();
     }
 
-    private string DaysRemaining(int placementId)
+    private string DaysRemaining(PlacementDescriptionDetailsDTO description)
     {
-        var applyDate = _placementDescriptions[placementId].LastApplyDate;
+        var applyDate = description.LastApplyDate;
         DateTime today = DateTime.Now;
         var daysLeft = applyDate.Subtract(today);
         return (daysLeft.Days + 1).ToString(); 
     }
-
-//_userId = Guid.Parse("ce0527df-eec0-43e1-9a9f-6546e35b695a"); // hardcoded to return value (delete)
 }
 
