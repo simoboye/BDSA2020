@@ -1,7 +1,6 @@
 @page "/profilesettings"
 @using Entities
 @using BDSA2020.Shared;
-@using System.ComponentModel.DataAnnotations;
 @inject HttpClient httpClient
 @using Newtonsoft.Json;
 @inject IMatchingService service
@@ -13,6 +12,7 @@
 @using System.Collections.Generic; 
 @using System.Net.Http;
 @using System.Security.Claims
+@using System.Linq;
 
 
 
@@ -47,6 +47,18 @@ else
                     <div class="form-group">
                         <label for="keywordSelect">Keywords</label>
                         <div class="form-group row" id="keywordSelect">
+                            
+                            <div class="col-sm-6">    
+                            @foreach (var keyword in keywords)
+                            {
+                                <div class="form-check">
+                                <input type="checkbox" @onchange="eventArgs => { CheckboxClicked(keyword, eventArgs.Value); }" class="form-check-input"/>
+                                <label class="form-check-label" for="exampleCheck1">@keyword</label>
+                                </div>
+                            }
+                            </div>
+
+                            @*
                             <div class="col-sm-6">
                                 @for(var i = 0; i<keywords.Length/2; i++){
                                     <div class="form-check">
@@ -63,6 +75,8 @@ else
                                     </div>
                                 }                                
                             </div>
+                            *@
+
                         </div>
                     </div>
                     <hr>
@@ -111,16 +125,17 @@ else
 
 @code {
     private bool checkedValue;
-
     private CreateStudentDTO _dto = new CreateStudentDTO();
-    private String[] keywords;
+    private string[] keywords;
 
+    private ICollection<string> _selectedKeywords = new List<string>();
     private string[] _degrees;
+
 
     
     protected override async Task OnInitializedAsync()
     {
-        keywords = await httpClient.GetFromJsonAsync<String[]>("KeywordRepository");
+        keywords = await httpClient.GetFromJsonAsync<string[]>("KeywordRepository");
         _degrees = Enum.GetNames(typeof(Degree));
     }
 
@@ -138,17 +153,42 @@ else
         //var result = response.Content.ReadAsStringAsync().Result;
         //Console.WriteLine(result);
 
-
-        Console.WriteLine("id " + _dto.Id);   
-        Console.WriteLine("degree " + _dto.Degree);   
-        Console.WriteLine("keyword " + _dto.KeywordNames);  //Mangler 
-        Console.WriteLine("minSal " + _dto.MinSalary);   
-        Console.WriteLine("maxSal " + _dto.MinWorkingHours);   
-        Console.WriteLine("maxWork " + _dto.MaxWorkingHours);   
-        Console.WriteLine("minWork " + _dto.Agreement);   
-        Console.WriteLine("location " + _dto.Location);   
+        Console.WriteLine("");
+        Console.WriteLine("######### LIST #########");
+        Console.WriteLine("id: " + _dto.Id);   
+        Console.WriteLine("degree: " + _dto.Degree);
+        Console.WriteLine("------------------------");
+        foreach (var item in _dto.KeywordNames)
+        {
+            Console.WriteLine("keyword: " + item);
+        }   
+        Console.WriteLine("------------------------");
+        Console.WriteLine("minHours: " + _dto.MinWorkingHours);   
+        Console.WriteLine("maxHours: " + _dto.MaxWorkingHours);   
+        Console.WriteLine("minSal: " + _dto.MinSalary);   
+        Console.WriteLine("agreement: " + _dto.Agreement);   
+        Console.WriteLine("location: " + _dto.Location);   
+        Console.WriteLine("");
     }
     
+    private void CheckboxClicked(string item, object checkedValue)
+    {
+        if((bool)checkedValue)
+        {
+            if(!_selectedKeywords.Contains(item))
+            { 
+                _selectedKeywords.Add(item);
+            }
+        }
+        else
+        {
+            if(_selectedKeywords.Contains(item))
+            {
+                _selectedKeywords.Remove(item);
+            }
+        }
+        _dto.KeywordNames = _selectedKeywords.ToArray();
+    }
 
     private void TrueAgreement()
     {
@@ -160,6 +200,4 @@ else
         this._dto.Agreement = false;
         Console.WriteLine("Agreement is set to: " + this._dto.Agreement.ToString());
     }
-
-    
 }
