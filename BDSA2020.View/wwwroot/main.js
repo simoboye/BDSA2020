@@ -24,3 +24,35 @@ document.querySelector('#controls').addEventListener('click', (event) => {
     $slide.scrollIntoView();
   }
 });
+
+function checkMore(){
+    //calculates if there is more desriptions from scroll values (455 is height of one description (px))
+    if((document.getElementById('scroll-container').scrollHeight - 455.0) == document.getElementById('scroll-container').scrollTop){
+      console.log("NO MORE DESCRIPTION")
+      //TODO add loadMore() logic here
+    }
+}
+
+function showAlert(){
+  document.getElementById('savedAlert').hidden = false;
+  setTimeout(function(){ hideAlert() }, 3000);
+}
+
+function hideAlert(){
+  document.getElementById('savedAlert').hidden = true;
+}
+
+function maxHoursShowVal(value){
+  var maxhoursslideroutput = document.getElementById("maxhoursslideroutput");
+  maxhoursslideroutput.innerHTML = value.toString();
+}
+
+function minHoursShowVal(value){
+  var minhoursslideroutput = document.getElementById("minhoursslideroutput");
+  minhoursslideroutput.innerHTML = value.toString();
+}
+
+function salaryShowVal(value){
+  var salaryslideroutput = document.getElementById("salaryslideroutput");
+  salaryslideroutput.innerHTML = value.toString();
+}

@@ -30,8 +30,10 @@ else
                     <div class="form-group">
                         <label for="degree">Degree</label>
                         <select class="form-control" id="degree">
-                            @* TODO: Retrieve these from enum*@    
-                            <option selected="selected" value="bachelor">Please select</option>
+                            <option selected="selected" value="@Entities.Degree.Bachelor">@Entities.Degree.Bachelor.ToString()</option>
+                            <option selected="selected" value="@Entities.Degree.Master">@Entities.Degree.Master.ToString()</option>
+                            <option selected="selected" value="@Entities.Degree.PhD">@Entities.Degree.PhD.ToString()</option>
+                            <option selected="selected" value="@Entities.Degree.Other">@Entities.Degree.Other.ToString()</option>
                         </select>
                     </div>
                     <hr>
@@ -66,7 +68,8 @@ else
                     <hr>
                     <div class="form-group">
                         <label for="salary">Salary</label>
-                        <input type="range" class="custom-range" id="salary" min="0" max="100">
+                        <input type="range" class="custom-range" id="salary" min="70" max="500" oninput="salaryShowVal(this.value)">
+                        <p>DKK/H: <span id="salaryslideroutput"></span></p>
                     </div>
                     <hr>
                     <label>Agreement</label>
