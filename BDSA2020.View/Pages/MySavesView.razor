@@ -65,7 +65,6 @@ else
     private Guid _userId;
 
     private PlacementDescriptionDetailsDTO[] _placementDescriptions;
-    //private List<PlacementDescriptionDetailsDTO> placementDescriptions;
     List<int> _studentPlacementDescriptionIds = new List<int>();
 
     
@@ -75,7 +74,7 @@ else
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
         _userId = Guid.Parse(user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
-        _userId = Guid.Parse("5a87427d-f0af-421d-a340-7d9dd8f9f76e"); // hardcoded to return value (delete)
+        //_userId = Guid.Parse("5a87427d-f0af-421d-a340-7d9dd8f9f76e"); // hardcoded to return value (delete)
 
         try
         {
@@ -154,7 +153,5 @@ else
         var daysLeft = applyDate.Subtract(today);
         return (daysLeft.Days + 1).ToString(); 
     }
-
-//_userId = Guid.Parse("ce0527df-eec0-43e1-9a9f-6546e35b695a"); // hardcoded to return value (delete)
 }
 

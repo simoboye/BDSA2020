@@ -101,7 +101,8 @@ else
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
         var _userId = Guid.Parse(user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
-        _userId = Guid.Parse("5a87427d-f0af-421d-a340-7d9dd8f9f76e"); // hardcoded to return value (delete)
+        //_userId = Guid.Parse("5a87427d-f0af-421d-a340-7d9dd8f9f76e"); // hardcoded to return value (delete)
+        Console.WriteLine(_userId + ": " + "(YOUR CURRENTLY LOGGED IN USER)");
 
         using (var response = await httpClient.PatchAsync($"StudentRepository/save/{_userId}/{placementDescriptionId}", null))
         {
@@ -130,6 +131,4 @@ else
         var daysLeft = applyDate.Subtract(today);
         return (daysLeft.Days + 1).ToString(); 
     }
-
-//_userId = Guid.Parse("ce0527df-eec0-43e1-9a9f-6546e35b695a"); // hardcoded to return value (delete)
 }
