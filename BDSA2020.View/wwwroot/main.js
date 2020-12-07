@@ -1,25 +1,15 @@
-
-window.CardAnimation = () => {
-  //use this for future JS where Blazor needs to be loaded
-  //document.getElementById('scroll-container').onscroll = function() {
-  //    checkMore();
-  //};
-}
-
 function goPrev() {
   document.getElementById('scroll-container').scrollBy({ 
-    top: -40,
+    left: -40,
     behavior: 'smooth' 
   });
 }
 
 function goNext() {
-
   document.getElementById('scroll-container').scrollBy({ 
-    top: 40,
+    left: 40,
     behavior: 'smooth' 
   });
-  checkMore();
 }
 
 document.querySelector('#controls').addEventListener('click', (event) => {
