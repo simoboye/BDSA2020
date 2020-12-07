@@ -91,12 +91,6 @@ else
         matches = service.CalculateMatches(student, placementDescriptions).ToArray();
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        //To run JS AFTER Blazor is done loading application
-        await JS.InvokeAsync<string>("CardAnimation");
-    }
-
     private async void AddToSaves(int placementDescriptionId)
     {
         //placementDescriptionId = placementDescriptionId + 1;
