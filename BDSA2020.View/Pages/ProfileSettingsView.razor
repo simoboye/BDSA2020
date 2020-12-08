@@ -27,11 +27,16 @@ else
         <div class="row">
             <div class="col-12">
                 <h1>Profile settings</h1>
+                @if(didSucces)
+                {
+                    <div class="alert alert-success successalert" id="savedAlert" data-dismiss="alert" aria-label="Close" aria-hidden="true" hidden>
+                        <b>Success!</b> Your account was successfully created!
+                    </div>
+                }
             </div>
         </div>
         <div class="row">
             <div class="col-12">
-                <!-- <form> -->
                 <EditForm Model="@_dto" OnValidSubmit="@SaveStudentSettings">
                     <hr>
                     <div class="form-group">
@@ -57,26 +62,6 @@ else
                                 </div>
                             }
                             </div>
-
-                            @*
-                            <div class="col-sm-6">
-                                @for(var i = 0; i<keywords.Length/2; i++){
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id='@(keywords[i].ToString())'>
-                                        <label class="form-check-label" for="exampleCheck1">@keywords[i]</label>
-                                    </div>
-                                }
-                            </div>
-                            <div class="col-sm-6">
-                                @for(var i = keywords.Length/2; i<keywords.Length; i++){
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id='@(keywords[i].ToString())'>
-                                        <label class="form-check-label" for="exampleCheck1">@keywords[i]</label>
-                                    </div>
-                                }                                
-                            </div>
-                            *@
-
                         </div>
                     </div>
                     <hr>
@@ -115,7 +100,6 @@ else
                     </div>
                     <hr>
                     <button type="submit" class="btn btn-primary">Submit</button>
-                <!-- </form> -->
                 </EditForm>
             </div>
         </div>
@@ -130,44 +114,32 @@ else
 
     private ICollection<string> _selectedKeywords = new List<string>();
     private string[] _degrees;
+    private bool didSucces; 
     
     protected override async Task OnInitializedAsync()
     {
         keywords = await httpClient.GetFromJsonAsync<string[]>("KeywordRepository");
         _degrees = Enum.GetNames(typeof(Degree));
+        _dto.Id = userPropertiesService.UserId;
     }
 
 
     private async Task SaveStudentSettings()
     {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-        _dto.Id = Guid.Parse(user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
-
         var json = JsonConvert.SerializeObject(_dto);
         var data = new StringContent(json, Encoding.UTF8, "application/json");
-        Console.WriteLine(_dto.Id);
 
-        var response = await httpClient.PostAsync($"StudentRepository/create", data);
-        var result = response.Content.ReadAsStringAsync().Result;
-        Console.WriteLine(result);
-
-        Console.WriteLine("");
-        Console.WriteLine("######### LIST #########");
-        Console.WriteLine("id: " + _dto.Id);   
-        Console.WriteLine("degree: " + _dto.Degree);
-        Console.WriteLine("------------------------");
-        foreach (var item in _dto.KeywordNames)
+        try
         {
-            Console.WriteLine("keyword: " + item);
-        }   
-        Console.WriteLine("------------------------");
-        Console.WriteLine("minHours: " + _dto.MinWorkingHours);   
-        Console.WriteLine("maxHours: " + _dto.MaxWorkingHours);   
-        Console.WriteLine("minSal: " + _dto.MinSalary);   
-        Console.WriteLine("agreement: " + _dto.Agreement);   
-        Console.WriteLine("location: " + _dto.Location);   
-        Console.WriteLine("");
+            var response = await httpClient.PostAsync($"StudentRepository/create", data);
+            var result = response.Content.ReadAsStringAsync().Result;
+            didSucces = true;
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
     }
     
     private void CheckboxClicked(string item, object checkedValue)
@@ -192,11 +164,9 @@ else
     private void TrueAgreement()
     {
         this._dto.Agreement = true;
-        Console.WriteLine("Agreement is set to: " + this._dto.Agreement.ToString());
     }
     private void FalseAgreement()
     {
         this._dto.Agreement = false;
-        Console.WriteLine("Agreement is set to: " + this._dto.Agreement.ToString());
     }
 }

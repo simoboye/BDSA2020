@@ -1,27 +1,26 @@
 @page "/placementdescription"
 
-@using System.Security.Claims
 @using Microsoft.AspNetCore.Authentication.AzureADB2C.UI
 @using Microsoft.Extensions.Options
 @inject IOptionsMonitor<AzureADB2COptions> AzureADB2COptions
 @using Microsoft.AspNetCore.Components.Authorization
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-@using BDSA2020.Shared;
+@using BDSA2020.Shared
 @inject HttpClient httpClient
-@using Newtonsoft.Json;
+@using Newtonsoft.Json
 @inject IMatchingService service
-@inject IJSRuntime JS;
+@inject IJSRuntime JS
 @inject UserPropertiesService userPropertiesService
-@using System;
-@using System.Text;
-@using System.Net.Http;
+@using System
+@using System.Text
+@using System.Net.Http
 
 
 
 @if (matches == null)
 {
-    <p><em>Loading...</em></p>
+    <p>You have not setup a profile yet</p>
 }
 else 
 {
@@ -48,7 +47,7 @@ else
                                 <li class="list-group-item"><b>Salary: </b>@item.MinSalary</li>
                                 <li class="list-group-item"><b>Last apply date: </b>@GetLastApplyDate(item)</li>
                                 <li class="list-group-item"><b>Days remaining: </b>@DaysRemaining(item)</li>
-                                <li class="list-group-item"><b>Matching score: </b>@item.MatchScore</li>
+                                <li class="list-group-item"><b>Matching score: </b>@item.MatchScore / 10</li>
                             </ul>
                             <div class="card-body">
                                 <a type="button" class="btn btn-primary btn-lg btn-block" href="mailto:@item.Email" target="hidden-iframe">Apply now</a>
@@ -84,28 +83,26 @@ else
     {
         var placementDescriptions = await httpClient.GetFromJsonAsync<PlacementDescriptionDetailsDTO[]>("PlacementDescriptionRepository");
         
-        var student = await httpClient.GetFromJsonAsync<StudentDetailsDTO>("StudentRepository/290c1a5f-3790-4bcb-89dc-6a4c3de155d1");
-        Console.WriteLine(userPropertiesService.UserId);
-        @* var student = await httpClient.GetFromJsonAsync<StudentDetailsDTO>($"StudentRepository/{userPropertiesService.UserId}"); *@
 
+        var student = await httpClient.GetFromJsonAsync<StudentDetailsDTO>($"StudentRepository/{userPropertiesService.UserId}");
         matches = service.CalculateMatches(student, placementDescriptions).ToArray();
+        @* try
+        {
+            var student = await httpClient.GetFromJsonAsync<StudentDetailsDTO>($"StudentRepository/{userPropertiesService.UserId}");
+            matches = service.CalculateMatches(student, placementDescriptions).ToArray();
+        }
+        catch (Exception)
+        {
+            matches = null;   
+        } *@
     }
 
     private async void AddToSaves(int placementDescriptionId)
     {
-        //placementDescriptionId = placementDescriptionId + 1;
-        Console.WriteLine(placementDescriptionId);
-
         var json = JsonConvert.SerializeObject(placementDescriptionId);
         var data = new StringContent(json, Encoding.UTF8, "application/json");
-        
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-        var _userId = Guid.Parse(user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
-        //_userId = Guid.Parse("5a87427d-f0af-421d-a340-7d9dd8f9f76e"); // hardcoded to return value (delete)
-        Console.WriteLine(_userId + ": " + "(YOUR CURRENTLY LOGGED IN USER)");
 
-        using (var response = await httpClient.PatchAsync($"StudentRepository/save/{_userId}/{placementDescriptionId}", null))
+        using (var response = await httpClient.PatchAsync($"StudentRepository/save/{userPropertiesService.UserId}/{placementDescriptionId}", null))
         {
             try 
             {
