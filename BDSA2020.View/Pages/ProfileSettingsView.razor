@@ -1,7 +1,20 @@
 @page "/profilesettings"
 @using Entities
-@using System.ComponentModel.DataAnnotations;
+@using BDSA2020.Shared;
 @inject HttpClient httpClient
+@using Newtonsoft.Json;
+@inject IMatchingService service
+@inject IJSRuntime JS;
+@inject UserPropertiesService userPropertiesService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@using System;
+@using System.Text;
+@using System.Collections.Generic; 
+@using System.Net.Http;
+@using System.Security.Claims
+@using System.Linq;
+
+
 
 
 @if (keywords == null)
@@ -18,21 +31,34 @@ else
         </div>
         <div class="row">
             <div class="col-12">
-                <form>
+                <!-- <form> -->
+                <EditForm Model="@_dto" OnValidSubmit="@SaveStudentSettings">
                     <hr>
                     <div class="form-group">
                         <label for="degree">Degree</label>
-                        <select class="form-control" id="degree">
-                            <option selected="selected" value="@Entities.Degree.Bachelor">@Entities.Degree.Bachelor.ToString()</option>
-                            <option selected="selected" value="@Entities.Degree.Master">@Entities.Degree.Master.ToString()</option>
-                            <option selected="selected" value="@Entities.Degree.PhD">@Entities.Degree.PhD.ToString()</option>
-                            <option selected="selected" value="@Entities.Degree.Other">@Entities.Degree.Other.ToString()</option>
+                        <select class="form-control" @bind="_dto.Degree" id="degree">
+                            @foreach (var degree in _degrees)
+                            {
+                                <option selected="selected" value="@degree">@degree</option>
+                            }
                         </select>
                     </div>
                     <hr>
                     <div class="form-group">
                         <label for="keywordSelect">Keywords</label>
                         <div class="form-group row" id="keywordSelect">
+                            
+                            <div class="col-sm-6">    
+                            @foreach (var keyword in keywords)
+                            {
+                                <div class="form-check">
+                                <input type="checkbox" @onchange="eventArgs => { CheckboxClicked(keyword, eventArgs.Value); }" class="form-check-input"/>
+                                <label class="form-check-label" for="exampleCheck1">@keyword</label>
+                                </div>
+                            }
+                            </div>
+
+                            @*
                             <div class="col-sm-6">
                                 @for(var i = 0; i<keywords.Length/2; i++){
                                     <div class="form-check">
@@ -49,54 +75,48 @@ else
                                     </div>
                                 }                                
                             </div>
+                            *@
+
                         </div>
                     </div>
                     <hr>
                     <label> Working-hours </label>
                     <div class="form-group">
-                        <label for="maxhours">Min. hours</label>
-                        <input type="range" class="custom-range" id="maxhours" min="1" max="40" oninput="minHoursShowVal(this.value)">
-                        <p>Hours: <span id="minhoursslideroutput"></span></p>
+                        <label for="maxhours">Min. hours: @_dto.MinWorkingHours</label>
+                        <input type="range" @bind="@_dto.MinWorkingHours" @bind:event="oninput" class="custom-range" id="maxhours" min="0" max="100">
                     </div>
                     <div class="form-group">
-                        <label for="minhours">Max. hours</label>
-                        <input type="range" class="custom-range" id="minhours" min="1" max="40" oninput="maxHoursShowVal(this.value)">
-                        <p>Hours: <span id="maxhoursslideroutput"></span></p>
+                        <label for="minhours">Max. hours: @_dto.MaxWorkingHours</label>
+                        <input type="range" @bind="@_dto.MaxWorkingHours" @bind:event="oninput" class="custom-range" id="minhours" min="0" max="100">
                     </div>
                     <hr>
                     <div class="form-group">
-                        <label for="salary">Salary</label>
-                        <input type="range" class="custom-range" id="salary" min="70" max="500" oninput="salaryShowVal(this.value)">
-                        <p>DKK/H: <span id="salaryslideroutput"></span></p>
+                        <label for="salary">Salary $: @_dto.MinSalary</label>
+                        <input type="range" @bind="@_dto.MinSalary" @bind:event="oninput" class="custom-range" id="salary" min="0" max="100">
                     </div>
                     <hr>
                     <label>Agreement</label>
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="yesAgreement" id="yesAgreement" value="yes" checked>
-                                <label class="form-check-label" for="yesAgreement">
-                                    Yes
-                                </label>
+                                <input class="form-check-input" type="radio" name="Agreement" value="yes" @onclick="() => TrueAgreement()"> Yes
                             </div>
-                        </div>
+                        </div> 
                         <div class="form-group col-md-6">
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="noAgreement" id="noAgreement" value="no">
-                                <label class="form-check-label" for="noAgreement">
-                                    No
-                                </label>
+                                <input class="form-check-input" type="radio" name="Agreement" value="no" @onclick="() => FalseAgreement()"> No
                             </div>
                         </div>
                     </div>
                     <hr>
                     <div class="form-group">
                         <label for="zipcode">Zipcode</label>
-                        <input type="number" class="form-control" id="zipcode">
+                        <InputText class="form-control" @bind-Value="_dto.Location" />
                     </div>
                     <hr>
                     <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
+                <!-- </form> -->
+                </EditForm>
             </div>
         </div>
     </div>
@@ -104,12 +124,79 @@ else
 
 
 @code {
-    private String[] keywords;
+    private bool checkedValue;
+    private CreateStudentDTO _dto = new CreateStudentDTO();
+    private string[] keywords;
 
-    Array values = Enum.GetValues(typeof(Entities.Degree));
+    private ICollection<string> _selectedKeywords = new List<string>();
+    private string[] _degrees;
     
     protected override async Task OnInitializedAsync()
     {
-        keywords = await httpClient.GetFromJsonAsync<String[]>("KeywordRepository");
+        keywords = await httpClient.GetFromJsonAsync<string[]>("KeywordRepository");
+        _degrees = Enum.GetNames(typeof(Degree));
+    }
+
+
+    private async Task SaveStudentSettings()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        _dto.Id = Guid.Parse(user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+
+        var json = JsonConvert.SerializeObject(_dto);
+        var data = new StringContent(json, Encoding.UTF8, "application/json");
+        Console.WriteLine(_dto.Id);
+
+        var response = await httpClient.PostAsync($"StudentRepository/create", data);
+        var result = response.Content.ReadAsStringAsync().Result;
+        Console.WriteLine(result);
+
+        Console.WriteLine("");
+        Console.WriteLine("######### LIST #########");
+        Console.WriteLine("id: " + _dto.Id);   
+        Console.WriteLine("degree: " + _dto.Degree);
+        Console.WriteLine("------------------------");
+        foreach (var item in _dto.KeywordNames)
+        {
+            Console.WriteLine("keyword: " + item);
+        }   
+        Console.WriteLine("------------------------");
+        Console.WriteLine("minHours: " + _dto.MinWorkingHours);   
+        Console.WriteLine("maxHours: " + _dto.MaxWorkingHours);   
+        Console.WriteLine("minSal: " + _dto.MinSalary);   
+        Console.WriteLine("agreement: " + _dto.Agreement);   
+        Console.WriteLine("location: " + _dto.Location);   
+        Console.WriteLine("");
+    }
+    
+    private void CheckboxClicked(string item, object checkedValue)
+    {
+        if((bool)checkedValue)
+        {
+            if(!_selectedKeywords.Contains(item))
+            { 
+                _selectedKeywords.Add(item);
+            }
+        }
+        else
+        {
+            if(_selectedKeywords.Contains(item))
+            {
+                _selectedKeywords.Remove(item);
+            }
+        }
+        _dto.KeywordNames = _selectedKeywords.ToArray();
+    }
+
+    private void TrueAgreement()
+    {
+        this._dto.Agreement = true;
+        Console.WriteLine("Agreement is set to: " + this._dto.Agreement.ToString());
+    }
+    private void FalseAgreement()
+    {
+        this._dto.Agreement = false;
+        Console.WriteLine("Agreement is set to: " + this._dto.Agreement.ToString());
     }
 }

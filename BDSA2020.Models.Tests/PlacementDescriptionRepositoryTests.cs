@@ -22,7 +22,7 @@ namespace BDSA2020.Models.Tests
         {
             var actual = await repository.GetPlacementDescriptionsAsync();
 
-            Assert.Equal(5, actual.Count);
+            Assert.Equal(30, actual.Count);
         }
 
         [Fact]
