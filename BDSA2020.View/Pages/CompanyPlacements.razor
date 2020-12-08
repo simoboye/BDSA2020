@@ -70,10 +70,10 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-        _userId = Guid.Parse(user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
-        _userId = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6"); // hardcoded to return value (delete)
+        //var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        //var user = authState.User;
+        //_userId = Guid.Parse(user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+        _userId = Guid.Parse("daccfa6a-6765-4295-82f1-49480ab2c2c1"); // hardcoded to return value (delete)
         
         try
         {

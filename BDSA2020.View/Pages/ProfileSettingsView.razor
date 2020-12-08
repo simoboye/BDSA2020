@@ -148,10 +148,11 @@ else
 
         var json = JsonConvert.SerializeObject(_dto);
         var data = new StringContent(json, Encoding.UTF8, "application/json");
+        Console.WriteLine(_dto.Id);
 
-        //var response = await httpClient.PostAsync($"StudentRepository/create", data);
-        //var result = response.Content.ReadAsStringAsync().Result;
-        //Console.WriteLine(result);
+        var response = await httpClient.PostAsync($"StudentRepository/create", data);
+        var result = response.Content.ReadAsStringAsync().Result;
+        Console.WriteLine(result);
 
         Console.WriteLine("");
         Console.WriteLine("######### LIST #########");
