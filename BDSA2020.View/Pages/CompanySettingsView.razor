@@ -1,15 +1,15 @@
 @page "/companysettings"
+@using BDSA2020.Shared
 @using Entities
 @using System.ComponentModel.DataAnnotations;
 @inject HttpClient httpClient
+@inject UserPropertiesService userPropertiesService;
+@inject AuthenticationStateProvider AuthenticationStateProvider;
+@using System.Security.Claims
+@using Newtonsoft.Json;
+@using System.Text
 
 
-@if (keywords == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{    
     <div class="container settingsView">
         <div class="row">
             <div class="col-12">
@@ -18,24 +18,37 @@ else
         </div>
         <div class="row">
             <div class="col-12">
-                <form>
+                <EditForm Model="@_dto" OnValidSubmit="@SaveCompanySettings">
                     <div class="form-group">
                         <label for="name">Company name:</label>
-                        <input type="text" class="form-control" id="name">
+                        <InputText type="text" class="form-control" id="name" @bind-Value="@_dto.Name"/>
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
+                </EditForm>
             </div>
         </div>
     </div>
-}
 
 
 @code {
     private String[] keywords;
-    
-    protected override async Task OnInitializedAsync()
+    private CreateCompanyDTO _dto = new CreateCompanyDTO();
+
+    private async Task SaveCompanySettings()
     {
-        keywords = await httpClient.GetFromJsonAsync<String[]>("KeywordRepository");
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        _dto.Id = Guid.Parse(user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+
+        Console.WriteLine("id " + _dto.Id);   
+        Console.WriteLine("name " + _dto.Name);   
+
+        var json = JsonConvert.SerializeObject(_dto);
+        Console.WriteLine(json);   
+        var data = new StringContent(json, Encoding.UTF8, "application/json");
+        Console.WriteLine(data);   
+
+        var response = await httpClient.PostAsync($"CompanyRepository​/create", data);
+        var result = response.Content.ReadAsStringAsync().Result;
     }
 }
