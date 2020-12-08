@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Net.Http;
+using Microsoft.AspNetCore.Rewrite;
 
 namespace BDSA2020.View
 {
@@ -55,6 +56,7 @@ namespace BDSA2020.View
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseRewriter(new RewriteOptions().AddRedirect("AzureADB2C/Account/SignedOut", "/redirectLogout"));
 
             app.UseEndpoints(endpoints =>
             {
