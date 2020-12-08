@@ -28,18 +28,3 @@ function showAlert(){
 function hideAlert(){
   document.getElementById('savedAlert').hidden = true;
 }
-
-function maxHoursShowVal(value){
-  var maxhoursslideroutput = document.getElementById("maxhoursslideroutput");
-  maxhoursslideroutput.innerHTML = value.toString();
-}
-
-function minHoursShowVal(value){
-  var minhoursslideroutput = document.getElementById("minhoursslideroutput");
-  minhoursslideroutput.innerHTML = value.toString();
-}
-
-function salaryShowVal(value){
-  var salaryslideroutput = document.getElementById("salaryslideroutput");
-  salaryslideroutput.innerHTML = value.toString();
-}

@@ -87,7 +87,6 @@ else
   
         try
         {
-            @* var studentInfo = await httpClient.GetFromJsonAsync<StudentDetailsDTO>($"StudentRepository/{userPropertiesService.UserId}"); *@
             var studentInfo = await httpClient.GetFromJsonAsync<StudentDetailsDTO>($"StudentRepository/{_userId}");
             var studentPlacementDescriptionIds = studentInfo.PlacementDescriptionIds.ToList();
             var placementDescriptions = await httpClient.GetFromJsonAsync<PlacementDescriptionDetailsDTO[]>("PlacementDescriptionRepository");
@@ -103,10 +102,8 @@ else
 
     private async void RemoveFromSaves(int placementDescriptionId)
     {
-        _userId = Guid.Parse("5a87427d-f0af-421d-a340-7d9dd8f9f76e"); // hardcoded to return value (delete)
 
-        @* using (var response = await httpClient.PatchAsync($"StudentRepository/unsave/{userPropertiesService.UserId}/{placementDescriptionId}", null)) *@
-        using (var response = await httpClient.PatchAsync($"StudentRepository/unsave/{_userId}/{placementDescriptionId}", null))
+        using (var response = await httpClient.PatchAsync($"StudentRepository/unsave/{userPropertiesService.UserId}/{placementDescriptionId}", null))
         {
             try 
             {
